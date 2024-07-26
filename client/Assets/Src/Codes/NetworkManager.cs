@@ -19,6 +19,8 @@ public class NetworkManager : MonoBehaviour
     private TcpClient tcpClient;
     private NetworkStream stream;
     
+    private uint sequence = 0;
+    
     WaitForSecondsRealtime wait;
 
     private byte[] receiveBuffer = new byte[4096];
@@ -145,6 +147,7 @@ public class NetworkManager : MonoBehaviour
             userId = GameManager.instance.deviceId,
             version = GameManager.instance.version,
             payload = payloadData,
+            sequence = sequence,
         };
 
         // ArrayBufferWriter<byte>를 사용하여 직렬화
@@ -282,6 +285,7 @@ public class NetworkManager : MonoBehaviour
         }
 
         if (response.data != null && response.data.Length > 0) {
+            sequence = response.sequence;
             if (response.handlerId == 0)
             {
                 string jsonString = Encoding.UTF8.GetString(response.data);
