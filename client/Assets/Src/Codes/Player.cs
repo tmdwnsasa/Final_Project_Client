@@ -41,7 +41,7 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!GameManager.instance.isLive) {
+        if (!GameManager.instance.isLive || GameManager.instance.chatting.inputField.isFocused) {
             return;
         }
         inputVec.x = Input.GetAxisRaw("Horizontal");

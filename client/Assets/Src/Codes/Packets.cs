@@ -7,10 +7,24 @@ using System;
 
 public class Packets : MonoBehaviour
 {
-    public enum PacketType { Ping, Normal, Location = 3 }
+    public enum PacketType {
+        PING = 0,
+        NORMAL = 1,
+        GAME_START = 2,
+        LOCATION = 3,
+        GAME_END = 4,
+        CHATTING = 5
+    }
     public enum HandlerIds {
-        Init = 0,
-        LocationUpdate = 2 
+        LOGIN = 0,
+        REGISTER = 1,
+        UPDATE_LOCATION = 2,
+        CREATE_GAME = 4,
+        JOIN_GAME = 5,
+        JOIN_LOBBY = 6,
+        CHARACTER_CHOICE = 7,
+        CHARACTER_SELECT = 8,
+        CHATTING = 10
     }
 
     public static void Serialize<T>(IBufferWriter<byte> writer, T data)
@@ -80,6 +94,14 @@ public class LocationUpdatePayload {
 }
 
 [ProtoContract]
+public class ChattingPayload {
+    [ProtoMember(1, IsRequired = true)]
+    public string message { get; set; }
+    [ProtoMember(2, IsRequired = true)]
+    public uint type { get; set; }
+}
+
+[ProtoContract]
 public class LocationUpdate
 {
     [ProtoMember(1)]
@@ -89,10 +111,10 @@ public class LocationUpdate
     public class UserLocation
     {
         [ProtoMember(1)]
-        public string id { get; set; }
+        public string playerId { get; set; }
 
         [ProtoMember(2)]
-        public uint playerId { get; set; }
+        public uint characterId { get; set; }
 
         [ProtoMember(3)]
         public float x { get; set; }
@@ -100,6 +122,19 @@ public class LocationUpdate
         [ProtoMember(4)]
         public float y { get; set; }
     }
+}
+
+[ProtoContract]
+public class ChattingUpdate
+{
+    [ProtoMember(1)]
+    public string playerId { get; set; }
+
+    [ProtoMember(2)]
+    public string message { get; set; }
+
+    [ProtoMember(3)]
+    public uint type { get; set; }
 }
 
 [ProtoContract]
