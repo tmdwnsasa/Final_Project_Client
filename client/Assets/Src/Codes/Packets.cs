@@ -8,10 +8,6 @@ using System;
 public class Packets : MonoBehaviour
 {
     public enum PacketType { Ping, Normal, Location = 3 }
-    public enum HandlerIds {
-        Init = 0,
-        LocationUpdate = 2 
-    }
 
     public static void Serialize<T>(IBufferWriter<byte> writer, T data)
     {
@@ -31,16 +27,26 @@ public class Packets : MonoBehaviour
 }
 
 [ProtoContract]
-public class InitialPayload
+public class RegisterPayload
 {
     [ProtoMember(1, IsRequired = true)]
     public string playerId { get; set; }
 
     [ProtoMember(2, IsRequired = true)]
-    public uint characterId { get; set; }
+    public string password { get; set; }
 
     [ProtoMember(3, IsRequired = true)]
-    public float frame { get; set; }
+    public string name { get; set; }
+}
+
+[ProtoContract]
+public class LoginPayload
+{
+    [ProtoMember(1, IsRequired = true)]
+    public string playerId { get; set; }
+
+    [ProtoMember(2, IsRequired = true)]
+    public string password { get; set; }
 }
 
 [ProtoContract]
@@ -118,4 +124,38 @@ public class Response {
 
     [ProtoMember(5)]
     public uint sequence { get; set; }
+}
+
+
+[ProtoContract]
+public class CharacterChoice
+{
+    [ProtoMember(1)]
+    public string playerId { get; set; }
+
+    [ProtoMember(2)]
+    public string sessionId { get; set; }
+}
+
+[ProtoContract]
+public class CharacterSelect
+{
+    [ProtoMember(1)]
+    public string playerId { get; set; }
+
+    [ProtoMember(2)]
+    public string sessionId { get; set; }
+
+    [ProtoMember(3)]
+    public List<Possession> possession { get; set; }
+
+    [ProtoContract]
+    public class Possession
+    {
+        [ProtoMember(1)]
+        public long playerId { get; set; }
+
+        [ProtoMember(2)]
+        public long characterId { get; set; }
+    }
 }

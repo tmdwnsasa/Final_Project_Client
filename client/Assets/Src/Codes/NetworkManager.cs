@@ -2,19 +2,26 @@ using System;
 using System.Buffers;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
+using static Packets;
+using static Handlers;
 
 public class NetworkManager : MonoBehaviour
 {
     public static NetworkManager instance;
 
-    public InputField ipInputField;
-    public InputField portInputField;
-    public InputField deviceIdInputField;
+    private string port = "5000";
+    private string ip = "127.0.0.1";
+    public InputField loginIdInputField;
+    public InputField loginPasswordInputField;
+    public InputField registerIdInputField;
+    public InputField registerPasswordInputField;
+    public InputField registerNameInputField;
     public GameObject uiNotice;
     private TcpClient tcpClient;
     private NetworkStream stream;
@@ -29,33 +36,77 @@ public class NetworkManager : MonoBehaviour
     void Awake() {        
         instance = this;
         wait = new WaitForSecondsRealtime(5);
-    }
-    public void OnStartButtonClicked() {
-        string ip = ipInputField.text;
-        string port = portInputField.text;
+        Handlers.instance = new Handlers();
 
-        if (IsValidPort(port)) {
+        if (IsValidPort(port))
+        {
             int portNumber = int.Parse(port);
 
-            if (deviceIdInputField.text != "") {
-                GameManager.instance.deviceId = deviceIdInputField.text;
-            } else {
-                if (GameManager.instance.deviceId == "") {
-                    GameManager.instance.deviceId = GenerateUniqueID();
-                }
-            }
-  
-            if (ConnectToServer(ip, portNumber)) {
+            if (ConnectToServer(ip, portNumber))
+            {
                 StartGame();
-            } else {
+            }
+            else
+            {
                 AudioManager.instance.PlaySfx(AudioManager.Sfx.LevelUp);
                 StartCoroutine(NoticeRoutine(1));
             }
-            
-        } else {
+
+        }
+        else
+        {
             AudioManager.instance.PlaySfx(AudioManager.Sfx.LevelUp);
             StartCoroutine(NoticeRoutine(0));
         }
+    }
+
+    //public void OnStartButtonClicked() {
+    //    string ip = ipInputField.text;
+    //    string port = portInputField.text;
+
+    //    if (IsValidPort(port)) {
+    //        int portNumber = int.Parse(port);
+
+    //        if (deviceIdInputField.text != "") {
+    //            GameManager.instance.deviceId = deviceIdInputField.text;
+    //        } else {
+    //            if (GameManager.instance.deviceId == "") {
+    //                GameManager.instance.deviceId = GenerateUniqueID();
+    //            }
+    //        }
+  
+    //        if (ConnectToServer(ip, portNumber)) {
+    //            StartGame();
+    //        } else {
+    //            AudioManager.instance.PlaySfx(AudioManager.Sfx.LevelUp);
+    //            StartCoroutine(NoticeRoutine(1));
+    //        }
+            
+    //    } else {
+    //        AudioManager.instance.PlaySfx(AudioManager.Sfx.LevelUp);
+    //        StartCoroutine(NoticeRoutine(0));
+    //    }
+    //}
+
+    //로그인 버튼
+    public void OnLoginButtonClicked()
+    {
+        string id = loginIdInputField.text;
+        string password = loginPasswordInputField.text;
+
+        if (id != "" && password != "" && name != "")
+            SendLoginPacket(id, password);
+    }
+
+    // 계정 생성 버튼
+    public void OnRegisterButtonClicked()
+    {
+        string id = registerIdInputField.text;
+        string password = registerPasswordInputField.text;
+        string name = registerNameInputField.text;
+
+        if(id != "" && password != "" && name != "")
+            SendRegisterPacket(id, password, name);
     }
 
     bool IsValidIP(string ip)
@@ -96,7 +147,7 @@ public class NetworkManager : MonoBehaviour
         // 게임 시작 코드 작성
         Debug.Log("Game Started");
         StartReceiving(); // Start receiving data
-        SendInitialPacket();
+
     }
 
     IEnumerator NoticeRoutine(int index) {
@@ -141,10 +192,12 @@ public class NetworkManager : MonoBehaviour
         Packets.Serialize(payloadWriter, payload);
         byte[] payloadData = payloadWriter.WrittenSpan.ToArray();
 
+        Debug.Log(GameManager.instance.playerId);
+
         CommonPacket commonPacket = new CommonPacket
         {
             handlerId = handlerId,
-            userId = GameManager.instance.deviceId,
+            userId = GameManager.instance.playerId,
             version = GameManager.instance.version,
             payload = payloadData,
             sequence = sequence,
@@ -169,16 +222,41 @@ public class NetworkManager : MonoBehaviour
         stream.Write(packet, 0, packet.Length);
     }
 
-    void SendInitialPacket() {
-        InitialPayload initialPayload = new InitialPayload
+    //void SendInitialPacket() {
+    //    InitialPayload initialPayload = new InitialPayload
+    //    {
+    //        playerId = GameManager.instance.playerId,
+    //        characterId = GameManager.instance.characterId,
+    //        frame = GameManager.instance.targetFrameRate,
+    //    };
+
+    //    // handlerId는 0으로 가정
+    //    SendPacket(initialPayload, (uint)Packets.HandlerIds.Init);
+    //}
+
+    void SendRegisterPacket(string id, string password, string name)
+    {
+        RegisterPayload registerPayload = new RegisterPayload
         {
-            playerId = GameManager.instance.deviceId,
-            characterId = GameManager.instance.characterId,
-            frame = GameManager.instance.targetFrameRate,
+            playerId = id,
+            password = password,
+            name = name,
         };
 
         // handlerId는 0으로 가정
-        SendPacket(initialPayload, (uint)Packets.HandlerIds.Init);
+        SendPacket(registerPayload, (uint)Handlers.HandlerIds.Register);
+    }
+
+    void SendLoginPacket(string id, string password)
+    {
+        LoginPayload loginPayload = new LoginPayload
+        {
+            playerId = id,
+            password = password,
+        };
+
+        // handlerId는 0으로 가정
+        SendPacket(loginPayload, (uint)Handlers.HandlerIds.Login);
     }
 
     async void SendPongPacket(byte[] packetData) {
@@ -214,7 +292,7 @@ public class NetworkManager : MonoBehaviour
             isLobby = true,
         };
 
-        SendPacket(locationUpdatePayload, (uint)Packets.HandlerIds.LocationUpdate);
+        SendPacket(locationUpdatePayload, (uint)Handlers.HandlerIds.LocationUpdate);
     }
 
 
@@ -277,7 +355,7 @@ public class NetworkManager : MonoBehaviour
         // 패킷 데이터 처리
         var response = Packets.Deserialize<Response>(packetData);
         // Debug.Log($"HandlerId: {response.handlerId}, responseCode: {response.responseCode}, timestamp: {response.timestamp}");
-        
+
         if (response.responseCode != 0 && !uiNotice.activeSelf) {
             AudioManager.instance.PlaySfx(AudioManager.Sfx.LevelUp);
             StartCoroutine(NoticeRoutine(2));
@@ -286,7 +364,28 @@ public class NetworkManager : MonoBehaviour
 
         if (response.data != null && response.data.Length > 0) {
             sequence = response.sequence;
-            if (response.handlerId == 0)
+            switch (response.handlerId)
+            {
+                case (uint)Handlers.HandlerIds.Login:
+                    break;
+                case (uint)Handlers.HandlerIds.Register:
+                    break;
+                case (uint)Handlers.HandlerIds.LocationUpdate:
+                    break;
+                case (uint)Handlers.HandlerIds.CreateGame:
+                    break;
+                case (uint)Handlers.HandlerIds.JoinGame:
+                    break;
+                case (uint)Handlers.HandlerIds.JoinLobby:
+                    break;
+                case (uint)Handlers.HandlerIds.CharacterChoice:
+                    Handlers.instance.GetCharacterChoice(response.data);
+                    break;
+                case (uint)Handlers.HandlerIds.CharacterSelect:
+                    Handlers.instance.GetCharacterSelect(response.data);
+                    break;
+            }
+            if (response.handlerId == (uint)Handlers.HandlerIds.Login)
             {
                 string jsonString = Encoding.UTF8.GetString(response.data);
 
@@ -302,7 +401,7 @@ public class NetworkManager : MonoBehaviour
                 string yString = jsonString.Substring(indexYStart, indexYEnd - indexYStart);
                 float y = float.Parse(yString);
 
-                GameManager.instance.GameStart(x, y);
+                GameManager.instance.GameStart();
             }
             ProcessResponseData(response.data);
         }

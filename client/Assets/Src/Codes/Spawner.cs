@@ -18,7 +18,7 @@ public class Spawner : MonoBehaviour
         HashSet<string> newUsers = new HashSet<string>();
 
         foreach(LocationUpdate.UserLocation user in data.users) {
-            if(user.id == GameManager.instance.player.deviceId)
+            if(user.id == GameManager.instance.player.playerId)
             {
                 GameManager.instance.player.movePlayer(user.x, user.y);
             }

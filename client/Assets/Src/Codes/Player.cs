@@ -10,7 +10,7 @@ public class Player : MonoBehaviour
 {
     public Vector2 inputVec;
     public float speed;
-    public string deviceId;
+    public string playerId;
     public RuntimeAnimatorController[] animCon;
 
     Rigidbody2D rigid;
@@ -28,10 +28,10 @@ public class Player : MonoBehaviour
 
     void OnEnable() {
 
-        if (deviceId.Length > 5) {
-            myText.text = deviceId[..5];
+        if (playerId.Length > 5) {
+            myText.text = playerId[..5];
         } else {
-            myText.text = deviceId;
+            myText.text = playerId;
         }
         myText.GetComponent<MeshRenderer>().sortingOrder = 6;
         
