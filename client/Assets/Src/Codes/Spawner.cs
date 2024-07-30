@@ -18,13 +18,13 @@ public class Spawner : MonoBehaviour
         HashSet<string> newUsers = new HashSet<string>();
 
         foreach(LocationUpdate.UserLocation user in data.users) {
-            if(user.id == GameManager.instance.player.playerId)
+            if(user.playerId == GameManager.instance.player.playerId)
             {
                 GameManager.instance.player.movePlayer(user.x, user.y);
             }
             else
             {
-                newUsers.Add(user.id);
+                newUsers.Add(user.playerId);
                 GameObject player = GameManager.instance.pool.Get(user);
                 PlayerPrefab playerScript = player.GetComponent<PlayerPrefab>();
                 playerScript.UpdatePosition(user.x, user.y);

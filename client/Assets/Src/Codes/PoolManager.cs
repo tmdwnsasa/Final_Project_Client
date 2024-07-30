@@ -19,7 +19,7 @@ public class PoolManager : MonoBehaviour
 
     public GameObject Get(LocationUpdate.UserLocation data) {
         // 유저가 이미 존재하면 해당 유저 반환
-        if (userDictionary.TryGetValue(data.id, out GameObject existingUser)) {
+        if (userDictionary.TryGetValue(data.playerId, out GameObject existingUser)) {
             return existingUser;
         }
         
@@ -30,9 +30,9 @@ public class PoolManager : MonoBehaviour
             if (!item.activeSelf) {
                 // 발견하면 select에 할당
                 select = item;
-                select.GetComponent<PlayerPrefab>().Init(data.playerId, data.id);
+                select.GetComponent<PlayerPrefab>().Init(data.characterId, data.playerId);
                 select.SetActive(true);
-                userDictionary[data.id] = select;
+                userDictionary[data.playerId] = select;
                 break;
             }
         }
@@ -41,8 +41,8 @@ public class PoolManager : MonoBehaviour
             // 새롭게 생성하고 select 변수에 할당
             select = Instantiate(prefabs[0], transform);
             pool.Add(select);
-            select.GetComponent<PlayerPrefab>().Init(data.playerId, data.id);
-            userDictionary[data.id] = select;
+            select.GetComponent<PlayerPrefab>().Init(data.characterId, data.playerId);
+            userDictionary[data.playerId] = select;
         }
 
         return select;

@@ -23,9 +23,11 @@ public class GameManager : MonoBehaviour
     [Header("# Game Object")]
     public PoolManager pool;
     public Player player;
+    public Chatting chatting;
     public GameObject hud;
     public GameObject LoginUI;
     public GameObject RegisterUI;
+    public GameObject ChattingUI;
 
     void Awake() {
         instance = this;
@@ -40,6 +42,7 @@ public class GameManager : MonoBehaviour
         hud.SetActive(true);
         LoginUI.SetActive(false);
         RegisterUI.SetActive(false);
+        ChattingUI.SetActive(true);
         isLive = true;
 
         AudioManager.instance.PlayBgm(true);

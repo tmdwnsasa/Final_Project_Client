@@ -60,33 +60,6 @@ public class NetworkManager : MonoBehaviour
         }
     }
 
-    //public void OnStartButtonClicked() {
-    //    string ip = ipInputField.text;
-    //    string port = portInputField.text;
-
-    //    if (IsValidPort(port)) {
-    //        int portNumber = int.Parse(port);
-
-    //        if (deviceIdInputField.text != "") {
-    //            GameManager.instance.deviceId = deviceIdInputField.text;
-    //        } else {
-    //            if (GameManager.instance.deviceId == "") {
-    //                GameManager.instance.deviceId = GenerateUniqueID();
-    //            }
-    //        }
-  
-    //        if (ConnectToServer(ip, portNumber)) {
-    //            StartGame();
-    //        } else {
-    //            AudioManager.instance.PlaySfx(AudioManager.Sfx.LevelUp);
-    //            StartCoroutine(NoticeRoutine(1));
-    //        }
-            
-    //    } else {
-    //        AudioManager.instance.PlaySfx(AudioManager.Sfx.LevelUp);
-    //        StartCoroutine(NoticeRoutine(0));
-    //    }
-    //}
 
     //로그인 버튼
     public void OnLoginButtonClicked()
@@ -147,7 +120,6 @@ public class NetworkManager : MonoBehaviour
         // 게임 시작 코드 작성
         Debug.Log("Game Started");
         StartReceiving(); // Start receiving data
-
     }
 
     IEnumerator NoticeRoutine(int index) {
@@ -192,8 +164,6 @@ public class NetworkManager : MonoBehaviour
         Packets.Serialize(payloadWriter, payload);
         byte[] payloadData = payloadWriter.WrittenSpan.ToArray();
 
-        Debug.Log(GameManager.instance.playerId);
-
         CommonPacket commonPacket = new CommonPacket
         {
             handlerId = handlerId,
@@ -209,7 +179,7 @@ public class NetworkManager : MonoBehaviour
         byte[] data = commonPacketWriter.WrittenSpan.ToArray();
 
         // 헤더 생성
-        byte[] header = CreatePacketHeader(data.Length, Packets.PacketType.Normal);
+        byte[] header = CreatePacketHeader(data.Length, Packets.PacketType.NORMAL);
 
         // 패킷 생성
         byte[] packet = new byte[header.Length + data.Length];
@@ -244,7 +214,7 @@ public class NetworkManager : MonoBehaviour
         };
 
         // handlerId는 0으로 가정
-        SendPacket(registerPayload, (uint)Handlers.HandlerIds.Register);
+        SendPacket(registerPayload, (uint)Handlers.HandlerIds.REGISTER);
     }
 
     void SendLoginPacket(string id, string password)
@@ -256,7 +226,7 @@ public class NetworkManager : MonoBehaviour
         };
 
         // handlerId는 0으로 가정
-        SendPacket(loginPayload, (uint)Handlers.HandlerIds.Login);
+        SendPacket(loginPayload, (uint)Handlers.HandlerIds.LOGIN);
     }
 
     async void SendPongPacket(byte[] packetData) {
@@ -271,7 +241,7 @@ public class NetworkManager : MonoBehaviour
         byte[] data = pingPacketWriter.WrittenSpan.ToArray();
 
         // 헤더 생성
-        byte[] header = CreatePacketHeader(data.Length, Packets.PacketType.Ping);
+        byte[] header = CreatePacketHeader(data.Length, Packets.PacketType.PING);
 
         // 패킷 생성
         byte[] packet = new byte[header.Length + data.Length];
@@ -292,7 +262,17 @@ public class NetworkManager : MonoBehaviour
             isLobby = true,
         };
 
-        SendPacket(locationUpdatePayload, (uint)Handlers.HandlerIds.LocationUpdate);
+        SendPacket(locationUpdatePayload, (uint)Handlers.HandlerIds.UPDATE_LOCACTION);
+    }
+
+    public void SendChattingPacket(string message, uint type) {
+        ChattingPayload ChattingPayload = new ChattingPayload
+        {
+            message = message,
+            type = type,
+        };
+
+        SendPacket(ChattingPayload, (uint)Handlers.HandlerIds.CHATTING);
     }
 
 
@@ -338,14 +318,17 @@ public class NetworkManager : MonoBehaviour
 
             switch (packetType)
             {
-                case Packets.PacketType.Ping:
+                case Packets.PacketType.PING:
                     SendPongPacket(packetData);
                     break;
-                case Packets.PacketType.Normal:
+                case Packets.PacketType.NORMAL:
                     HandleNormalPacket(packetData);
                     break;
-                case Packets.PacketType.Location:
+                case Packets.PacketType.LOCATION:
                     HandleLocationPacket(packetData);
+                    break;
+                case Packets.PacketType.CHATTING:
+                    HandleChattingPacket(packetData);
                     break;
             }
         }
@@ -366,26 +349,26 @@ public class NetworkManager : MonoBehaviour
             sequence = response.sequence;
             switch (response.handlerId)
             {
-                case (uint)Handlers.HandlerIds.Login:
+                case (uint)Handlers.HandlerIds.LOGIN:
                     break;
-                case (uint)Handlers.HandlerIds.Register:
+                case (uint)Handlers.HandlerIds.REGISTER:
                     break;
-                case (uint)Handlers.HandlerIds.LocationUpdate:
+                case (uint)Handlers.HandlerIds.UPDATE_LOCACTION:
                     break;
-                case (uint)Handlers.HandlerIds.CreateGame:
+                case (uint)Handlers.HandlerIds.CREATE_GAME:
                     break;
-                case (uint)Handlers.HandlerIds.JoinGame:
+                case (uint)Handlers.HandlerIds.JOIN_GAME:
                     break;
-                case (uint)Handlers.HandlerIds.JoinLobby:
+                case (uint)Handlers.HandlerIds.JOIN_LOBBY:
                     break;
-                case (uint)Handlers.HandlerIds.CharacterChoice:
+                case (uint)Handlers.HandlerIds.CHARACTER_CHOICE:
                     Handlers.instance.GetCharacterChoice(response.data);
                     break;
-                case (uint)Handlers.HandlerIds.CharacterSelect:
+                case (uint)Handlers.HandlerIds.CHARACTER_SELECT:
                     Handlers.instance.GetCharacterSelect(response.data);
                     break;
             }
-            if (response.handlerId == (uint)Handlers.HandlerIds.Login)
+            if (response.handlerId == (uint)Handlers.HandlerIds.LOGIN)
             {
                 string jsonString = Encoding.UTF8.GetString(response.data);
 
@@ -433,5 +416,29 @@ public class NetworkManager : MonoBehaviour
         } catch (Exception e) {
             Debug.LogError($"Error HandleLocationPacket: {e.Message}");
         }
+    }
+
+    void HandleChattingPacket(byte[] packetData) {
+        var response = Packets.Deserialize<ChattingUpdate>(packetData);
+
+        GameManager.instance.chatting.updateChatting($"{response.playerId} : {response.message} / {response.type}");
+        Debug.Log($"{response.playerId} : {response.message} / {response.type}");
+    }
+
+    void OnApplicationQuit()
+    {
+        if (stream != null)
+        {
+            stream.Close();
+            stream = null;
+        }
+
+        if (tcpClient != null)
+        {
+            tcpClient.Close();
+            tcpClient = null;
+        }
+
+        Debug.Log("Disconnected server");
     }
 }

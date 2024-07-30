@@ -7,14 +7,15 @@ public class Handlers : MonoBehaviour
     public static Handlers instance;
     public enum HandlerIds
     {
-        Login = 0,
-        Register = 1,
-        LocationUpdate = 2,
-        CreateGame = 4,
-        JoinGame = 5,
-        JoinLobby = 6,
-        CharacterChoice = 7,
-        CharacterSelect = 8,
+        LOGIN = 0,
+        REGISTER = 1,
+        UPDATE_LOCACTION = 2,
+        CREATE_GAME = 4,
+        JOIN_GAME = 5,
+        JOIN_LOBBY = 6,
+        CHARACTER_CHOICE = 7,
+        CHARACTER_SELECT = 8,
+        CHATTING = 10,
     }
 
     [Serializable]
