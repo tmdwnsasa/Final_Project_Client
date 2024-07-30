@@ -15,14 +15,18 @@ public class GameManager : MonoBehaviour
 
     [Header("# Player Info")]
     public uint characterId;
-    public string deviceId;
+    public string sessionId;
+    public string playerId;
+    public string password;
+    public string name;
 
     [Header("# Game Object")]
     public PoolManager pool;
     public Player player;
     public Chatting chatting;
     public GameObject hud;
-    public GameObject GameStartUI;
+    public GameObject LoginUI;
+    public GameObject RegisterUI;
     public GameObject ChattingUI;
 
     void Awake() {
@@ -30,17 +34,34 @@ public class GameManager : MonoBehaviour
         Application.targetFrameRate = targetFrameRate;
     }
 
-    public void GameStart(float x, float y) {
+    public void GameStart() {
         characterId = (uint)Random.Range(0, 4);
-        player.gameObject.transform.position = new Vector2(x, y);
-        player.deviceId = deviceId;
+        player.gameObject.transform.position = new Vector2(0, 0);
+        player.playerId = playerId;
         player.gameObject.SetActive(true);
         hud.SetActive(true);
-        GameStartUI.SetActive(false);
+        LoginUI.SetActive(false);
+        RegisterUI.SetActive(false);
         ChattingUI.SetActive(true);
         isLive = true;
 
         AudioManager.instance.PlayBgm(true);
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
+    }
+
+    public void GoRegister()
+    {
+        LoginUI.SetActive(false);
+        RegisterUI.SetActive(true);
+
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
+    }
+
+    public void GoLogin()
+    {
+        RegisterUI.SetActive(false);
+        LoginUI.SetActive(true);
+
         AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
     }
 

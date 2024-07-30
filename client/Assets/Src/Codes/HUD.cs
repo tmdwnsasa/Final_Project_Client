@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class HUD : MonoBehaviour
 {
-    public enum InfoType { DeviceId, Time }
+    public enum InfoType { PlayerId, Time }
     public InfoType type;
 
     Text myText;
@@ -17,8 +17,8 @@ public class HUD : MonoBehaviour
 
     void LateUpdate() {
         switch(type) {
-            case InfoType.DeviceId:
-                myText.text = string.Format("{0}", GameManager.instance.deviceId);
+            case InfoType.PlayerId:
+                myText.text = string.Format("{0}", GameManager.instance.playerId);
                 break;
             case InfoType.Time:
                 int min = Mathf.FloorToInt(GameManager.instance.gameTime / 60);
