@@ -371,6 +371,9 @@ public class NetworkManager : MonoBehaviour
                 case Packets.PacketType.CHATTING:
                     HandleChattingPacket(packetData);
                     break;
+                case Packets.PacketType.GAME_END:
+                    HandleGameEndPacket(packetData);
+                    break;
             }
         }
     }
@@ -465,5 +468,11 @@ public class NetworkManager : MonoBehaviour
         }
 
         Debug.Log("Disconnected server");
+    }
+    void HandleGameEndPacket(byte[] packetData)
+    {
+        var response = Packets.Deserialize<GameEndPayload>(packetData);
+        GameManager.instance.GameEnd();
+        Debug.Log($"{response.winnerTeam}, {response.loserTeam}, {response.users}");
     }
 }

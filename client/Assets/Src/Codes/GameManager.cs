@@ -6,6 +6,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+
+
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
@@ -38,11 +40,15 @@ public class GameManager : MonoBehaviour
     public GameObject ChattingUI;
     public GameObject CharacterChoiceUI;
     public GameObject CharacterSelectUI;
+    public GameObject GameEndUI;
+
+    
 
     void Awake() {
         instance = this;
         Application.targetFrameRate = targetFrameRate;
         SetBtn();
+        GameEndUI = GameObject.Find("Canvas").transform.GetChild(7).gameObject;
     }
 
     public void GameStart() {
@@ -168,5 +174,10 @@ public class GameManager : MonoBehaviour
             return;
         }
         gameTime += Time.deltaTime;
+    }
+
+    public void GameEnd()
+    {
+        GameEndUI.SetActive(true);
     }
 }

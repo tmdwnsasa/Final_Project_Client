@@ -210,3 +210,30 @@ public class CharacterSelect
         public long characterId { get; set; }
     }
 }
+
+[ProtoContract]
+public class GameEndPayload
+{
+    [ProtoMember(1)]
+    public string winnerTeam { get; set; }
+
+    [ProtoMember(2)]
+    public string loserTeam { get; set; }
+
+    [ProtoMember(3)]
+    public List<UserState> users { get; set; }
+
+    [ProtoContract]
+    public class UserState
+    {
+        [ProtoMember(1)]
+        public string playerId { get; set; }
+
+        [ProtoMember(2)]
+        public uint kill { get; set; }
+
+        [ProtoMember(3)]
+        public uint death { get; set; }
+
+    }
+}
