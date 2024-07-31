@@ -54,6 +54,23 @@ public class LoginPayload
 
     [ProtoMember(2, IsRequired = true)]
     public string password { get; set; }
+
+    [ProtoMember(3, IsRequired = true)]
+    public float frame { get; set; }
+}
+
+[ProtoContract]
+public class JoinLobbyPayload
+{
+    [ProtoMember(1, IsRequired = true)]
+    public uint characterId { get; set; }
+}
+
+[ProtoContract]
+public class CharacterEarnPayload
+{
+    [ProtoMember(1, IsRequired = true)]
+    public uint characterId { get; set; }
 }
 
 [ProtoContract]
@@ -162,6 +179,9 @@ public class CharacterChoice
     public string playerId { get; set; }
 
     [ProtoMember(2)]
+    public string name { get; set; }
+
+    [ProtoMember(3)]
     public string sessionId { get; set; }
 }
 
@@ -172,9 +192,12 @@ public class CharacterSelect
     public string playerId { get; set; }
 
     [ProtoMember(2)]
-    public string sessionId { get; set; }
+    public string name { get; set; }
 
     [ProtoMember(3)]
+    public string sessionId { get; set; }
+
+    [ProtoMember(4)]
     public List<Possession> possession { get; set; }
 
     [ProtoContract]

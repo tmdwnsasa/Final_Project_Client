@@ -82,6 +82,23 @@ public class NetworkManager : MonoBehaviour
             SendRegisterPacket(id, password, name);
     }
 
+    // 케릭터 선택 버튼
+    public void OnCharacterChoiceButtonClicked()
+    {
+        uint characterId = GameManager.instance.characterId;
+
+        SendCharacterEarnPacket(characterId);
+        SendJoinLobbyPacket(characterId);
+    }
+
+    // 케릭터 고르기 버튼
+    public void OnCharacterSelectButtonClicked()
+    {
+        uint characterId = GameManager.instance.characterId;
+
+        SendJoinLobbyPacket(characterId);
+    }
+
     bool IsValidIP(string ip)
     {
         // 간단한 IP 유효성 검사
@@ -217,17 +234,41 @@ public class NetworkManager : MonoBehaviour
         SendPacket(registerPayload, (uint)Handlers.HandlerIds.REGISTER);
     }
 
+    void SendCharacterEarnPacket(uint characterId)
+    {
+        CharacterEarnPayload characterEarnPayload = new CharacterEarnPayload
+        {
+            characterId = characterId,
+        };
+
+        // handlerId는 0으로 가정
+        SendPacket(characterEarnPayload, (uint)Handlers.HandlerIds.GIVE_CHARACTER);
+    }   
+
     void SendLoginPacket(string id, string password)
     {
         LoginPayload loginPayload = new LoginPayload
         {
             playerId = id,
             password = password,
+            frame = GameManager.instance.targetFrameRate,
         };
 
         // handlerId는 0으로 가정
         SendPacket(loginPayload, (uint)Handlers.HandlerIds.LOGIN);
     }
+
+    void SendJoinLobbyPacket(uint characterId)
+    {
+        JoinLobbyPayload joinLobbyPayload = new JoinLobbyPayload
+        {
+            characterId = characterId,
+        };
+
+        // handlerId는 0으로 가정
+        SendPacket(joinLobbyPayload, (uint)Handlers.HandlerIds.JOIN_LOBBY);
+    }
+
 
     async void SendPongPacket(byte[] packetData) {
         Ping response = Packets.Deserialize<Ping>(packetData);
@@ -352,6 +393,7 @@ public class NetworkManager : MonoBehaviour
                 case (uint)Handlers.HandlerIds.LOGIN:
                     break;
                 case (uint)Handlers.HandlerIds.REGISTER:
+                    GameManager.instance.GoLogin();
                     break;
                 case (uint)Handlers.HandlerIds.UPDATE_LOCACTION:
                     break;
@@ -360,31 +402,14 @@ public class NetworkManager : MonoBehaviour
                 case (uint)Handlers.HandlerIds.JOIN_GAME:
                     break;
                 case (uint)Handlers.HandlerIds.JOIN_LOBBY:
+                    GameManager.instance.GameStart();
                     break;
-                case (uint)Handlers.HandlerIds.CHARACTER_CHOICE:
+                case (uint)Handlers.HandlerIds.CHOICE_CHARACTER:
                     Handlers.instance.GetCharacterChoice(response.data);
                     break;
-                case (uint)Handlers.HandlerIds.CHARACTER_SELECT:
+                case (uint)Handlers.HandlerIds.SELECT_CHARACTER:
                     Handlers.instance.GetCharacterSelect(response.data);
                     break;
-            }
-            if (response.handlerId == (uint)Handlers.HandlerIds.LOGIN)
-            {
-                string jsonString = Encoding.UTF8.GetString(response.data);
-
-                // "x" 값 추출
-                int indexXStart = jsonString.IndexOf("\"x\":") + 4; // "x": 다음 인덱스에서 시작
-                int indexXEnd = jsonString.IndexOf(",", indexXStart); // 쉼표(,)가 나오는 곳까지
-                string xString = jsonString.Substring(indexXStart, indexXEnd - indexXStart);
-                float x = float.Parse(xString);
-
-                // "y" 값 추출
-                int indexYStart = jsonString.IndexOf("\"y\":") + 4; // "y": 다음 인덱스에서 시작
-                int indexYEnd = jsonString.IndexOf("}", indexYStart); // 닫는 중괄호(})가 나오는 곳까지
-                string yString = jsonString.Substring(indexYStart, indexYEnd - indexYStart);
-                float y = float.Parse(yString);
-
-                GameManager.instance.GameStart();
             }
             ProcessResponseData(response.data);
         }
