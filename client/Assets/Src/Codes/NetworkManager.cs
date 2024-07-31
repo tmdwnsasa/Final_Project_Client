@@ -209,18 +209,6 @@ public class NetworkManager : MonoBehaviour
         stream.Write(packet, 0, packet.Length);
     }
 
-    //void SendInitialPacket() {
-    //    InitialPayload initialPayload = new InitialPayload
-    //    {
-    //        playerId = GameManager.instance.playerId,
-    //        characterId = GameManager.instance.characterId,
-    //        frame = GameManager.instance.targetFrameRate,
-    //    };
-
-    //    // handlerId는 0으로 가정
-    //    SendPacket(initialPayload, (uint)Packets.HandlerIds.Init);
-    //}
-
     void SendRegisterPacket(string id, string password, string name)
     {
         RegisterPayload registerPayload = new RegisterPayload
@@ -251,7 +239,6 @@ public class NetworkManager : MonoBehaviour
         {
             playerId = id,
             password = password,
-            frame = GameManager.instance.targetFrameRate,
         };
 
         // handlerId는 0으로 가정
