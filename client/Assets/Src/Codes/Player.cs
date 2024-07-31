@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -11,6 +12,7 @@ public class Player : MonoBehaviour
     public Vector2 inputVec;
     public float speed;
     public string playerId;
+    public string name;
     public RuntimeAnimatorController[] animCon;
 
     Rigidbody2D rigid;
@@ -28,13 +30,12 @@ public class Player : MonoBehaviour
 
     void OnEnable() {
 
-        if (playerId.Length > 5) {
-            myText.text = playerId[..5];
+        if (name.Length > 5) {
+            myText.text = name[..5];
         } else {
-            myText.text = playerId;
+            myText.text = name;
         }
         myText.GetComponent<MeshRenderer>().sortingOrder = 6;
-        
         anim.runtimeAnimatorController = animCon[GameManager.instance.characterId];
     }
 
