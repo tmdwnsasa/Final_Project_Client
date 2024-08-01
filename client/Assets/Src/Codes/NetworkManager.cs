@@ -10,6 +10,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using static Packets;
 using static Handlers;
+using static UnityEngine.UIElements.UxmlAttributeDescription;
+using UnityEngine.TextCore.Text;
 
 public class NetworkManager : MonoBehaviour
 {
@@ -97,6 +99,17 @@ public class NetworkManager : MonoBehaviour
         uint characterId = GameManager.instance.characterId;
 
         SendJoinLobbyPacket(characterId);
+    }
+
+    public void OnGameEndButtonClicked()
+    {
+        SendGameEndPacket();
+    }
+
+    public void OnReturnLobbyButtonClicked()
+    {
+        SendReturnLobbyPacket();
+        GameManager.instance.ReturnLobby();
     }
 
     bool IsValidIP(string ip)
@@ -303,6 +316,25 @@ public class NetworkManager : MonoBehaviour
         SendPacket(ChattingPayload, (uint)Handlers.HandlerIds.CHATTING);
     }
 
+    public void SendGameEndPacket()
+    {
+        GameEndRequestPayload gameEndRequestPayload = new GameEndRequestPayload
+        {
+            message = "aaa"
+        };
+        SendPacket(gameEndRequestPayload, (uint)Handlers.HandlerIds.GAME_END);
+    }
+
+    public void SendReturnLobbyPacket()
+    {
+        ReturnLobbyRequestPayload ReturnLobbyRequestPayload = new ReturnLobbyRequestPayload
+        {
+            message = "123"
+        };
+
+        SendPacket(ReturnLobbyRequestPayload, (uint)Handlers.HandlerIds.RETURN_LOBBY);
+    }
+
 
     void StartReceiving() {
         _ = ReceivePacketsAsync();
@@ -357,6 +389,9 @@ public class NetworkManager : MonoBehaviour
                     break;
                 case Packets.PacketType.CHATTING:
                     HandleChattingPacket(packetData);
+                    break;
+                case Packets.PacketType.GAME_END:
+                    HandleGameEndPacket(packetData);
                     break;
             }
         }
@@ -452,5 +487,11 @@ public class NetworkManager : MonoBehaviour
         }
 
         Debug.Log("Disconnected server");
+    }
+
+    void HandleGameEndPacket(byte[] packetData)
+    {
+        var response = Packets.Deserialize<GameEndPayload>(packetData);
+        GameManager.instance.GameEnd(response.result,response.users);
     }
 }
