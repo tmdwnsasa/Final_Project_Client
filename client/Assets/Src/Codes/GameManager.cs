@@ -50,7 +50,6 @@ public class GameManager : MonoBehaviour
         instance = this;
         Application.targetFrameRate = targetFrameRate;
         SetBtn();
-        GameEndUI = GameObject.Find("Canvas").transform.GetChild(7).gameObject;
     }
 
     public void GameStart() {
