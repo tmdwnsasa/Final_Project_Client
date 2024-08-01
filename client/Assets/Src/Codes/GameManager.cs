@@ -4,7 +4,10 @@ using System.Collections.Generic;
 using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.SocialPlatforms;
 using UnityEngine.UI;
+
+
 
 public class GameManager : MonoBehaviour
 {
@@ -38,11 +41,16 @@ public class GameManager : MonoBehaviour
     public GameObject ChattingUI;
     public GameObject CharacterChoiceUI;
     public GameObject CharacterSelectUI;
+    public GameObject GameEndUI;
+    public GameObject GameEndBtn;
+
+
 
     void Awake() {
         instance = this;
         Application.targetFrameRate = targetFrameRate;
         SetBtn();
+        GameEndUI = GameObject.Find("Canvas").transform.GetChild(7).gameObject;
     }
 
     public void GameStart() {
@@ -56,6 +64,7 @@ public class GameManager : MonoBehaviour
         CharacterChoiceUI.SetActive(false);
         CharacterSelectUI.SetActive(false);
         ChattingUI.SetActive(true);
+        GameEndBtn.SetActive(true);
         isLive = true;
 
         AudioManager.instance.PlayBgm(true);
@@ -168,5 +177,55 @@ public class GameManager : MonoBehaviour
             return;
         }
         gameTime += Time.deltaTime;
+    }
+    private Image victory;
+    private Image defeat;
+    public void GameEnd(string result, List<GameEndPayload.UserState> users)
+    {
+        victory = GameEndUI.transform.Find("victory").GetComponent<Image>();
+        defeat = GameEndUI.transform.Find("defeat").GetComponent<Image>();
+        Text user1Name = GameEndUI.transform.Find("Panel/user1_name").GetComponent<Text>();
+        Text user1Kill = GameEndUI.transform.Find("Panel/user1_kill").GetComponent<Text>();
+        Text user1Death = GameEndUI.transform.Find("Panel/user1_death").GetComponent<Text>();
+        Text user2Name = GameEndUI.transform.Find("Panel/user2_name").GetComponent<Text>();
+        Text user2kill = GameEndUI.transform.Find("Panel/user2_kill").GetComponent<Text>();
+        Text user2Death = GameEndUI.transform.Find("Panel/user2_death").GetComponent<Text>();
+        Text user3Name = GameEndUI.transform.Find("Panel/user3_name").GetComponent<Text>();
+        Text user3Kill = GameEndUI.transform.Find("Panel/user3_kill").GetComponent<Text>();
+        Text user3Death = GameEndUI.transform.Find("Panel/user3_death").GetComponent<Text>();
+        Text user4Name = GameEndUI.transform.Find("Panel/user4_name").GetComponent<Text>();
+        Text user4Kill = GameEndUI.transform.Find("Panel/user4_kill").GetComponent<Text>();
+        Text user4Death = GameEndUI.transform.Find("Panel/user4_death").GetComponent<Text>();
+        GameEndBtn.SetActive(false);
+        GameEndUI.SetActive(true);
+        if (result == "Win")
+        {
+                victory.gameObject.SetActive(true);
+                defeat.gameObject.SetActive(false);
+        }
+        else if (result == "Lose")
+        {
+                victory.gameObject.SetActive(false);
+                defeat.gameObject.SetActive(true);
+        }
+        user1Name.text = users[0].playerId;
+        user1Kill.text = users[0].kill.ToString();
+        user1Death.text = users[0].death.ToString();
+        user2Name.text = users[1].playerId;
+        user2kill.text = users[1].kill.ToString(); ;
+        user2Death.text = users[1].death.ToString(); ;
+        user3Name.text = users[2].playerId;
+        user3Kill.text = users[2].kill.ToString(); ;
+        user3Death.text = users[2].death.ToString(); ;
+        user4Name.text = users[3].playerId;
+        user4Kill.text = users[3].kill.ToString(); ;
+        user4Death.text = users[3].death.ToString(); ;
+
+
+    }
+
+    public void ReturnLobby()
+    {
+        GameEndUI.SetActive(false);
     }
 }
