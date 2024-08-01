@@ -43,6 +43,8 @@ public class GameManager : MonoBehaviour
     public GameObject CharacterSelectUI;
     public GameObject GameEndUI;
     public GameObject GameEndBtn;
+    public GameObject MatchStartUI;
+
 
 
 
@@ -64,6 +66,8 @@ public class GameManager : MonoBehaviour
         CharacterSelectUI.SetActive(false);
         ChattingUI.SetActive(true);
         GameEndBtn.SetActive(true);
+        MatchStartUI.SetActive(true);
+
         isLive = true;
 
         AudioManager.instance.PlayBgm(true);
