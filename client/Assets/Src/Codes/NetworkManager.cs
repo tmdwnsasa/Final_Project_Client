@@ -101,6 +101,14 @@ public class NetworkManager : MonoBehaviour
         SendJoinLobbyPacket(characterId);
     }
 
+    // 매칭/대결 버튼
+    public void OnMatchGameButtonClicked()
+    {
+        string sessionId = GameManager.instance.sessionId;
+
+        SendMatchPacket(sessionId);
+    }
+
     public void OnGameEndButtonClicked()
     {
         SendGameEndPacket();
@@ -314,6 +322,15 @@ public class NetworkManager : MonoBehaviour
         };
 
         SendPacket(ChattingPayload, (uint)Handlers.HandlerIds.CHATTING);
+    }
+
+        public void SendMatchPacket(string sessionId){
+        MatchingPayload MatchingPayload = new MatchingPayload
+        {
+            sessionId = sessionId
+        };
+        Debug.Log($"{sessionId}");
+        SendPacket(MatchingPayload,(uint)Handlers.HandlerIds.MATCHMAKING);
     }
 
     public void SendGameEndPacket()

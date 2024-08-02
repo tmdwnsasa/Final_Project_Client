@@ -248,3 +248,11 @@ public class ReturnLobbyRequestPayload
     [ProtoMember(1, IsRequired = true)]
     public string message { get; set; }
 }
+
+[ProtoContract]
+public class MatchingPayload
+{
+    [ProtoMember(1,IsRequired = true)]
+    public string sessionId { get; set; }
+
+}
