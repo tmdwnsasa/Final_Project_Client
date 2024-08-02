@@ -210,3 +210,49 @@ public class CharacterSelect
         public long characterId { get; set; }
     }
 }
+
+[ProtoContract]
+public class GameEndPayload
+{
+    [ProtoMember(1)]
+    public string result { get; set; }
+
+    [ProtoMember(2)]
+    public List<UserState> users { get; set; }
+
+    [ProtoContract]
+    public class UserState
+    {
+        [ProtoMember(1)]
+        public string playerId { get; set; }
+
+        [ProtoMember(2)]
+        public uint kill { get; set; }
+
+        [ProtoMember(3)]
+        public uint death { get; set; }
+
+    }
+}
+
+[ProtoContract]
+public class GameEndRequestPayload
+{
+    [ProtoMember(1, IsRequired = true)]
+    public string message { get; set; }
+}
+
+[ProtoContract]
+public class ReturnLobbyRequestPayload
+{
+    [ProtoMember(1, IsRequired = true)]
+    public string message { get; set; }
+}
+
+[ProtoContract]
+public class MatchingPayload
+{
+    [ProtoMember(1,IsRequired = true)]
+    public string sessionId { get; set; }
+
+}

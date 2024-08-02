@@ -18,6 +18,9 @@ public class Handlers : MonoBehaviour
         SELECT_CHARACTER = 8,
         GIVE_CHARACTER = 9,
         CHATTING = 10,
+        MATCHMAKING = 11,
+        GAME_END = 15,
+        RETURN_LOBBY = 16,
     }
 
     [Serializable]
