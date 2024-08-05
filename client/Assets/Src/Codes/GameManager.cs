@@ -153,14 +153,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
-
-    // public void BattleGameStart(List<BattleStart.UserTeam> users, string messagee)
-    // {
-    //     Debug.Log("Battle is starting...");
-
-
-
-    // }
+     public void BattleGameStart(){
+        MatchStartUI.SetActive(false);
+    }
 
     public void GameOver() {
         StartCoroutine(GameOverRoutine());
