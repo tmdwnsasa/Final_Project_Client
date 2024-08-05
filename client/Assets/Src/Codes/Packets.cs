@@ -13,7 +13,8 @@ public class Packets : MonoBehaviour
         GAME_START = 2,
         LOCATION = 3,
         GAME_END = 4,
-        CHATTING = 5
+        CHATTING = 5,
+        SKILL = 50
     }
 
     public static void Serialize<T>(IBufferWriter<byte> writer, T data)
@@ -101,6 +102,21 @@ public class ChattingPayload {
 }
 
 [ProtoContract]
+public class SkillPayload{
+    [ProtoMember(1, IsRequired = true)]
+    public float x { get; set; }
+
+    [ProtoMember(2, IsRequired = true)]
+    public float y { get; set; }
+
+    [ProtoMember(3, IsRequired = true)]
+    public float rangeX { get; set; }
+
+    [ProtoMember(4, IsRequired = true)]
+    public float rangeY { get; set; }
+}
+
+[ProtoContract]
 public class LocationUpdate
 {
     [ProtoMember(1)]
@@ -135,6 +151,26 @@ public class ChattingUpdate
     [ProtoMember(3)]
     public uint type { get; set; }
 }
+
+[ProtoContract]
+public class SkillUpdate
+{
+    [ProtoMember(1)]
+    public string playerId { get; set; }
+
+    [ProtoMember(2)]
+    public float x { get; set; }
+
+    [ProtoMember(3)]
+    public float y { get; set; }
+
+    [ProtoMember(4)]
+    public float rangeX { get; set; }
+
+    [ProtoMember(5)]
+    public float rangeY { get; set; }
+}
+
 
 [ProtoContract]
 public class Response {

@@ -16,6 +16,7 @@ public class Handlers : MonoBehaviour
         CHARACTER_CHOICE = 7,
         CHARACTER_SELECT = 8,
         CHATTING = 10,
+        SKILL = 50
     }
 
     [Serializable]

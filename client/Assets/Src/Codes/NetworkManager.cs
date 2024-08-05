@@ -265,6 +265,18 @@ public class NetworkManager : MonoBehaviour
         SendPacket(locationUpdatePayload, (uint)Handlers.HandlerIds.UPDATE_LOCACTION);
     }
 
+    public void SendSkillUpdatePacket(float x, float y, float rangeX, float rangeY) {
+        SkillPayload SkillPayload = new SkillPayload
+        {
+            x = x,
+            y = y,
+            rangeX = rangeX,
+            rangeY = rangeY,
+        };
+
+        SendPacket(SkillPayload, (uint)Handlers.HandlerIds.SKILL);
+    }
+
     public void SendChattingPacket(string message, uint type) {
         ChattingPayload ChattingPayload = new ChattingPayload
         {
@@ -330,6 +342,9 @@ public class NetworkManager : MonoBehaviour
                 case Packets.PacketType.CHATTING:
                     HandleChattingPacket(packetData);
                     break;
+                case Packets.PacketType.SKILL:
+                    HandleSkillPacket(packetData);
+                    break;
             }
         }
     }
@@ -366,6 +381,8 @@ public class NetworkManager : MonoBehaviour
                     break;
                 case (uint)Handlers.HandlerIds.CHARACTER_SELECT:
                     Handlers.instance.GetCharacterSelect(response.data);
+                    break;
+                case (uint)Handlers.HandlerIds.SKILL:
                     break;
             }
             if (response.handlerId == (uint)Handlers.HandlerIds.LOGIN)
@@ -424,6 +441,12 @@ public class NetworkManager : MonoBehaviour
         GameManager.instance.chatting.updateChatting($"{response.playerId} : {response.message} / {response.type}");
         Debug.Log($"{response.playerId} : {response.message} / {response.type}");
     }
+
+    void HandleSkillPacket(byte[] packetData)
+	{
+        var response = Packets.Deserialize<SkillUpdate>(packetData);
+        GameManager.instance.player.SetSkill(response.x, response.y, response.rangeX, response.rangeY);
+	}
 
     void OnApplicationQuit()
     {
