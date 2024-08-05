@@ -101,6 +101,14 @@ public class NetworkManager : MonoBehaviour
         SendJoinLobbyPacket(characterId);
     }
 
+    // 매칭/대결 버튼
+    public void OnMatchGameButtonClicked()
+    {
+        string sessionId = GameManager.instance.sessionId;
+
+        SendMatchPacket(sessionId);
+    }
+
     public void OnGameEndButtonClicked()
     {
         SendGameEndPacket();
@@ -316,6 +324,15 @@ public class NetworkManager : MonoBehaviour
         SendPacket(ChattingPayload, (uint)Handlers.HandlerIds.CHATTING);
     }
 
+        public void SendMatchPacket(string sessionId){
+        MatchingPayload MatchingPayload = new MatchingPayload
+        {
+            sessionId = sessionId
+        };
+        Debug.Log($"User's Session Id : {sessionId}");
+        SendPacket(MatchingPayload,(uint)Handlers.HandlerIds.MATCHMAKING);
+    }
+
     public void SendGameEndPacket()
     {
         GameEndRequestPayload gameEndRequestPayload = new GameEndRequestPayload
@@ -390,6 +407,12 @@ public class NetworkManager : MonoBehaviour
                 case Packets.PacketType.CHATTING:
                     HandleChattingPacket(packetData);
                     break;
+                 case Packets.PacketType.MATCHMAKING:
+                    HandleMatchMakingPacket(packetData);
+                    break;
+                case Packets.PacketType.GAME_START:
+                    HandleBattleStartPacket(packetData);
+                    break;
                 case Packets.PacketType.GAME_END:
                     HandleGameEndPacket(packetData);
                     break;
@@ -400,7 +423,7 @@ public class NetworkManager : MonoBehaviour
     void HandleNormalPacket(byte[] packetData) {
         // 패킷 데이터 처리
         var response = Packets.Deserialize<Response>(packetData);
-        // Debug.Log($"HandlerId: {response.handlerId}, responseCode: {response.responseCode}, timestamp: {response.timestamp}");
+        Debug.Log($"HandlerId: {response.handlerId}, responseCode: {response.responseCode}, timestamp: {response.timestamp}");
 
         if (response.responseCode != 0 && !uiNotice.activeSelf) {
             AudioManager.instance.PlaySfx(AudioManager.Sfx.LevelUp);
@@ -431,6 +454,8 @@ public class NetworkManager : MonoBehaviour
                     break;
                 case (uint)Handlers.HandlerIds.SELECT_CHARACTER:
                     Handlers.instance.GetCharacterSelect(response.data);
+                    break;
+                 case (uint)Handlers.HandlerIds.MATCHMAKING:
                     break;
             }
             ProcessResponseData(response.data);
@@ -472,6 +497,12 @@ public class NetworkManager : MonoBehaviour
         Debug.Log($"{response.playerId} : {response.message} / {response.type}");
     }
 
+    void HandleMatchMakingPacket(byte[] packetData) {
+        var response = Packets.Deserialize<MatchMakingComplete>(packetData);
+        Debug.Log($"{response.message}");
+
+    }
+
     void OnApplicationQuit()
     {
         if (stream != null)
@@ -494,4 +525,18 @@ public class NetworkManager : MonoBehaviour
         var response = Packets.Deserialize<GameEndPayload>(packetData);
         GameManager.instance.GameEnd(response.result,response.users);
     }
+
+    //recieve GAME_START packet
+    void HandleBattleStartPacket(byte[] packetData)
+    {
+        var response = Packets.Deserialize<BattleStart>(packetData);
+        foreach (var user in response.users)
+        {
+            Debug.Log($"Player ID: {user.playerId}, Team: {user.team}, Position: ({user.x}, {user.y})");
+        }
+
+         //Calls BattleStart method on GameManager & pass data to players
+        // GameManager.instance.BattleGameStart(response.users, response.message);
+    }
+
 }
