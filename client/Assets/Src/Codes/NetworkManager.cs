@@ -35,6 +35,8 @@ public class NetworkManager : MonoBehaviour
     private byte[] receiveBuffer = new byte[4096];
     private List<byte> incompleteData = new List<byte>();
 
+    private bool isLobby;
+
     void Awake() {        
         instance = this;
         wait = new WaitForSecondsRealtime(5);
@@ -60,6 +62,8 @@ public class NetworkManager : MonoBehaviour
             AudioManager.instance.PlaySfx(AudioManager.Sfx.LevelUp);
             StartCoroutine(NoticeRoutine(0));
         }
+
+        isLobby = true;
     }
 
 
@@ -308,7 +312,7 @@ public class NetworkManager : MonoBehaviour
         {
             x = x,
             y = y,
-            isLobby = true,
+            isLobby = isLobby,
         };
 
         SendPacket(locationUpdatePayload, (uint)Handlers.HandlerIds.UPDATE_LOCACTION);
@@ -324,7 +328,7 @@ public class NetworkManager : MonoBehaviour
         SendPacket(ChattingPayload, (uint)Handlers.HandlerIds.CHATTING);
     }
 
-        public void SendMatchPacket(string sessionId){
+    public void SendMatchPacket(string sessionId){
         MatchingPayload MatchingPayload = new MatchingPayload
         {
             sessionId = sessionId
@@ -350,6 +354,8 @@ public class NetworkManager : MonoBehaviour
         };
 
         SendPacket(ReturnLobbyRequestPayload, (uint)Handlers.HandlerIds.RETURN_LOBBY);
+
+        isLobby = true;
     }
 
 
@@ -535,7 +541,9 @@ public class NetworkManager : MonoBehaviour
             Debug.Log($"Player ID: {user.playerId}, Team: {user.team}, Position: ({user.x}, {user.y})");
         }
 
-         //Calls BattleStart method on GameManager & pass data to players
+        isLobby = false;
+
+        //Calls BattleStart method on GameManager & pass data to players
         // GameManager.instance.BattleGameStart(response.users, response.message);
     }
 
