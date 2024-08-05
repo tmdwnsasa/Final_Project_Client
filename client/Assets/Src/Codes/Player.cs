@@ -60,10 +60,10 @@ public class Player : MonoBehaviour
         inputVec.y = Input.GetAxisRaw("Vertical");
 
         if((isPlusX && inputVec.x < 0) || (isMinusX && inputVec.x > 0)) {
-            inputVec.x = -inputVec.x;
+            inputVec.x = 0;
         }
         if((isPlusY && inputVec.y < 0) || (isMinusY && inputVec.y > 0)) {
-            inputVec.y = -inputVec.y;
+            inputVec.y = 0;
         }
 
         if(oldInputVec != inputVec)
