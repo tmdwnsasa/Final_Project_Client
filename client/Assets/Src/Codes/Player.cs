@@ -42,11 +42,15 @@ public class Player : MonoBehaviour
         isMinusY = false;
     }
 
-    void OnEnable() {
+    void OnEnable()
+    {
 
-        if (name.Length > 5) {
+        if (name.Length > 5)
+        {
             myText.text = name[..5];
-        } else {
+        }
+        else
+        {
             myText.text = name;
         }
         myText.GetComponent<MeshRenderer>().sortingOrder = 6;
@@ -57,20 +61,23 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!GameManager.instance.isLive || GameManager.instance.chatting.inputField.isFocused) {
+        if (!GameManager.instance.isLive || GameManager.instance.chatting.inputField.isFocused)
+        {
             return;
         }
         inputVec.x = Input.GetAxisRaw("Horizontal");
         inputVec.y = Input.GetAxisRaw("Vertical");
 
-        if((isPlusX && inputVec.x < 0) || (isMinusX && inputVec.x > 0)) {
+        if ((isPlusX && inputVec.x < 0) || (isMinusX && inputVec.x > 0))
+        {
             inputVec.x = 0;
         }
-        if((isPlusY && inputVec.y < 0) || (isMinusY && inputVec.y > 0)) {
+        if ((isPlusY && inputVec.y < 0) || (isMinusY && inputVec.y > 0))
+        {
             inputVec.y = 0;
         }
 
-        if(oldInputVec != inputVec)
+        if (oldInputVec != inputVec)
         {
             // 위치 이동 패킷 전송 -> 서버로
             NetworkManager.instance.SendLocationUpdatePacket(inputVec.x, inputVec.y);
@@ -98,12 +105,13 @@ public class Player : MonoBehaviour
         else
             BoxArea.y = 0;
 
-        if (!(inputVec.x != 0 && inputVec.y != 0))
+        if (!(inputVec.x != 0))
         {
             //공격
-            if (Input.GetKeyDown(KeyCode.Z))
+            if (Input.GetKeyDown(KeyCode.Z) && !NetworkManager.instance.isLobby)
             {
-                if (x != 0) {
+                if (x != 0)
+                {
                     //send 스킬 패킷을 보내고
                     NetworkManager.instance.SendSkillUpdatePacket(BoxArea.x, BoxArea.y, attackRangeX, attackRangeY);
                 }
@@ -114,31 +122,38 @@ public class Player : MonoBehaviour
             }
         }
     }
-    
 
 
-        void FixedUpdate() {
-            if (!GameManager.instance.isLive) {
-                return;
-            }
+
+    void FixedUpdate()
+    {
+        if (!GameManager.instance.isLive)
+        {
+            return;
         }
-        
+    }
 
-        // Update가 끝난이후 적용
-        void LateUpdate() {
-            if (!GameManager.instance.isLive) {
-                return;
-            }
 
-            anim.SetFloat("Speed", inputVec.magnitude);
-
-            if (inputVec.x != 0) {
-                spriter.flipX = inputVec.x < 0;
-            }
+    // Update가 끝난이후 적용
+    void LateUpdate()
+    {
+        if (!GameManager.instance.isLive)
+        {
+            return;
         }
 
-    void OnCollisionStay2D(Collision2D collision) {
-        if (!GameManager.instance.isLive) {
+        anim.SetFloat("Speed", inputVec.magnitude);
+
+        if (inputVec.x != 0)
+        {
+            spriter.flipX = inputVec.x < 0;
+        }
+    }
+
+    void OnCollisionStay2D(Collision2D collision)
+    {
+        if (!GameManager.instance.isLive)
+        {
             return;
         }
         ContactPoint2D contact = collision.contacts[0];
@@ -146,22 +161,29 @@ public class Player : MonoBehaviour
         Vector2 normal = contact.normal;
         //Debug.Log("법선 벡터: " + normal);
 
-        if(normal.x > 0) {
+        if (normal.x > 0)
+        {
             isPlusX = true;
-        } else if(normal.x < 0) {
+        }
+        else if (normal.x < 0)
+        {
             isMinusX = true;
         }
 
-        if(normal.y > 0) {
+        if (normal.y > 0)
+        {
             isPlusY = true;
-        } else if(normal.y < 0) {
+        }
+        else if (normal.y < 0)
+        {
             isMinusY = true;
         }
     }
 
-    void OnCollisionExit2D(Collision2D collision) 
+    void OnCollisionExit2D(Collision2D collision)
     {
-        if (!GameManager.instance.isLive) {
+        if (!GameManager.instance.isLive)
+        {
             return;
         }
 
@@ -170,13 +192,15 @@ public class Player : MonoBehaviour
         isPlusY = false;
         isMinusY = false;
     }
-    
 
-    public void movePlayer(float x, float y) {
+
+    public void movePlayer(float x, float y)
+    {
         transform.position = new Vector2(x, y);
     }
-    
-    public void SetSkill(float x, float y, float rangeX, float rangeY) {
-            
-        }
+
+    public void SetNearSkill(float x, float y, float rangeX, float rangeY)
+    {
+
+    }
 }

@@ -13,7 +13,7 @@ public class PlayerPrefab : MonoBehaviour
     private Vector3 currentPosition;
     private uint characterId;
     TextMeshPro myText;
-    
+
     void Awake()
     {
         anim = GetComponent<Animator>();
@@ -28,16 +28,19 @@ public class PlayerPrefab : MonoBehaviour
         currentPosition = Vector3.zero;
         this.characterId = characterId;
 
-        if (playerId.Length > 5) {
+        if (playerId.Length > 5)
+        {
             myText.text = playerId[..5];
-        } else {
+        }
+        else
+        {
             myText.text = playerId;
         }
         myText.GetComponent<MeshRenderer>().sortingOrder = 6;
     }
 
     void OnEnable()
-    {    
+    {
         anim.runtimeAnimatorController = animCon[characterId];
     }
 
@@ -72,6 +75,12 @@ public class PlayerPrefab : MonoBehaviour
         {
             spriter.flipX = inputVec.x < 0;
         }
+    }
+
+
+    public void SetNearSkill(float x, float y, float rangeX, float rangeY)
+    {
+
     }
 
     void OnCollisionStay2D(Collision2D collision)

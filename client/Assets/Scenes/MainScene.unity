@@ -31567,6 +31567,7 @@ MonoBehaviour:
   registerPasswordInputField: {fileID: 1125321820}
   registerNameInputField: {fileID: 432587436}
   uiNotice: {fileID: 1390587656}
+  isLobby: 0
 --- !u!4 &1131302437
 Transform:
   m_ObjectHideFlags: 0
@@ -41491,6 +41492,11 @@ MonoBehaviour:
   - {fileID: 22100000, guid: e7442b4b1dab2479584ab1d8aa08a473, type: 2}
   - {fileID: 22100000, guid: 1aab438ac4cdc4d36b86fc36c80f39ad, type: 2}
   - {fileID: 22100000, guid: 19bee3ea924744a4b88dc35a07a6debf, type: 2}
+  x: 1
+  y: 1
+  BoxArea: {x: 0.5, y: 0}
+  attackRangeX: 1
+  attackRangeY: 2
 --- !u!1 &1744828155
 GameObject:
   m_ObjectHideFlags: 3
