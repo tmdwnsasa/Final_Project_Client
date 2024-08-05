@@ -11,7 +11,7 @@ public class PlayerPrefab : MonoBehaviour
     private SpriteRenderer spriter;
     private Vector3 lastPosition;
     private Vector3 currentPosition;
-    private uint playerId;
+    private uint characterId;
     TextMeshPro myText;
     
     void Awake()
@@ -21,24 +21,24 @@ public class PlayerPrefab : MonoBehaviour
         myText = GetComponentInChildren<TextMeshPro>();
     }
 
-    public void Init(uint playerId, string id)
+    public void Init(uint characterId, string playerId)
     {
-        anim.runtimeAnimatorController = animCon[playerId];
+        anim.runtimeAnimatorController = animCon[characterId];
         lastPosition = Vector3.zero;
         currentPosition = Vector3.zero;
-        this.playerId = playerId;
+        this.characterId = characterId;
 
-        if (id.Length > 5) {
-            myText.text = id[..5];
+        if (playerId.Length > 5) {
+            myText.text = playerId[..5];
         } else {
-            myText.text = id;
+            myText.text = playerId;
         }
         myText.GetComponent<MeshRenderer>().sortingOrder = 6;
     }
 
     void OnEnable()
     {    
-        anim.runtimeAnimatorController = animCon[playerId];
+        anim.runtimeAnimatorController = animCon[characterId];
     }
 
     // 서버로부터 위치 업데이트를 수신할 때 호출될 메서드
