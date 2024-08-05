@@ -201,6 +201,15 @@ public class Player : MonoBehaviour
 
     public void SetNearSkill(float x, float y, float rangeX, float rangeY)
     {
+        transform.GetChild(4).gameObject.SetActive(true);
+        transform.GetChild(4).localPosition = new Vector2(x, y);
+        transform.GetChild(4).localScale = new Vector3(rangeX, rangeY, 1);
+        StartCoroutine(AttackRangeCheck());
+    }
 
+    IEnumerator AttackRangeCheck()
+    {
+        yield return new WaitForSeconds(1.0f);
+        transform.GetChild(4).gameObject.SetActive(false);
     }
 }
