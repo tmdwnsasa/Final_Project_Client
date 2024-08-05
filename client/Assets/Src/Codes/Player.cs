@@ -15,7 +15,6 @@ public class Player : MonoBehaviour
     public string name;
     public RuntimeAnimatorController[] animCon;
 
-    Rigidbody2D rigid;
     SpriteRenderer spriter;
     Animator anim;
     TextMeshPro myText;
@@ -28,7 +27,6 @@ public class Player : MonoBehaviour
 
     void Awake()
     {
-        rigid = GetComponent<Rigidbody2D>();
         spriter = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
         myText = GetComponentInChildren<TextMeshPro>();
@@ -142,6 +140,6 @@ public class Player : MonoBehaviour
     }
 
     public void movePlayer(float x, float y) {
-        rigid.MovePosition(new Vector2(x, y));
+        transform.position = new Vector2(x, y);
     }
 }
