@@ -237,13 +237,6 @@ public class GameEndPayload
 }
 
 [ProtoContract]
-public class GameEndRequestPayload
-{
-    [ProtoMember(1, IsRequired = true)]
-    public string message { get; set; }
-}
-
-[ProtoContract]
 public class ReturnLobbyRequestPayload
 {
     [ProtoMember(1, IsRequired = true)]

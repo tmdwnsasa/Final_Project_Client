@@ -109,11 +109,6 @@ public class NetworkManager : MonoBehaviour
         SendMatchPacket(sessionId);
     }
 
-    public void OnGameEndButtonClicked()
-    {
-        SendGameEndPacket();
-    }
-
     public void OnReturnLobbyButtonClicked()
     {
         SendReturnLobbyPacket();
@@ -331,15 +326,6 @@ public class NetworkManager : MonoBehaviour
         };
         Debug.Log($"User's Session Id : {sessionId}");
         SendPacket(MatchingPayload,(uint)Handlers.HandlerIds.MATCHMAKING);
-    }
-
-    public void SendGameEndPacket()
-    {
-        GameEndRequestPayload gameEndRequestPayload = new GameEndRequestPayload
-        {
-            message = "aaa"
-        };
-        SendPacket(gameEndRequestPayload, (uint)Handlers.HandlerIds.GAME_END);
     }
 
     public void SendReturnLobbyPacket()

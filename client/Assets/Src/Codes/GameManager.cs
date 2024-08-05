@@ -42,7 +42,6 @@ public class GameManager : MonoBehaviour
     public GameObject CharacterChoiceUI;
     public GameObject CharacterSelectUI;
     public GameObject GameEndUI;
-    public GameObject GameEndBtn;
     public GameObject MatchStartUI;
 
 
@@ -65,7 +64,6 @@ public class GameManager : MonoBehaviour
         CharacterChoiceUI.SetActive(false);
         CharacterSelectUI.SetActive(false);
         ChattingUI.SetActive(true);
-        GameEndBtn.SetActive(true);
         MatchStartUI.SetActive(true);
 
         isLive = true;
@@ -208,7 +206,7 @@ public class GameManager : MonoBehaviour
         Text user4Name = GameEndUI.transform.Find("Panel/user4_name").GetComponent<Text>();
         Text user4Kill = GameEndUI.transform.Find("Panel/user4_kill").GetComponent<Text>();
         Text user4Death = GameEndUI.transform.Find("Panel/user4_death").GetComponent<Text>();
-        GameEndBtn.SetActive(false);
+
         GameEndUI.SetActive(true);
         if (result == "Win")
         {
