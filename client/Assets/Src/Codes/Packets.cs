@@ -245,6 +245,15 @@ public class ReturnLobbyRequestPayload
     public string message { get; set; }
 }
 
+
+[ProtoContract]
+public class ExitPayload
+{
+    [ProtoMember(1, IsRequired = true)]
+    public string message { get; set; }
+}
+
+
 [ProtoContract]
 public class MatchingPayload
 {
