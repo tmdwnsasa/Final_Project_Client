@@ -26,6 +26,9 @@ public class Player : MonoBehaviour
     private bool isPlusY;
     private bool isMinusY;
 
+    public float x = 1, y = 1;
+    public Vector2 BoxArea = new Vector2(0.5f, 0);
+    public float attackRangeX = 1, attackRangeY = 2;
     void Awake()
     {
         rigid = GetComponent<Rigidbody2D>();
@@ -49,6 +52,7 @@ public class Player : MonoBehaviour
             myText.text = name;
         }
         myText.GetComponent<MeshRenderer>().sortingOrder = 6;
+        
         anim.runtimeAnimatorController = animCon[GameManager.instance.characterId];
     }
 
@@ -75,42 +79,78 @@ public class Player : MonoBehaviour
         }
 
         oldInputVec = inputVec;
-    }
 
-
-    void FixedUpdate() {
-        if (!GameManager.instance.isLive) {
-            return;
-        }
-        // 힘을 준다.
-        // rigid.AddForce(inputVec);
-
-        // 속도 제어
-        // rigid.velocity = inputVec;
-
-        // 위치 이동
-        // Vector2 nextVec = inputVec * speed * Time.fixedDeltaTime;
-        // rigid.MovePosition(rigid.position + nextVec);
-    }
-
-    // Update가 끝난이후 적용
-    void LateUpdate() {
-        if (!GameManager.instance.isLive) {
-            return;
+        if (inputVec.x != 0 || inputVec.y != 0)
+        {
+            x = inputVec.x;
+            y = inputVec.y;
         }
 
-        anim.SetFloat("Speed", inputVec.magnitude);
+        if (x < 0)
+            BoxArea.x = -0.5f;
+        else if (x > 0)
+            BoxArea.x = 0.5f;
+        else
+            BoxArea.x = 0;
 
-        if (inputVec.x != 0) {
-            spriter.flipX = inputVec.x < 0;
+        if (y < 0)
+            BoxArea.y = -0.5f;
+        else if (y > 0)
+            BoxArea.y = 0.5f;
+        else
+            BoxArea.y = 0;
+
+        if (!(inputVec.x != 0 && inputVec.y != 0))
+        {
+            //공격
+            if (Input.GetKeyDown(KeyCode.Z))
+            {
+                if (x != 0) {
+                    //send 스킬 패킷을 보내고
+                    NetworkManager.instance.SendSkillUpdatePacket(BoxArea.x, BoxArea.y, attackRangeX, attackRangeY);
+                }
+                else
+                {
+                    NetworkManager.instance.SendSkillUpdatePacket(BoxArea.x, BoxArea.y, attackRangeY, attackRangeX);
+                }
+            }
         }
     }
+    
+
+
+        void FixedUpdate() {
+            if (!GameManager.instance.isLive) {
+                return;
+            }
+            // 힘을 준다.
+            // rigid.AddForce(inputVec);
+
+            // 속도 제어
+            // rigid.velocity = inputVec;
+
+            // 위치 이동
+            // Vector2 nextVec = inputVec * speed * Time.fixedDeltaTime;
+            // rigid.MovePosition(rigid.position + nextVec);
+        }
+
+        // Update가 끝난이후 적용
+        void LateUpdate() {
+            if (!GameManager.instance.isLive) {
+                return;
+            }
+
+            anim.SetFloat("Speed", inputVec.magnitude);
+
+            if (inputVec.x != 0) {
+                spriter.flipX = inputVec.x < 0;
+            }
+        }
 
     void OnCollisionStay2D(Collision2D collision) {
         if (!GameManager.instance.isLive) {
             return;
         }
-
         ContactPoint2D contact = collision.contacts[0];
         //법선 벡터
         Vector2 normal = contact.normal;
@@ -140,8 +180,14 @@ public class Player : MonoBehaviour
         isPlusY = false;
         isMinusY = false;
     }
+    
 
-    public void movePlayer(float x, float y) {
-        rigid.MovePosition(new Vector2(x, y));
-    }
+        public void movePlayer(float x, float y) {
+            rigid.MovePosition(new Vector2(x, y));
+        }
+
+        public void SetSkill(float x, float y, float rangeX, float rangeY) {
+            
+        }
+  
 }

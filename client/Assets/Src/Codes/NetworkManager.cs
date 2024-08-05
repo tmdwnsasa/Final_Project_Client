@@ -313,6 +313,18 @@ public class NetworkManager : MonoBehaviour
         SendPacket(locationUpdatePayload, (uint)Handlers.HandlerIds.UPDATE_LOCACTION);
     }
 
+    public void SendSkillUpdatePacket(float x, float y, float rangeX, float rangeY) {
+        SkillPayload SkillPayload = new SkillPayload
+        {
+            x = x,
+            y = y,
+            rangeX = rangeX,
+            rangeY = rangeY,
+        };
+
+        SendPacket(SkillPayload, (uint)Handlers.HandlerIds.SKILL);
+    }
+
     public void SendChattingPacket(string message, uint type) {
         ChattingPayload ChattingPayload = new ChattingPayload
         {
@@ -400,7 +412,7 @@ public class NetworkManager : MonoBehaviour
                 case Packets.PacketType.CHATTING:
                     HandleChattingPacket(packetData);
                     break;
-                 case Packets.PacketType.MATCHMAKING:
+                     case Packets.PacketType.MATCHMAKING:
                     HandleMatchMakingPacket(packetData);
                     break;
                 case Packets.PacketType.GAME_START:
@@ -408,6 +420,9 @@ public class NetworkManager : MonoBehaviour
                     break;
                 case Packets.PacketType.GAME_END:
                     HandleGameEndPacket(packetData);
+                    break;
+                    case Packets.PacketType.SKILL:
+                    HandleSkillPacket(packetData);
                     break;
             }
         }
@@ -448,8 +463,28 @@ public class NetworkManager : MonoBehaviour
                 case (uint)Handlers.HandlerIds.SELECT_CHARACTER:
                     Handlers.instance.GetCharacterSelect(response.data);
                     break;
-                 case (uint)Handlers.HandlerIds.MATCHMAKING:
+                    case (uint)Handlers.HandlerIds.MATCHMAKING:
                     break;
+                    case (uint)Handlers.HandlerIds.SKILL:
+                    break;
+            }
+            if (response.handlerId == (uint)Handlers.HandlerIds.LOGIN)
+            {
+                string jsonString = Encoding.UTF8.GetString(response.data);
+
+                // "x" 값 추출
+                int indexXStart = jsonString.IndexOf("\"x\":") + 4; // "x": 다음 인덱스에서 시작
+                int indexXEnd = jsonString.IndexOf(",", indexXStart); // 쉼표(,)가 나오는 곳까지
+                string xString = jsonString.Substring(indexXStart, indexXEnd - indexXStart);
+                float x = float.Parse(xString);
+
+                // "y" 값 추출
+                int indexYStart = jsonString.IndexOf("\"y\":") + 4; // "y": 다음 인덱스에서 시작
+                int indexYEnd = jsonString.IndexOf("}", indexYStart); // 닫는 중괄호(})가 나오는 곳까지
+                string yString = jsonString.Substring(indexYStart, indexYEnd - indexYStart);
+                float y = float.Parse(yString);
+
+                GameManager.instance.GameStart();
             }
             ProcessResponseData(response.data);
         }
@@ -489,7 +524,11 @@ public class NetworkManager : MonoBehaviour
         GameManager.instance.chatting.updateChatting($"{response.playerId} : {response.message} / {response.type}");
         Debug.Log($"{response.playerId} : {response.message} / {response.type}");
     }
-
+    void HandleSkillPacket(byte[] packetData)
+	{
+        var response = Packets.Deserialize<SkillUpdate>(packetData);
+        GameManager.instance.player.SetSkill(response.x, response.y, response.rangeX, response.rangeY);
+	}
     void HandleMatchMakingPacket(byte[] packetData) {
         var response = Packets.Deserialize<MatchMakingComplete>(packetData);
         Debug.Log($"{response.message}");
