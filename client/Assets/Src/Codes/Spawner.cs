@@ -19,7 +19,7 @@ public class Spawner : MonoBehaviour
         HashSet<string> newUsers = new HashSet<string>();
 
         foreach(LocationUpdate.UserLocation user in data.users) {
-            if(user.playerId == GameManager.instance.player.playerId)
+            if(user.playerId == GameManager.instance.player.name)
             {
                 GameManager.instance.player.movePlayer(user.x, user.y);
             }
@@ -30,7 +30,6 @@ public class Spawner : MonoBehaviour
                 PlayerPrefab playerScript = player.GetComponent<PlayerPrefab>();
                 playerScript.UpdatePosition(user.x, user.y);
             }
-            
         }
 
         foreach (string userId in currentUsers) {

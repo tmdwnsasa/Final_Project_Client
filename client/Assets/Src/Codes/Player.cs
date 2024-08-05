@@ -15,7 +15,6 @@ public class Player : MonoBehaviour
     public string name;
     public RuntimeAnimatorController[] animCon;
 
-    Rigidbody2D rigid;
     SpriteRenderer spriter;
     Animator anim;
     TextMeshPro myText;
@@ -31,7 +30,6 @@ public class Player : MonoBehaviour
     public float attackRangeX = 1, attackRangeY = 2;
     void Awake()
     {
-        rigid = GetComponent<Rigidbody2D>();
         spriter = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
         myText = GetComponentInChildren<TextMeshPro>();
@@ -66,10 +64,10 @@ public class Player : MonoBehaviour
         inputVec.y = Input.GetAxisRaw("Vertical");
 
         if((isPlusX && inputVec.x < 0) || (isMinusX && inputVec.x > 0)) {
-            inputVec.x = -inputVec.x;
+            inputVec.x = 0;
         }
         if((isPlusY && inputVec.y < 0) || (isMinusY && inputVec.y > 0)) {
-            inputVec.y = -inputVec.y;
+            inputVec.y = 0;
         }
 
         if(oldInputVec != inputVec)
@@ -174,11 +172,11 @@ public class Player : MonoBehaviour
     }
     
 
-        public void movePlayer(float x, float y) {
-            rigid.MovePosition(new Vector2(x, y));
-        }
-
-        public void SetSkill(float x, float y, float rangeX, float rangeY) {
+    public void movePlayer(float x, float y) {
+        transform.position = new Vector2(x, y);
+    }
+    
+    public void SetSkill(float x, float y, float rangeX, float rangeY) {
             
         }
 }
