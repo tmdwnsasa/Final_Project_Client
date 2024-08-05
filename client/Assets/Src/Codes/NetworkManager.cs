@@ -318,6 +318,7 @@ public class NetworkManager : MonoBehaviour
         {
             message = message,
             type = type,
+            isLobby = isLobby,
         };
 
         SendPacket(ChattingPayload, (uint)Handlers.HandlerIds.CHATTING);

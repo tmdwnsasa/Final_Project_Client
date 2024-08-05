@@ -116,6 +116,8 @@ public class ChattingPayload {
     public string message { get; set; }
     [ProtoMember(2, IsRequired = true)]
     public uint type { get; set; }
+    [ProtoMember(3, IsRequired = true)]
+    public bool isLobby { get; set; }
 }
 
 [ProtoContract]
