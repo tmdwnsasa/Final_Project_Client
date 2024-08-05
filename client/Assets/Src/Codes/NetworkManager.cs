@@ -119,6 +119,12 @@ public class NetworkManager : MonoBehaviour
         GameManager.instance.ReturnLobby();
     }
 
+    public void OnExitButtonClicked()
+    {
+        SendExitPacket();
+    }
+
+
     bool IsValidIP(string ip)
     {
         // 간단한 IP 유효성 검사
@@ -345,6 +351,16 @@ public class NetworkManager : MonoBehaviour
         isLobby = true;
     }
 
+    public void SendExitPacket()
+    {
+        ExitPayload exitPayload = new ExitPayload
+        {
+            message = "exit"
+        };
+
+        SendPacket(exitPayload, (uint)Handlers.HandlerIds.EXIT);
+    }
+
 
     void StartReceiving() {
         _ = ReceivePacketsAsync();
@@ -449,6 +465,9 @@ public class NetworkManager : MonoBehaviour
                     Handlers.instance.GetCharacterSelect(response.data);
                     break;
                  case (uint)Handlers.HandlerIds.MATCHMAKING:
+                    break;
+                case (uint)Handlers.HandlerIds.EXIT:
+                    Application.Quit();
                     break;
             }
             ProcessResponseData(response.data);
