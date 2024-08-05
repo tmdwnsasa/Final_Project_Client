@@ -102,11 +102,12 @@ public class GameManager : MonoBehaviour
         LoginUI.SetActive(false);
         RegisterUI.SetActive(false);
         CharacterSelectUI.SetActive(true);
-        for(int i = 0; i < GameManager.instance.possession.Count; i++)
+        for(int i = 0; i < possession.Count; i++)
         {
-            GameObject.Find("CharacterSelect").transform.GetChild(0).GetChild((int)GameManager.instance.possession[i]).gameObject.SetActive(true);
+            GameObject.Find("CharacterSelect").transform.GetChild(0).GetChild((int)possession[i]).gameObject.SetActive(true);
         }
 
+        CharacterChange(possession[0]);
         AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
     }
 
