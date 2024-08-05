@@ -332,7 +332,7 @@ public class NetworkManager : MonoBehaviour
     {
         ReturnLobbyRequestPayload ReturnLobbyRequestPayload = new ReturnLobbyRequestPayload
         {
-            message = "123"
+            message = "returnLobby"
         };
 
         SendPacket(ReturnLobbyRequestPayload, (uint)Handlers.HandlerIds.RETURN_LOBBY);
