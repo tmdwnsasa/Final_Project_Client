@@ -191,7 +191,6 @@ public class SkillUpdate
     public float rangeY { get; set; }
 }
 
-
 [ProtoContract]
 public class Response {
     [ProtoMember(1)]
