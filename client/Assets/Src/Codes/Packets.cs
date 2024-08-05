@@ -13,7 +13,8 @@ public class Packets : MonoBehaviour
         GAME_START = 2,
         LOCATION = 3,
         GAME_END = 4,
-        CHATTING = 5
+        CHATTING = 5,
+        MATCHMAKING =6
     }
 
     public static void Serialize<T>(IBufferWriter<byte> writer, T data)
@@ -256,3 +257,40 @@ public class MatchingPayload
     public string sessionId { get; set; }
 
 }
+
+[ProtoContract]
+public class MatchMakingComplete
+{
+    [ProtoMember(1,IsRequired = true)]
+    public string message { get; set; }
+
+}
+
+
+[ProtoContract]
+public class BattleStart
+{
+    [ProtoMember(1)]
+    public List<UserTeam> users { get; set; }
+
+    [ProtoMember(2)]
+    public string message { get; set; }
+
+    [ProtoContract]
+    public class UserTeam
+    {
+        [ProtoMember(1)]
+        public string playerId { get; set; }
+
+        [ProtoMember(2)]
+        public string team { get; set; }
+
+        [ProtoMember(3)]
+        public float x { get; set; }
+
+        [ProtoMember(4)]
+        public float y { get; set; }
+
+    }
+}
+
