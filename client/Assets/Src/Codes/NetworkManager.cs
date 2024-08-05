@@ -529,8 +529,7 @@ public class NetworkManager : MonoBehaviour
 
         isLobby = false;
 
-        //Calls BattleStart method on GameManager & pass data to players
-        // GameManager.instance.BattleGameStart(response.users, response.message);
+        GameManager.instance.BattleGameStart();
     }
 
 }
