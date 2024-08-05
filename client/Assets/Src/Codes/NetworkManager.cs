@@ -113,11 +113,6 @@ public class NetworkManager : MonoBehaviour
         SendMatchPacket(sessionId);
     }
 
-    public void OnGameEndButtonClicked()
-    {
-        SendGameEndPacket();
-    }
-
     public void OnReturnLobbyButtonClicked()
     {
         SendReturnLobbyPacket();
@@ -337,20 +332,11 @@ public class NetworkManager : MonoBehaviour
         SendPacket(MatchingPayload,(uint)Handlers.HandlerIds.MATCHMAKING);
     }
 
-    public void SendGameEndPacket()
-    {
-        GameEndRequestPayload gameEndRequestPayload = new GameEndRequestPayload
-        {
-            message = "aaa"
-        };
-        SendPacket(gameEndRequestPayload, (uint)Handlers.HandlerIds.GAME_END);
-    }
-
     public void SendReturnLobbyPacket()
     {
         ReturnLobbyRequestPayload ReturnLobbyRequestPayload = new ReturnLobbyRequestPayload
         {
-            message = "123"
+            message = "returnLobby"
         };
 
         SendPacket(ReturnLobbyRequestPayload, (uint)Handlers.HandlerIds.RETURN_LOBBY);
