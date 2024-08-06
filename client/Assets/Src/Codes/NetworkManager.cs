@@ -576,7 +576,6 @@ public class NetworkManager : MonoBehaviour
     {
         var response = Packets.Deserialize<MatchMakingComplete>(packetData);
         Debug.Log($"{response.message}");
-
     }
 
     void OnApplicationQuit()
@@ -605,6 +604,7 @@ public class NetworkManager : MonoBehaviour
     void HandleAttackPacket(byte[] packetData)
     {
         var response = Packets.Deserialize<AttackedSuccess>(packetData);
+        CharacterManager.instance.UpdateCharacterState(response);
 
         foreach (var user in response.users)
         {

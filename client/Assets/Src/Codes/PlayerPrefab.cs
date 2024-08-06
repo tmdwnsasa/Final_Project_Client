@@ -77,7 +77,6 @@ public class PlayerPrefab : MonoBehaviour
         }
     }
 
-
     public void SetNearSkill(float x, float y, float rangeX, float rangeY)
     {
         transform.GetChild(4).gameObject.SetActive(true);
@@ -97,5 +96,16 @@ public class PlayerPrefab : MonoBehaviour
     {
         yield return new WaitForSeconds(1.0f);
         transform.GetChild(4).gameObject.SetActive(false);
+    }
+
+    public void SetHp(float hp) {
+        //hp 설정
+        if(hp <= 0) {
+            anim.SetTrigger("Dead");
+        }
+    }
+
+    public void ResetAnimation() {
+        anim.ResetTrigger("Dead");
     }
 }

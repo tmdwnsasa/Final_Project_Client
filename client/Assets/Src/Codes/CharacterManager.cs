@@ -49,7 +49,6 @@ public class CharacterManager : MonoBehaviour
 
     public void UpdateAttack(SkillUpdate data)
     {
-
         if (data.playerId == GameManager.instance.player.name)
         {
             GameManager.instance.player.SetNearSkill(data.x, data.y, data.rangeX, data.rangeY);
@@ -59,6 +58,23 @@ public class CharacterManager : MonoBehaviour
             GameObject player = GameManager.instance.pool.GetId(data.playerId);
             PlayerPrefab playerScript = player.GetComponent<PlayerPrefab>();
             playerScript.SetNearSkill(data.x, data.y, data.rangeX, data.rangeY);
+        }
+    }
+
+    public void UpdateCharacterState(AttackedSuccess data)
+    {
+        foreach (AttackedSuccess.UserAttackState user in data.users)
+        {
+            if (user.playerId == GameManager.instance.player.name)
+            {
+                GameManager.instance.player.SetHp(user.hp);
+            }
+            else
+            {
+                GameObject player = GameManager.instance.pool.GetId(user.playerId);
+                PlayerPrefab playerScript = player.GetComponent<PlayerPrefab>();
+                playerScript.SetHp(user.hp);
+            }
         }
     }
 }

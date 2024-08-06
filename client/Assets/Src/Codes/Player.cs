@@ -44,7 +44,6 @@ public class Player : MonoBehaviour
 
     void OnEnable()
     {
-
         if (name.Length > 5)
         {
             myText.text = name[..5];
@@ -123,8 +122,6 @@ public class Player : MonoBehaviour
         }
     }
 
-
-
     void FixedUpdate()
     {
         if (!GameManager.instance.isLive)
@@ -132,7 +129,6 @@ public class Player : MonoBehaviour
             return;
         }
     }
-
 
     // Update가 끝난이후 적용
     void LateUpdate()
@@ -193,7 +189,6 @@ public class Player : MonoBehaviour
         isMinusY = false;
     }
 
-
     public void movePlayer(float x, float y)
     {
         transform.position = new Vector2(x, y);
@@ -211,5 +206,16 @@ public class Player : MonoBehaviour
     {
         yield return new WaitForSeconds(1.0f);
         transform.GetChild(4).gameObject.SetActive(false);
+    }
+
+    public void SetHp(float hp) {
+        //hp 설정
+        if(hp <= 0) {
+            anim.SetTrigger("Dead");
+        }
+    }
+
+    public void ResetAnimation() {
+        anim.ResetTrigger("Dead");
     }
 }
