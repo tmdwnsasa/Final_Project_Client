@@ -291,13 +291,16 @@ public class GameEndPayload
     public class UserState
     {
         [ProtoMember(1)]
-        public string playerId { get; set; }
+        public string name { get; set; }
 
         [ProtoMember(2)]
         public uint kill { get; set; }
 
         [ProtoMember(3)]
         public uint death { get; set; }
+
+        [ProtoMember(4)]
+        public uint damage { get; set; }
     }
 }
 
