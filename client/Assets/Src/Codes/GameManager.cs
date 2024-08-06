@@ -43,13 +43,15 @@ public class GameManager : MonoBehaviour
     public GameObject MatchStartUI;
     public GameObject exitBtn;
 
-    void Awake() {
+    void Awake()
+    {
         instance = this;
         Application.targetFrameRate = targetFrameRate;
         SetBtn();
     }
 
-    public void GameStart() {
+    public void GameStart()
+    {
         player.gameObject.transform.position = new Vector2(0, 0);
         player.playerId = playerId;
         player.name = name;
@@ -99,7 +101,7 @@ public class GameManager : MonoBehaviour
         LoginUI.SetActive(false);
         RegisterUI.SetActive(false);
         CharacterSelectUI.SetActive(true);
-        for(int i = 0; i < possession.Count; i++)
+        for (int i = 0; i < possession.Count; i++)
         {
             GameObject.Find("CharacterSelect").transform.GetChild(0).GetChild((int)possession[i]).gameObject.SetActive(true);
         }
@@ -150,16 +152,19 @@ public class GameManager : MonoBehaviour
         }
     }
 
-     public void BattleGameStart(){
+    public void BattleGameStart()
+    {
         MatchStartUI.SetActive(false);
     }
 
-    public void GameOver() {
+    public void GameOver()
+    {
         isLive = false;
         // StartCoroutine(GameOverRoutine());
     }
 
-    IEnumerator GameOverRoutine() {
+    IEnumerator GameOverRoutine()
+    {
         isLive = false;
         yield return new WaitForSeconds(0.5f);
 
@@ -167,17 +172,20 @@ public class GameManager : MonoBehaviour
         AudioManager.instance.PlaySfx(AudioManager.Sfx.Lose);
     }
 
-    public void GameRetry() {
+    public void GameRetry()
+    {
         SceneManager.LoadScene(0);
     }
 
-    public void GameQuit() {
+    public void GameQuit()
+    {
         Application.Quit();
     }
 
     void Update()
     {
-        if (!isLive) {
+        if (!isLive)
+        {
             return;
         }
         gameTime += Time.deltaTime;
@@ -187,21 +195,40 @@ public class GameManager : MonoBehaviour
     public void GameEnd(string result, List<GameEndPayload.UserState> users)
     {
         isLive = false;
-        
+
         victory = GameEndUI.transform.Find("victory").GetComponent<Image>();
         defeat = GameEndUI.transform.Find("defeat").GetComponent<Image>();
+        // for (int i = 0; i < users.Count; i++)
+        // {
+        //     // Debug.Log(users[i].name);
+        //     // Debug.Log(users[i].kill);
+        //     // Debug.Log(users[i].death);
+        //     // Debug.Log(users[i].damage);
+        //     Text userName = GameEndUI.transform.Find("Panel/user"+ i+1 +"_name").GetComponent<Text>();
+        //     Text userKill = GameEndUI.transform.Find("Panel/user"+ i+1 +"_kill").GetComponent<Text>();
+        //     Text userDeath = GameEndUI.transform.Find("Panel/user"+ i+1 +"_death").GetComponent<Text>();
+        //     Text userDamage = GameEndUI.transform.Find("Panel/user"+ i+1 +"_damage").GetComponent<Text>();
+        //     userName.text = users[i].name;
+        //     userKill.text = users[i].kill.ToString();
+        //     userDeath.text = users[i].death.ToString();
+        //     userDamage.text = users[i].damage.ToString();
+        // }
         Text user1Name = GameEndUI.transform.Find("Panel/user1_name").GetComponent<Text>();
         Text user1Kill = GameEndUI.transform.Find("Panel/user1_kill").GetComponent<Text>();
         Text user1Death = GameEndUI.transform.Find("Panel/user1_death").GetComponent<Text>();
+        Text user1Damage = GameEndUI.transform.Find("Panel/user1_damage").GetComponent<Text>();
         Text user2Name = GameEndUI.transform.Find("Panel/user2_name").GetComponent<Text>();
         Text user2kill = GameEndUI.transform.Find("Panel/user2_kill").GetComponent<Text>();
+        Text user2Damage = GameEndUI.transform.Find("Panel/user2_damage").GetComponent<Text>();
         Text user2Death = GameEndUI.transform.Find("Panel/user2_death").GetComponent<Text>();
         Text user3Name = GameEndUI.transform.Find("Panel/user3_name").GetComponent<Text>();
         Text user3Kill = GameEndUI.transform.Find("Panel/user3_kill").GetComponent<Text>();
         Text user3Death = GameEndUI.transform.Find("Panel/user3_death").GetComponent<Text>();
+        Text user3Damage = GameEndUI.transform.Find("Panel/user3_damage").GetComponent<Text>();
         Text user4Name = GameEndUI.transform.Find("Panel/user4_name").GetComponent<Text>();
         Text user4Kill = GameEndUI.transform.Find("Panel/user4_kill").GetComponent<Text>();
         Text user4Death = GameEndUI.transform.Find("Panel/user4_death").GetComponent<Text>();
+        Text user4Damage = GameEndUI.transform.Find("Panel/user4_damage").GetComponent<Text>();
 
         GameEndUI.SetActive(true);
         if (result == "Win")
@@ -214,18 +241,22 @@ public class GameManager : MonoBehaviour
             victory.gameObject.SetActive(false);
             defeat.gameObject.SetActive(true);
         }
-        user1Name.text = users[0].playerId;
+        user1Name.text = users[0].name;
         user1Kill.text = users[0].kill.ToString();
         user1Death.text = users[0].death.ToString();
-        user2Name.text = users[1].playerId;
+        user1Damage.text = users[0].damage.ToString();
+        user2Name.text = users[1].name;
         user2kill.text = users[1].kill.ToString(); 
         user2Death.text = users[1].death.ToString(); 
-        // user3Name.text = users[2].playerId;
-        // user3Kill.text = users[2].kill.ToString(); 
-        // user3Death.text = users[2].death.ToString(); 
-        // user4Name.text = users[3].playerId;
-        // user4Kill.text = users[3].kill.ToString(); 
-        // user4Death.text = users[3].death.ToString(); 
+        user2Damage.text = users[1].damage.ToString(); 
+        user3Name.text = users[2].name;
+        user3Kill.text = users[2].kill.ToString(); 
+        user3Death.text = users[2].death.ToString(); 
+        user3Damage.text = users[2].damage.ToString(); 
+        user4Name.text = users[3].name;
+        user4Kill.text = users[3].kill.ToString(); 
+        user4Death.text = users[3].death.ToString(); 
+        user4Damage.text = users[3].damage.ToString(); 
     }
 
     public void ReturnLobby()
