@@ -218,12 +218,12 @@ public class GameManager : MonoBehaviour
         user2Name.text = users[1].playerId;
         user2kill.text = users[1].kill.ToString(); 
         user2Death.text = users[1].death.ToString(); 
-        // user3Name.text = users[2].playerId;
-        // user3Kill.text = users[2].kill.ToString(); 
-        // user3Death.text = users[2].death.ToString(); 
-        // user4Name.text = users[3].playerId;
-        // user4Kill.text = users[3].kill.ToString(); 
-        // user4Death.text = users[3].death.ToString(); 
+        user3Name.text = users[2].playerId;
+        user3Kill.text = users[2].kill.ToString(); 
+        user3Death.text = users[2].death.ToString(); 
+        user4Name.text = users[3].playerId;
+        user4Kill.text = users[3].kill.ToString(); 
+        user4Death.text = users[3].death.ToString(); 
     }
 
     public void ReturnLobby()
