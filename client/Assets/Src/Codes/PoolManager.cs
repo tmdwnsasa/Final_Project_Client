@@ -48,6 +48,17 @@ public class PoolManager : MonoBehaviour
         return select;
     }
 
+    public GameObject GetId(string playerId) {
+        // 유저가 이미 존재하면 해당 유저 반환
+        if (userDictionary.TryGetValue(playerId, out GameObject existingUser)) {
+            return existingUser;
+        }
+        else
+        {
+            return null;
+        }
+    }
+
     public void Remove(string userId) {
         if (userDictionary.TryGetValue(userId, out GameObject userObject)) {
             Debug.Log($"Removing user: {userId}");

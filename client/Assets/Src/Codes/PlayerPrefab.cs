@@ -13,7 +13,7 @@ public class PlayerPrefab : MonoBehaviour
     private Vector3 currentPosition;
     private uint characterId;
     TextMeshPro myText;
-    
+
     void Awake()
     {
         anim = GetComponent<Animator>();
@@ -28,16 +28,19 @@ public class PlayerPrefab : MonoBehaviour
         currentPosition = Vector3.zero;
         this.characterId = characterId;
 
-        if (playerId.Length > 5) {
+        if (playerId.Length > 5)
+        {
             myText.text = playerId[..5];
-        } else {
+        }
+        else
+        {
             myText.text = playerId;
         }
         myText.GetComponent<MeshRenderer>().sortingOrder = 6;
     }
 
     void OnEnable()
-    {    
+    {
         anim.runtimeAnimatorController = animCon[characterId];
     }
 
@@ -74,11 +77,31 @@ public class PlayerPrefab : MonoBehaviour
         }
     }
 
+    public void SetNearSkill(float x, float y, float rangeX, float rangeY)
+    {
+        transform.GetChild(4).gameObject.SetActive(true);
+        transform.GetChild(4).localPosition = new Vector2(x, y);
+        transform.GetChild(4).localScale = new Vector3(rangeX, rangeY, 1);
+        StartCoroutine(AttackRangeCheck());
+    }
+
     void OnCollisionStay2D(Collision2D collision)
     {
         if (!GameManager.instance.isLive)
         {
             return;
+        }
+    }
+    IEnumerator AttackRangeCheck()
+    {
+        yield return new WaitForSeconds(1.0f);
+        transform.GetChild(4).gameObject.SetActive(false);
+    }
+
+    public void SetHp(float hp) {
+        //hp 설정
+        if(hp <= 0) {
+            anim.SetBool("Dead", true);
         }
     }
 }

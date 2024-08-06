@@ -22,6 +22,7 @@ public class Handlers : MonoBehaviour
         GAME_END = 15,
         RETURN_LOBBY = 16,
         EXIT = 20,
+        SKILL = 50
     }
 
     [Serializable]
