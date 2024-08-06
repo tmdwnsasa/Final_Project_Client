@@ -377,6 +377,8 @@ public class NetworkManager : MonoBehaviour
         GameManager.instance.isLive = true;
         GameManager.instance.player.ResetAnimation();
         isLobby = true;
+
+        GameManager.instance.MatchStartUI.SetActive(true);
     }
 
     public void SendExitPacket()
