@@ -462,6 +462,11 @@ public class NetworkManager : MonoBehaviour
                 case Packets.PacketType.SKILL:
                     HandleSkillPacket(packetData);
                     break;
+
+                case Packets.PacketType.ATTACK:
+                    HandleAttackPacket(packetData);
+                    break;
+
             }
         }
     }
@@ -595,6 +600,16 @@ public class NetworkManager : MonoBehaviour
     {
         var response = Packets.Deserialize<GameEndPayload>(packetData);
         GameManager.instance.GameEnd(response.result, response.users);
+    }
+
+    void HandleAttackPacket(byte[] packetData)
+    {
+        var response = Packets.Deserialize<AttackedSuccess>(packetData);
+
+        foreach (var user in response.users)
+        {
+            Debug.Log($"{user.playerId} : {user.hp}");
+        }
     }
 
     //recieve GAME_START packet

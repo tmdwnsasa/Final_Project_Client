@@ -4,18 +4,21 @@ using System.IO;
 using System.Buffers;
 using System.Collections.Generic;
 using System;
+using JetBrains.Annotations;
 
 public class Packets : MonoBehaviour
 {
-    public enum PacketType {
+    public enum PacketType
+    {
         PING = 0,
         NORMAL = 1,
         GAME_START = 2,
         LOCATION = 3,
         GAME_END = 4,
         CHATTING = 5,
-        MATCHMAKING =6,
-        SKILL = 50
+        MATCHMAKING = 6,
+        ATTACK = 40,
+        SKILL = 50,
     }
 
     public static void Serialize<T>(IBufferWriter<byte> writer, T data)
@@ -23,12 +26,17 @@ public class Packets : MonoBehaviour
         Serializer.Serialize(writer, data);
     }
 
-    public static T Deserialize<T>(byte[] data) {
-        try {
-            using (var stream = new MemoryStream(data)) {
+    public static T Deserialize<T>(byte[] data)
+    {
+        try
+        {
+            using (var stream = new MemoryStream(data))
+            {
                 return ProtoBuf.Serializer.Deserialize<T>(stream);
             }
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             Debug.LogError($"Deserialize: Failed to deserialize data. Exception: {ex}");
             throw;
         }
@@ -102,7 +110,8 @@ public class Ping
 }
 
 [ProtoContract]
-public class LocationUpdatePayload {
+public class LocationUpdatePayload
+{
     [ProtoMember(1, IsRequired = true)]
     public float x { get; set; }
     [ProtoMember(2, IsRequired = true)]
@@ -112,7 +121,8 @@ public class LocationUpdatePayload {
 }
 
 [ProtoContract]
-public class ChattingPayload {
+public class ChattingPayload
+{
     [ProtoMember(1, IsRequired = true)]
     public string message { get; set; }
     [ProtoMember(2, IsRequired = true)]
@@ -122,7 +132,8 @@ public class ChattingPayload {
 }
 
 [ProtoContract]
-public class SkillPayload{
+public class SkillPayload
+{
     [ProtoMember(1, IsRequired = true)]
     public float x { get; set; }
 
@@ -192,7 +203,25 @@ public class SkillUpdate
 }
 
 [ProtoContract]
-public class Response {
+public class AttackedSuccess
+{
+    [ProtoMember(1)]
+    public List<UserAttackState> users { get; set; }
+
+    [ProtoContract]
+    public class UserAttackState
+    {
+        [ProtoMember(1)]
+        public string playerId { get; set; }
+
+        [ProtoMember(2)]
+        public float hp { get; set; }
+    }
+}
+
+[ProtoContract]
+public class Response
+{
     [ProtoMember(1)]
     public uint handlerId { get; set; }
 
@@ -292,7 +321,7 @@ public class ExitPayload
 [ProtoContract]
 public class MatchingPayload
 {
-    [ProtoMember(1,IsRequired = true)]
+    [ProtoMember(1, IsRequired = true)]
     public string sessionId { get; set; }
 
 }
@@ -300,7 +329,7 @@ public class MatchingPayload
 [ProtoContract]
 public class MatchMakingComplete
 {
-    [ProtoMember(1,IsRequired = true)]
+    [ProtoMember(1, IsRequired = true)]
     public string message { get; set; }
 
 }
