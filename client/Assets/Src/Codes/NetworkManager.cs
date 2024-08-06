@@ -120,6 +120,12 @@ public class NetworkManager : MonoBehaviour
         GameManager.instance.ReturnLobby();
     }
 
+    public void OnExitButtonClicked()
+    {
+        SendExitPacket();
+    }
+
+
     bool IsValidIP(string ip)
     {
         // 간단한 IP 유효성 검사
@@ -371,6 +377,16 @@ public class NetworkManager : MonoBehaviour
         isLobby = true;
     }
 
+    public void SendExitPacket()
+    {
+        ExitPayload exitPayload = new ExitPayload
+        {
+            message = "exit"
+        };
+
+        SendPacket(exitPayload, (uint)Handlers.HandlerIds.EXIT);
+    }
+
 
     void StartReceiving()
     {
@@ -492,24 +508,9 @@ public class NetworkManager : MonoBehaviour
                     break;
                 case (uint)Handlers.HandlerIds.SKILL:
                     break;
-            }
-            if (response.handlerId == (uint)Handlers.HandlerIds.LOGIN)
-            {
-                string jsonString = Encoding.UTF8.GetString(response.data);
-
-                // "x" 값 추출
-                int indexXStart = jsonString.IndexOf("\"x\":") + 4; // "x": 다음 인덱스에서 시작
-                int indexXEnd = jsonString.IndexOf(",", indexXStart); // 쉼표(,)가 나오는 곳까지
-                string xString = jsonString.Substring(indexXStart, indexXEnd - indexXStart);
-                float x = float.Parse(xString);
-
-                // "y" 값 추출
-                int indexYStart = jsonString.IndexOf("\"y\":") + 4; // "y": 다음 인덱스에서 시작
-                int indexYEnd = jsonString.IndexOf("}", indexYStart); // 닫는 중괄호(})가 나오는 곳까지
-                string yString = jsonString.Substring(indexYStart, indexYEnd - indexYStart);
-                float y = float.Parse(yString);
-
-                GameManager.instance.GameStart();
+                case (uint)Handlers.HandlerIds.EXIT:
+                    Application.Quit();
+                    break;
             }
             ProcessResponseData(response.data);
         }
