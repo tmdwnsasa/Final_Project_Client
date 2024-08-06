@@ -186,6 +186,8 @@ public class GameManager : MonoBehaviour
     private Image defeat;
     public void GameEnd(string result, List<GameEndPayload.UserState> users)
     {
+        isLive = false;
+        
         victory = GameEndUI.transform.Find("victory").GetComponent<Image>();
         defeat = GameEndUI.transform.Find("defeat").GetComponent<Image>();
         Text user1Name = GameEndUI.transform.Find("Panel/user1_name").GetComponent<Text>();
