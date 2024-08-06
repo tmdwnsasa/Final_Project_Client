@@ -456,6 +456,7 @@ public class NetworkManager : MonoBehaviour
                 case (uint)Handlers.HandlerIds.JOIN_GAME:
                     break;
                 case (uint)Handlers.HandlerIds.JOIN_LOBBY:
+                    Handlers.instance.SetCharacterStats(response.data);
                     GameManager.instance.GameStart();
                     break;
                 case (uint)Handlers.HandlerIds.CHOICE_CHARACTER:
