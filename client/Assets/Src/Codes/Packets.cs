@@ -298,7 +298,6 @@ public class GameEndPayload
 
         [ProtoMember(3)]
         public uint death { get; set; }
-
     }
 }
 

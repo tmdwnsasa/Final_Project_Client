@@ -130,14 +130,6 @@ public class Player : MonoBehaviour
         }
     }
 
-    void FixedUpdate()
-    {
-        if (!GameManager.instance.isLive)
-        {
-            return;
-        }
-    }
-
     // Update가 끝난이후 적용
     void LateUpdate()
     {
@@ -165,14 +157,14 @@ public class Player : MonoBehaviour
         Vector2 normal = contact.normal;
         //Debug.Log("법선 벡터: " + normal);
 
-        if (normal.x > 0) {
+        if(normal.x > 0) {
             isPlusX = true;
         }
         if(normal.x < 0) {
             isMinusX = true;
         }
 
-        if (normal.y > 0) {
+        if(normal.y > 0) {
             isPlusY = true;
         }
         if(normal.y < 0) {
@@ -215,11 +207,12 @@ public class Player : MonoBehaviour
     public void SetHp(float hp) {
         //hp 설정
         if(hp <= 0) {
-            anim.SetTrigger("Dead");
+            anim.SetBool("Dead", true);
+            GameManager.instance.isLive = false;
         }
     }
 
     public void ResetAnimation() {
-        anim.ResetTrigger("Dead");
+        anim.SetBool("Dead", false);
     }
 }

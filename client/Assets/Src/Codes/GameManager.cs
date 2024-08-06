@@ -7,8 +7,6 @@ using UnityEngine.SceneManagement;
 using UnityEngine.SocialPlatforms;
 using UnityEngine.UI;
 
-
-
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
@@ -43,9 +41,6 @@ public class GameManager : MonoBehaviour
     public GameObject CharacterSelectUI;
     public GameObject GameEndUI;
     public GameObject MatchStartUI;
-
-
-
 
     void Awake() {
         instance = this;
@@ -158,7 +153,8 @@ public class GameManager : MonoBehaviour
     }
 
     public void GameOver() {
-        StartCoroutine(GameOverRoutine());
+        isLive = false;
+        // StartCoroutine(GameOverRoutine());
     }
 
     IEnumerator GameOverRoutine() {
@@ -206,13 +202,13 @@ public class GameManager : MonoBehaviour
         GameEndUI.SetActive(true);
         if (result == "Win")
         {
-                victory.gameObject.SetActive(true);
-                defeat.gameObject.SetActive(false);
+            victory.gameObject.SetActive(true);
+            defeat.gameObject.SetActive(false);
         }
         else if (result == "Lose")
         {
-                victory.gameObject.SetActive(false);
-                defeat.gameObject.SetActive(true);
+            victory.gameObject.SetActive(false);
+            defeat.gameObject.SetActive(true);
         }
         user1Name.text = users[0].playerId;
         user1Kill.text = users[0].kill.ToString();
@@ -220,14 +216,12 @@ public class GameManager : MonoBehaviour
         user2Name.text = users[1].playerId;
         user2kill.text = users[1].kill.ToString(); 
         user2Death.text = users[1].death.ToString(); 
-        user3Name.text = users[2].playerId;
-        user3Kill.text = users[2].kill.ToString(); 
-        user3Death.text = users[2].death.ToString(); 
-        user4Name.text = users[3].playerId;
-        user4Kill.text = users[3].kill.ToString(); 
-        user4Death.text = users[3].death.ToString(); 
-
-
+        // user3Name.text = users[2].playerId;
+        // user3Kill.text = users[2].kill.ToString(); 
+        // user3Death.text = users[2].death.ToString(); 
+        // user4Name.text = users[3].playerId;
+        // user4Kill.text = users[3].kill.ToString(); 
+        // user4Death.text = users[3].death.ToString(); 
     }
 
     public void ReturnLobby()

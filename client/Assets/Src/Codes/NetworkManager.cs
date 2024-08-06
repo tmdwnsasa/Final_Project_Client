@@ -374,6 +374,8 @@ public class NetworkManager : MonoBehaviour
 
         SendPacket(ReturnLobbyRequestPayload, (uint)Handlers.HandlerIds.RETURN_LOBBY);
 
+        GameManager.instance.isLive = true;
+        GameManager.instance.player.ResetAnimation();
         isLobby = true;
     }
 
@@ -605,12 +607,13 @@ public class NetworkManager : MonoBehaviour
     void HandleAttackPacket(byte[] packetData)
     {
         var response = Packets.Deserialize<AttackedSuccess>(packetData);
-        CharacterManager.instance.UpdateCharacterState(response);
-
+        
         foreach (var user in response.users)
         {
             Debug.Log($"{user.playerId} : {user.hp}");
         }
+
+        CharacterManager.instance.UpdateCharacterState(response);
     }
 
     //recieve GAME_START packet

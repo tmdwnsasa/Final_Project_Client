@@ -17838,7 +17838,7 @@ Camera:
   far clip plane: 1000
   field of view: 34
   orthographic: 1
-  orthographic size: 7.7777777
+  orthographic size: 19.500643
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -41320,7 +41320,7 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
-  m_Size: {x: 1, y: 1.42}
+  m_Size: {x: 0.7, y: 1}
   m_Direction: 0
 --- !u!50 &1729806263
 Rigidbody2D:
@@ -41485,7 +41485,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inputVec: {x: 0, y: 0}
+  characterId: 0
+  characterName: 
+  hp: 0
   speed: 3
+  power: 0
+  defense: 0
+  critical: 0
   playerId: 
   name: 
   animCon:

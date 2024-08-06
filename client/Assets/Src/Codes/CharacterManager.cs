@@ -14,10 +14,10 @@ public class CharacterManager : MonoBehaviour
 
     public void Spawn(LocationUpdate data)
     {
-        if (!GameManager.instance.isLive)
-        {
-            return;
-        }
+        // if (!GameManager.instance.isLive)
+        // {
+        //     return;
+        // }
 
         HashSet<string> newUsers = new HashSet<string>();
 

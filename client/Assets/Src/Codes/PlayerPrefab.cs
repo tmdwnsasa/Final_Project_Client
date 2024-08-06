@@ -101,11 +101,7 @@ public class PlayerPrefab : MonoBehaviour
     public void SetHp(float hp) {
         //hp 설정
         if(hp <= 0) {
-            anim.SetTrigger("Dead");
+            anim.SetBool("Dead", true);
         }
-    }
-
-    public void ResetAnimation() {
-        anim.ResetTrigger("Dead");
     }
 }
