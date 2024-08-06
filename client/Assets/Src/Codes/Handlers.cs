@@ -42,6 +42,19 @@ public class Handlers : MonoBehaviour
         public List<uint> possession;
     }
 
+    [Serializable]
+    public struct CharacterStats
+    {
+        public int characterId;
+        public string characterName;
+        public float hp;
+        public float speed;
+        public float power;
+        public float defense;
+        public float critical;
+        public int price;
+    }
+
     public void GetCharacterChoice(byte[] data)
     {
         string jsonString = Encoding.UTF8.GetString(data);
@@ -67,5 +80,19 @@ public class Handlers : MonoBehaviour
         Debug.Log(GameManager.instance.possession[0]);
 
         GameManager.instance.GoCharacterSelect();
+    }
+
+    public void SetCharacterStats(byte[] data)
+    {
+        string jsonString = Encoding.UTF8.GetString(data);
+        CharacterStats characterStats = JsonUtility.FromJson<CharacterStats>(jsonString);
+
+        GameManager.instance.player.characterId = characterStats.characterId;
+        GameManager.instance.player.characterName = characterStats.characterName;
+        GameManager.instance.player.hp = characterStats.hp;
+        GameManager.instance.player.speed = characterStats.speed;
+        GameManager.instance.player.power = characterStats.power;
+        GameManager.instance.player.defense = characterStats.defense;
+        GameManager.instance.player.critical = characterStats.critical;
     }
 }

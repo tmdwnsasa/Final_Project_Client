@@ -10,7 +10,15 @@ using UnityEngine.UI;
 public class Player : MonoBehaviour
 {
     public Vector2 inputVec;
+
+    public int characterId;
+    public string characterName;
+    public float hp;
     public float speed;
+    public float power;
+    public float defense;
+    public float critical;
+
     public string playerId;
     public string name;
     public RuntimeAnimatorController[] animCon;
@@ -157,21 +165,17 @@ public class Player : MonoBehaviour
         Vector2 normal = contact.normal;
         //Debug.Log("법선 벡터: " + normal);
 
-        if (normal.x > 0)
-        {
+        if (normal.x > 0) {
             isPlusX = true;
         }
-        else if (normal.x < 0)
-        {
+        if(normal.x < 0) {
             isMinusX = true;
         }
 
-        if (normal.y > 0)
-        {
+        if (normal.y > 0) {
             isPlusY = true;
         }
-        else if (normal.y < 0)
-        {
+        if(normal.y < 0) {
             isMinusY = true;
         }
     }
