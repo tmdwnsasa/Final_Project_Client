@@ -379,6 +379,7 @@ public class NetworkManager : MonoBehaviour
         isLobby = true;
 
         GameManager.instance.MatchStartUI.SetActive(true);
+        GameManager.instance.exitBtn.SetActive(true);
     }
 
     public void SendExitPacket()
@@ -630,6 +631,7 @@ public class NetworkManager : MonoBehaviour
         isLobby = false;
 
         GameManager.instance.BattleGameStart();
+        GameManager.instance.exitBtn.SetActive(false);
     }
 
 }
