@@ -566,7 +566,7 @@ public class NetworkManager : MonoBehaviour
         var response = Packets.Deserialize<BattleStart>(packetData);
         foreach (var user in response.users)
         {
-            Debug.Log($"Player ID: {user.playerId}, Team: {user.team}, Position: ({user.x}, {user.y})");
+            Debug.Log($"Player ID: {user.playerId}, Team: {user.team}, HP : {user.hp}, Position: ({user.x}, {user.y})");
         }
 
         isLobby = false;

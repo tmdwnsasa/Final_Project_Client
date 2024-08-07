@@ -356,9 +356,12 @@ public class BattleStart
         public string team { get; set; }
 
         [ProtoMember(3)]
-        public float x { get; set; }
+        public float hp { get; set; }
 
         [ProtoMember(4)]
+        public float x { get; set; }
+
+        [ProtoMember(5)]
         public float y { get; set; }
 
     }
