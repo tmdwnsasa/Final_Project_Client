@@ -435,6 +435,11 @@ public class NetworkManager : MonoBehaviour
         var response = Packets.Deserialize<Response>(packetData);
         Debug.Log($"HandlerId: {response.handlerId}, responseCode: {response.responseCode}, timestamp: {response.timestamp}");
 
+        if (response.responseCode == 10008)
+        {
+            Application.Quit();
+        }
+
         if (response.responseCode != 0 && !uiNotice.activeSelf)
         {
             AudioManager.instance.PlaySfx(AudioManager.Sfx.LevelUp);
@@ -546,7 +551,7 @@ public class NetworkManager : MonoBehaviour
     void HandleAttackPacket(byte[] packetData)
     {
         var response = Packets.Deserialize<AttackedSuccess>(packetData);
-        
+
         foreach (var user in response.users)
         {
             Debug.Log($"{user.playerId} : {user.hp}");

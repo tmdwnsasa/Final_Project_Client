@@ -120,7 +120,7 @@ public class Player : MonoBehaviour
         else
             BoxArea.y = 0;
 
-        if (!(inputVec.x != 0))
+        if (!(inputVec.x != 0 && inputVec.y != 0))
         {
             //공격
             if (Input.GetKeyDown(KeyCode.Z) && !NetworkManager.instance.isLobby)
@@ -165,17 +165,21 @@ public class Player : MonoBehaviour
         Vector2 normal = contact.normal;
         //Debug.Log("법선 벡터: " + normal);
 
-        if(normal.x > 0) {
+        if (normal.x > 0)
+        {
             isPlusX = true;
         }
-        if(normal.x < 0) {
+        if (normal.x < 0)
+        {
             isMinusX = true;
         }
 
-        if(normal.y > 0) {
+        if (normal.y > 0)
+        {
             isPlusY = true;
         }
-        if(normal.y < 0) {
+        if (normal.y < 0)
+        {
             isMinusY = true;
         }
     }
@@ -212,15 +216,18 @@ public class Player : MonoBehaviour
         transform.GetChild(4).gameObject.SetActive(false);
     }
 
-    public void SetHp(float hp) {
+    public void SetHp(float hp)
+    {
         //hp 설정
-        if(hp <= 0) {
+        if (hp <= 0)
+        {
             anim.SetBool("Dead", true);
             GameManager.instance.isLive = false;
         }
     }
 
-    public void ResetAnimation() {
+    public void ResetAnimation()
+    {
         anim.SetBool("Dead", false);
     }
 }
