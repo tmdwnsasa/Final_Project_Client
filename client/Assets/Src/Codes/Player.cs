@@ -13,7 +13,12 @@ public class Player : MonoBehaviour
 
     public int characterId;
     public string characterName;
-    public float hp;
+
+    public float nowHp;
+    public float hp = 0;
+
+    public Slider hpSlider;
+
     public float speed;
     public float power;
     public float defense;
@@ -42,12 +47,16 @@ public class Player : MonoBehaviour
         anim = GetComponent<Animator>();
         myText = GetComponentInChildren<TextMeshPro>();
 
+        hpSlider.gameObject.SetActive(false);
+
         oldInputVec = new Vector2(0, 0);
 
         isPlusX = false;
         isMinusX = false;
         isPlusY = false;
         isMinusY = false;
+
+        hpSlider.value = 1;
     }
 
     void OnEnable()
@@ -120,7 +129,7 @@ public class Player : MonoBehaviour
         else
             BoxArea.y = 0;
 
-        if (!(inputVec.x != 0))
+        if (!(inputVec.x != 0 && inputVec.y != 0))
         {
             //공격
             if (Input.GetKeyDown(KeyCode.Z) && !NetworkManager.instance.isLobby)
@@ -165,17 +174,21 @@ public class Player : MonoBehaviour
         Vector2 normal = contact.normal;
         //Debug.Log("법선 벡터: " + normal);
 
-        if(normal.x > 0) {
+        if (normal.x > 0)
+        {
             isPlusX = true;
         }
-        if(normal.x < 0) {
+        if (normal.x < 0)
+        {
             isMinusX = true;
         }
 
-        if(normal.y > 0) {
+        if (normal.y > 0)
+        {
             isPlusY = true;
         }
-        if(normal.y < 0) {
+        if (normal.y < 0)
+        {
             isMinusY = true;
         }
     }
@@ -212,15 +225,29 @@ public class Player : MonoBehaviour
         transform.GetChild(4).gameObject.SetActive(false);
     }
 
-    public void SetHp(float hp) {
+    public void SetHp(float hp)
+    {
+        nowHp = hp;
+        hpSlider.value = nowHp / this.hp;
         //hp 설정
-        if(hp <= 0) {
+        if (hp <= 0)
+        {
+            hpSlider.gameObject.SetActive(false);
             anim.SetBool("Dead", true);
             GameManager.instance.isLive = false;
         }
     }
 
-    public void ResetAnimation() {
+    public void startSetHp(float hp)
+    {
+        hpSlider.gameObject.SetActive(true);
+        //hp 설정
+        this.hp = hp;
+        nowHp = hp;
+        hpSlider.value = nowHp / hp;
+    }
+    public void ResetAnimation()
+    {
         anim.SetBool("Dead", false);
     }
 }

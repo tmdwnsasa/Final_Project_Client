@@ -14,6 +14,10 @@ public class PlayerPrefab : MonoBehaviour
     private uint characterId;
     TextMeshPro myText;
 
+    public float nowHp;
+    public float hp;
+    public Slider hpSlider;
+
     void Awake()
     {
         anim = GetComponent<Animator>();
@@ -26,6 +30,8 @@ public class PlayerPrefab : MonoBehaviour
         anim.runtimeAnimatorController = animCon[characterId];
         lastPosition = Vector3.zero;
         currentPosition = Vector3.zero;
+        hpSlider.gameObject.SetActive(false);
+
         this.characterId = characterId;
 
         if (playerId.Length > 5)
@@ -98,10 +104,24 @@ public class PlayerPrefab : MonoBehaviour
         transform.GetChild(4).gameObject.SetActive(false);
     }
 
-    public void SetHp(float hp) {
+    public void SetHp(float hp)
+    {
+        nowHp = hp;
+        hpSlider.value = nowHp / this.hp;
         //hp 설정
-        if(hp <= 0) {
+        if (hp <= 0)
+        {
+            hpSlider.gameObject.SetActive(false);
             anim.SetBool("Dead", true);
         }
+    }
+
+    public void startSetHp(float hp)
+    {
+        hpSlider.gameObject.SetActive(true);
+        //hp 설정
+        this.hp = hp;
+        nowHp = hp;
+        hpSlider.value = nowHp / hp;
     }
 }
