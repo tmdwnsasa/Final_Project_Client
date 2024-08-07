@@ -260,8 +260,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1131302436}
-        m_TargetAssemblyTypeName: NetworkManager, Assembly-CSharp
+      - m_Target: {fileID: 564488354}
+        m_TargetAssemblyTypeName: ButtonController, Assembly-CSharp
         m_MethodName: OnReturnLobbyButtonClicked
         m_Mode: 1
         m_Arguments:
@@ -5887,8 +5887,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1131302436}
-        m_TargetAssemblyTypeName: NetworkManager, Assembly-CSharp
+      - m_Target: {fileID: 564488354}
+        m_TargetAssemblyTypeName: ButtonController, Assembly-CSharp
         m_MethodName: OnLoginButtonClicked
         m_Mode: 1
         m_Arguments:
@@ -17838,7 +17838,7 @@ Camera:
   far clip plane: 1000
   field of view: 34
   orthographic: 1
-  orthographic size: 7.7777777
+  orthographic size: 19.500643
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -22293,6 +22293,50 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!1 &564488353
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 564488355}
+  - component: {fileID: 564488354}
+  m_Layer: 0
+  m_Name: ButtonController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &564488354
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 564488353}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7b181aca4fc4684b983f4224fb387ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &564488355
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 564488353}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 420.50836, y: 403.87677, z: -3.5783484}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &576129587
 GameObject:
   m_ObjectHideFlags: 0
@@ -23144,8 +23188,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1131302436}
-        m_TargetAssemblyTypeName: NetworkManager, Assembly-CSharp
+      - m_Target: {fileID: 564488354}
+        m_TargetAssemblyTypeName: ButtonController, Assembly-CSharp
         m_MethodName: OnMatchGameButtonClicked
         m_Mode: 1
         m_Arguments:
@@ -23523,8 +23567,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1131302436}
-        m_TargetAssemblyTypeName: NetworkManager, Assembly-CSharp
+      - m_Target: {fileID: 564488354}
+        m_TargetAssemblyTypeName: ButtonController, Assembly-CSharp
         m_MethodName: OnExitButtonClicked
         m_Mode: 1
         m_Arguments:
@@ -23603,7 +23647,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bgmClip: {fileID: 8300000, guid: 4559935c00ef8e94b846e2e03e39f0d0, type: 3}
-  bgmVolume: 0.1
+  bgmVolume: 0.05
   sfxClips:
   - {fileID: 8300000, guid: 291608b8d286e2a4580ff36324455ce2, type: 3}
   - {fileID: 8300000, guid: 0bddcb411d826e14bb26d40ae45d8e22, type: 3}
@@ -23615,7 +23659,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 6f0c572d865b4664db7a460972bc4768, type: 3}
   - {fileID: 8300000, guid: 4b294d59d2399014daa718b35c9de73b, type: 3}
   - {fileID: 8300000, guid: 2c4bc183a5df5aa4baf7c4fcf236a2de, type: 3}
-  sfxVolume: 0.3
+  sfxVolume: 0.1
   channels: 16
 --- !u!4 &749104444
 Transform:
@@ -23721,7 +23765,7 @@ GameObject:
   - component: {fileID: 764992098}
   - component: {fileID: 764992097}
   m_Layer: 5
-  m_Name: RegisterButton
+  m_Name: SelectButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -23806,8 +23850,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1131302436}
-        m_TargetAssemblyTypeName: NetworkManager, Assembly-CSharp
+      - m_Target: {fileID: 564488354}
+        m_TargetAssemblyTypeName: ButtonController, Assembly-CSharp
         m_MethodName: OnCharacterSelectButtonClicked
         m_Mode: 1
         m_Arguments:
@@ -31773,11 +31817,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8766ffeec1be47e4a32f195e974de55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  loginIdInputField: {fileID: 292250540}
-  loginPasswordInputField: {fileID: 1376315085}
-  registerIdInputField: {fileID: 910971216}
-  registerPasswordInputField: {fileID: 1125321820}
-  registerNameInputField: {fileID: 432587436}
   uiNotice: {fileID: 1390587656}
   isLobby: 0
 --- !u!4 &1131302437
@@ -32492,13 +32531,13 @@ MonoBehaviour:
   player: {fileID: 1729806269}
   chatting: {fileID: 865887264}
   hud: {fileID: 2138311659}
-  LoginUI: {fileID: 1357713223}
-  RegisterUI: {fileID: 1924887434}
-  ChattingUI: {fileID: 865887262}
-  CharacterChoiceUI: {fileID: 14218512}
-  CharacterSelectUI: {fileID: 1465511745}
-  GameEndUI: {fileID: 1775148744}
-  MatchStartUI: {fileID: 1728042655}
+  loginUI: {fileID: 1357713223}
+  registerUI: {fileID: 1924887434}
+  chattingUI: {fileID: 865887262}
+  characterChoiceUI: {fileID: 14218512}
+  characterSelectUI: {fileID: 1465511745}
+  gameEndUI: {fileID: 1775148744}
+  matchStartUI: {fileID: 1728042655}
   exitBtn: {fileID: 1455111996}
 --- !u!1 &1271028042
 GameObject:
@@ -33065,7 +33104,7 @@ GameObject:
   - component: {fileID: 1329122908}
   - component: {fileID: 1329122907}
   m_Layer: 5
-  m_Name: RegisterButton
+  m_Name: ChoiceButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -33150,8 +33189,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1131302436}
-        m_TargetAssemblyTypeName: NetworkManager, Assembly-CSharp
+      - m_Target: {fileID: 564488354}
+        m_TargetAssemblyTypeName: ButtonController, Assembly-CSharp
         m_MethodName: OnCharacterChoiceButtonClicked
         m_Mode: 1
         m_Arguments:
@@ -50638,8 +50677,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1131302436}
-        m_TargetAssemblyTypeName: NetworkManager, Assembly-CSharp
+      - m_Target: {fileID: 564488354}
+        m_TargetAssemblyTypeName: ButtonController, Assembly-CSharp
         m_MethodName: OnRegisterButtonClicked
         m_Mode: 1
         m_Arguments:
@@ -55805,6 +55844,7 @@ SceneRoots:
   - {fileID: 1572847319}
   - {fileID: 749104444}
   - {fileID: 1131302437}
+  - {fileID: 564488355}
   - {fileID: 1729806265}
   - {fileID: 1830330568}
   - {fileID: 1994037204}

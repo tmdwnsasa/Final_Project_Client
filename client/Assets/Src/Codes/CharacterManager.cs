@@ -30,7 +30,7 @@ public class CharacterManager : MonoBehaviour
             else
             {
                 newUsers.Add(user.playerId);
-                GameObject player = GameManager.instance.pool.Get(user);
+                GameObject player = GameManager.instance.pool.Get(user.playerId, user.characterId);
                 PlayerPrefab playerScript = player.GetComponent<PlayerPrefab>();
                 playerScript.UpdatePosition(user.x, user.y);
             }

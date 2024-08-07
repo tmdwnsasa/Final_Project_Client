@@ -34,13 +34,13 @@ public class GameManager : MonoBehaviour
     public Player player;
     public Chatting chatting;
     public GameObject hud;
-    public GameObject LoginUI;
-    public GameObject RegisterUI;
-    public GameObject ChattingUI;
-    public GameObject CharacterChoiceUI;
-    public GameObject CharacterSelectUI;
-    public GameObject GameEndUI;
-    public GameObject MatchStartUI;
+    public GameObject loginUI;
+    public GameObject registerUI;
+    public GameObject chattingUI;
+    public GameObject characterChoiceUI;
+    public GameObject characterSelectUI;
+    public GameObject gameEndUI;
+    public GameObject matchStartUI;
     public GameObject exitBtn;
 
     void Awake()
@@ -57,12 +57,12 @@ public class GameManager : MonoBehaviour
         player.name = name;
         player.gameObject.SetActive(true);
         hud.SetActive(true);
-        LoginUI.SetActive(false);
-        RegisterUI.SetActive(false);
-        CharacterChoiceUI.SetActive(false);
-        CharacterSelectUI.SetActive(false);
-        ChattingUI.SetActive(true);
-        MatchStartUI.SetActive(true);
+        loginUI.SetActive(false);
+        registerUI.SetActive(false);
+        characterChoiceUI.SetActive(false);
+        characterSelectUI.SetActive(false);
+        chattingUI.SetActive(true);
+        matchStartUI.SetActive(true);
         exitBtn.SetActive(true);
 
         isLive = true;
@@ -73,37 +73,37 @@ public class GameManager : MonoBehaviour
 
     public void GoRegister()
     {
-        LoginUI.SetActive(false);
-        RegisterUI.SetActive(true);
+        loginUI.SetActive(false);
+        registerUI.SetActive(true);
 
         AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
     }
 
     public void GoLogin()
     {
-        RegisterUI.SetActive(false);
-        LoginUI.SetActive(true);
+        registerUI.SetActive(false);
+        loginUI.SetActive(true);
 
         AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
     }
 
     public void GoCharacterChoice()
     {
-        LoginUI.SetActive(false);
-        RegisterUI.SetActive(false);
-        CharacterChoiceUI.SetActive(true);
+        loginUI.SetActive(false);
+        registerUI.SetActive(false);
+        characterChoiceUI.SetActive(true);
 
         AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
     }
 
     public void GoCharacterSelect()
     {
-        LoginUI.SetActive(false);
-        RegisterUI.SetActive(false);
-        CharacterSelectUI.SetActive(true);
+        loginUI.SetActive(false);
+        registerUI.SetActive(false);
+        characterSelectUI.SetActive(true);
         for (int i = 0; i < possession.Count; i++)
         {
-            GameObject.Find("CharacterSelect").transform.GetChild(0).GetChild((int)possession[i]).gameObject.SetActive(true);
+            characterSelectUI.transform.GetChild(0).GetChild((int)possession[i]).gameObject.SetActive(true);
         }
 
         CharacterChange(possession[0]);
@@ -115,14 +115,14 @@ public class GameManager : MonoBehaviour
         Debug.Log(index);
         characterId = index;
 
-        if (GameObject.Find("Canvas").transform.Find("CharacterChoice").gameObject.activeSelf)
+        if (characterChoiceUI.gameObject.activeSelf)
         {
-            Transform ChoiceImage = GameObject.Find("Canvas").transform.GetChild(4).GetChild(2);
+            Transform ChoiceImage = characterChoiceUI.transform.GetChild(2);
             ChoiceImage.GetComponent<Image>().sprite = farmers[(int)index];
         }
-        if (GameObject.Find("Canvas").transform.Find("CharacterSelect").gameObject.activeSelf)
+        if (characterSelectUI.gameObject.activeSelf)
         {
-            Transform SelectImage = GameObject.Find("Canvas").transform.GetChild(5).GetChild(2);
+            Transform SelectImage = characterSelectUI.transform.GetChild(2);
             SelectImage.GetComponent<Image>().sprite = farmers[(int)index];
         }
     }
@@ -130,7 +130,7 @@ public class GameManager : MonoBehaviour
     public void SetBtn()
     {
         {
-            Transform group = GameObject.Find("Canvas").transform.GetChild(4).GetChild(0);
+            Transform group = characterChoiceUI.transform.GetChild(0);
             int count = group.childCount;
             for (uint i = 0; i < count; i++)
             {
@@ -141,7 +141,7 @@ public class GameManager : MonoBehaviour
         }
 
         {
-            Transform group = GameObject.Find("Canvas").transform.GetChild(5).GetChild(0);
+            Transform group = characterSelectUI.transform.GetChild(0);
             int count = group.childCount;
             for (uint i = 0; i < count; i++)
             {
@@ -150,11 +150,6 @@ public class GameManager : MonoBehaviour
                 btn.GetComponent<Button>().onClick.AddListener(() => CharacterChange(index));
             }
         }
-    }
-
-    public void BattleGameStart()
-    {
-        MatchStartUI.SetActive(false);
     }
 
     public void GameOver()
@@ -196,41 +191,37 @@ public class GameManager : MonoBehaviour
     {
         isLive = false;
 
-        victory = GameEndUI.transform.Find("victory").GetComponent<Image>();
-        defeat = GameEndUI.transform.Find("defeat").GetComponent<Image>();
-        // for (int i = 0; i < users.Count; i++)
-        // {
-        //     // Debug.Log(users[i].name);
-        //     // Debug.Log(users[i].kill);
-        //     // Debug.Log(users[i].death);
-        //     // Debug.Log(users[i].damage);
-        //     Text userName = GameEndUI.transform.Find("Panel/user"+ i+1 +"_name").GetComponent<Text>();
-        //     Text userKill = GameEndUI.transform.Find("Panel/user"+ i+1 +"_kill").GetComponent<Text>();
-        //     Text userDeath = GameEndUI.transform.Find("Panel/user"+ i+1 +"_death").GetComponent<Text>();
-        //     Text userDamage = GameEndUI.transform.Find("Panel/user"+ i+1 +"_damage").GetComponent<Text>();
-        //     userName.text = users[i].name;
-        //     userKill.text = users[i].kill.ToString();
-        //     userDeath.text = users[i].death.ToString();
-        //     userDamage.text = users[i].damage.ToString();
-        // }
-        Text user1Name = GameEndUI.transform.Find("Panel/user1_name").GetComponent<Text>();
-        Text user1Kill = GameEndUI.transform.Find("Panel/user1_kill").GetComponent<Text>();
-        Text user1Death = GameEndUI.transform.Find("Panel/user1_death").GetComponent<Text>();
-        Text user1Damage = GameEndUI.transform.Find("Panel/user1_damage").GetComponent<Text>();
-        Text user2Name = GameEndUI.transform.Find("Panel/user2_name").GetComponent<Text>();
-        Text user2kill = GameEndUI.transform.Find("Panel/user2_kill").GetComponent<Text>();
-        Text user2Damage = GameEndUI.transform.Find("Panel/user2_damage").GetComponent<Text>();
-        Text user2Death = GameEndUI.transform.Find("Panel/user2_death").GetComponent<Text>();
-        Text user3Name = GameEndUI.transform.Find("Panel/user3_name").GetComponent<Text>();
-        Text user3Kill = GameEndUI.transform.Find("Panel/user3_kill").GetComponent<Text>();
-        Text user3Death = GameEndUI.transform.Find("Panel/user3_death").GetComponent<Text>();
-        Text user3Damage = GameEndUI.transform.Find("Panel/user3_damage").GetComponent<Text>();
-        Text user4Name = GameEndUI.transform.Find("Panel/user4_name").GetComponent<Text>();
-        Text user4Kill = GameEndUI.transform.Find("Panel/user4_kill").GetComponent<Text>();
-        Text user4Death = GameEndUI.transform.Find("Panel/user4_death").GetComponent<Text>();
-        Text user4Damage = GameEndUI.transform.Find("Panel/user4_damage").GetComponent<Text>();
+        victory = gameEndUI.transform.GetChild(0).GetComponent<Image>();
+        defeat = gameEndUI.transform.GetChild(1).GetComponent<Image>();
+        for (int i = 0; i < users.Count; i++)
+        {
+            Text userName = gameEndUI.transform.GetChild(2).GetChild(i * 4 + 4).GetComponent<Text>();
+            Text userKill = gameEndUI.transform.GetChild(2).GetChild(i * 4 + 5).GetComponent<Text>();
+            Text userDeath = gameEndUI.transform.GetChild(2).GetChild(i * 4 + 6).GetComponent<Text>();
+            Text userDamage = gameEndUI.transform.GetChild(2).GetChild(i * 4 + 7).GetComponent<Text>();
+            userName.text = users[i].name;
+            userKill.text = users[i].kill.ToString();
+            userDeath.text = users[i].death.ToString();
+            userDamage.text = users[i].damage.ToString();
+        }
+        // Text user1Name = GameEndUI.transform.GetChild(2).GetChild(4).GetComponent<Text>();
+        // Text user1Kill = GameEndUI.transform.GetChild(2).GetChild(5).GetComponent<Text>();
+        // Text user1Death = GameEndUI.transform.GetChild(2).GetChild(6).GetComponent<Text>();
+        // Text user1Damage = GameEndUI.transform.GetChild(2).GetChild(7).GetComponent<Text>();
+        // Text user2Name = GameEndUI.transform.GetChild(2).GetChild(8).GetComponent<Text>();
+        // Text user2kill = GameEndUI.transform.GetChild(2).GetChild(9).GetComponent<Text>();
+        // Text user2Damage = GameEndUI.transform.GetChild(2).GetChild(10).GetComponent<Text>();
+        // Text user2Death = GameEndUI.transform.GetChild(2).GetChild(11).GetComponent<Text>();
+        // Text user3Name = GameEndUI.transform.GetChild(2).GetChild(12).GetComponent<Text>();
+        // Text user3Kill = GameEndUI.transform.GetChild(2).GetChild(13).GetComponent<Text>();
+        // Text user3Death = GameEndUI.transform.GetChild(2).GetChild(14).GetComponent<Text>();
+        // Text user3Damage = GameEndUI.transform.GetChild(2).GetChild(15).GetComponent<Text>();
+        // Text user4Name = GameEndUI.transform.GetChild(2).GetChild(16).GetComponent<Text>();
+        // Text user4Kill = GameEndUI.transform.GetChild(2).GetChild(17).GetComponent<Text>();
+        // Text user4Death = GameEndUI.transform.GetChild(2).GetChild(18).GetComponent<Text>();
+        // Text user4Damage = GameEndUI.transform.GetChild(2).GetChild(19).GetComponent<Text>();
 
-        GameEndUI.SetActive(true);
+        gameEndUI.SetActive(true);
         if (result == "Win")
         {
             victory.gameObject.SetActive(true);
@@ -241,26 +232,26 @@ public class GameManager : MonoBehaviour
             victory.gameObject.SetActive(false);
             defeat.gameObject.SetActive(true);
         }
-        user1Name.text = users[0].name;
-        user1Kill.text = users[0].kill.ToString();
-        user1Death.text = users[0].death.ToString();
-        user1Damage.text = users[0].damage.ToString();
-        user2Name.text = users[1].name;
-        user2kill.text = users[1].kill.ToString(); 
-        user2Death.text = users[1].death.ToString(); 
-        user2Damage.text = users[1].damage.ToString(); 
-        user3Name.text = users[2].name;
-        user3Kill.text = users[2].kill.ToString(); 
-        user3Death.text = users[2].death.ToString(); 
-        user3Damage.text = users[2].damage.ToString(); 
-        user4Name.text = users[3].name;
-        user4Kill.text = users[3].kill.ToString(); 
-        user4Death.text = users[3].death.ToString(); 
-        user4Damage.text = users[3].damage.ToString(); 
+        // user1Name.text = users[0].name;
+        // user1Kill.text = users[0].kill.ToString();
+        // user1Death.text = users[0].death.ToString();
+        // user1Damage.text = users[0].damage.ToString();
+        // user2Name.text = users[1].name;
+        // user2kill.text = users[1].kill.ToString(); 
+        // user2Death.text = users[1].death.ToString(); 
+        // user2Damage.text = users[1].damage.ToString(); 
+        // user3Name.text = users[2].name;
+        // user3Kill.text = users[2].kill.ToString(); 
+        // user3Death.text = users[2].death.ToString(); 
+        // user3Damage.text = users[2].damage.ToString(); 
+        // user4Name.text = users[3].name;
+        // user4Kill.text = users[3].kill.ToString(); 
+        // user4Death.text = users[3].death.ToString(); 
+        // user4Damage.text = users[3].damage.ToString(); 
     }
 
     public void ReturnLobby()
     {
-        GameEndUI.SetActive(false);
+        gameEndUI.SetActive(false);
     }
 }

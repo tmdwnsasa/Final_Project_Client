@@ -19,11 +19,6 @@ public class NetworkManager : MonoBehaviour
 
     private string port = "5000";
     private string ip = "127.0.0.1";
-    public InputField loginIdInputField;
-    public InputField loginPasswordInputField;
-    public InputField registerIdInputField;
-    public InputField registerPasswordInputField;
-    public InputField registerNameInputField;
     public GameObject uiNotice;
     private TcpClient tcpClient;
     private NetworkStream stream;
@@ -67,64 +62,22 @@ public class NetworkManager : MonoBehaviour
         isLobby = true;
     }
 
-
-    //로그인 버튼
-    public void OnLoginButtonClicked()
+    void OnApplicationQuit()
     {
-        string id = loginIdInputField.text;
-        string password = loginPasswordInputField.text;
+        if (stream != null)
+        {
+            stream.Close();
+            stream = null;
+        }
 
-        if (id != "" && password != "" && name != "")
-            SendLoginPacket(id, password);
+        if (tcpClient != null)
+        {
+            tcpClient.Close();
+            tcpClient = null;
+        }
+
+        Debug.Log("Disconnected server");
     }
-
-    // 계정 생성 버튼
-    public void OnRegisterButtonClicked()
-    {
-        string id = registerIdInputField.text;
-        string password = registerPasswordInputField.text;
-        string name = registerNameInputField.text;
-
-        if (id != "" && password != "" && name != "")
-            SendRegisterPacket(id, password, name);
-    }
-
-    // 케릭터 선택 버튼
-    public void OnCharacterChoiceButtonClicked()
-    {
-        uint characterId = GameManager.instance.characterId;
-
-        SendCharacterEarnPacket(characterId);
-        SendJoinLobbyPacket(characterId);
-    }
-
-    // 케릭터 고르기 버튼
-    public void OnCharacterSelectButtonClicked()
-    {
-        uint characterId = GameManager.instance.characterId;
-
-        SendJoinLobbyPacket(characterId);
-    }
-
-    // 매칭/대결 버튼
-    public void OnMatchGameButtonClicked()
-    {
-        string sessionId = GameManager.instance.sessionId;
-
-        SendMatchPacket(sessionId);
-    }
-
-    public void OnReturnLobbyButtonClicked()
-    {
-        SendReturnLobbyPacket();
-        GameManager.instance.ReturnLobby();
-    }
-
-    public void OnExitButtonClicked()
-    {
-        SendExitPacket();
-    }
-
 
     bool IsValidIP(string ip)
     {
@@ -244,7 +197,7 @@ public class NetworkManager : MonoBehaviour
         stream.Write(packet, 0, packet.Length);
     }
 
-    void SendRegisterPacket(string id, string password, string name)
+    public void SendRegisterPacket(string id, string password, string name)
     {
         RegisterPayload registerPayload = new RegisterPayload
         {
@@ -257,7 +210,7 @@ public class NetworkManager : MonoBehaviour
         SendPacket(registerPayload, (uint)Handlers.HandlerIds.REGISTER);
     }
 
-    void SendCharacterEarnPacket(uint characterId)
+    public void SendCharacterEarnPacket(uint characterId)
     {
         CharacterEarnPayload characterEarnPayload = new CharacterEarnPayload
         {
@@ -268,7 +221,7 @@ public class NetworkManager : MonoBehaviour
         SendPacket(characterEarnPayload, (uint)Handlers.HandlerIds.GIVE_CHARACTER);
     }
 
-    void SendLoginPacket(string id, string password)
+    public void SendLoginPacket(string id, string password)
     {
         LoginPayload loginPayload = new LoginPayload
         {
@@ -280,7 +233,7 @@ public class NetworkManager : MonoBehaviour
         SendPacket(loginPayload, (uint)Handlers.HandlerIds.LOGIN);
     }
 
-    void SendJoinLobbyPacket(uint characterId)
+    public void SendJoinLobbyPacket(uint characterId)
     {
         JoinLobbyPayload joinLobbyPayload = new JoinLobbyPayload
         {
@@ -378,7 +331,7 @@ public class NetworkManager : MonoBehaviour
         GameManager.instance.player.ResetAnimation();
         isLobby = true;
 
-        GameManager.instance.MatchStartUI.SetActive(true);
+        GameManager.instance.matchStartUI.SetActive(true);
         GameManager.instance.exitBtn.SetActive(true);
     }
 
@@ -584,23 +537,6 @@ public class NetworkManager : MonoBehaviour
         Debug.Log($"{response.message}");
     }
 
-    void OnApplicationQuit()
-    {
-        if (stream != null)
-        {
-            stream.Close();
-            stream = null;
-        }
-
-        if (tcpClient != null)
-        {
-            tcpClient.Close();
-            tcpClient = null;
-        }
-
-        Debug.Log("Disconnected server");
-    }
-
     void HandleGameEndPacket(byte[] packetData)
     {
         var response = Packets.Deserialize<GameEndPayload>(packetData);
@@ -630,8 +566,7 @@ public class NetworkManager : MonoBehaviour
 
         isLobby = false;
 
-        GameManager.instance.BattleGameStart();
+        GameManager.instance.matchStartUI.SetActive(false);
         GameManager.instance.exitBtn.SetActive(false);
     }
-
 }
