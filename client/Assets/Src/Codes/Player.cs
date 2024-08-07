@@ -70,6 +70,14 @@ public class Player : MonoBehaviour
     {
         if (!GameManager.instance.isLive || GameManager.instance.chatting.inputField.isFocused)
         {
+            inputVec = new Vector2(0, 0);
+            if (oldInputVec != inputVec)
+            {
+                // 위치 이동 패킷 전송 -> 서버로
+                NetworkManager.instance.SendLocationUpdatePacket(inputVec.x, inputVec.y);
+            }
+
+            oldInputVec = inputVec;
             return;
         }
         inputVec.x = Input.GetAxisRaw("Horizontal");
