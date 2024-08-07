@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 public class CharacterManager : MonoBehaviour
 {
@@ -67,13 +68,33 @@ public class CharacterManager : MonoBehaviour
         {
             if (user.playerId == GameManager.instance.player.name)
             {
+                Debug.Log("Player Damaged");
                 GameManager.instance.player.SetHp(user.hp);
             }
             else
             {
+                Debug.Log("Player Damaged");
                 GameObject player = GameManager.instance.pool.GetId(user.playerId);
                 PlayerPrefab playerScript = player.GetComponent<PlayerPrefab>();
                 playerScript.SetHp(user.hp);
+            }
+        }
+    }
+
+    public void SetCharacterHp(BattleStart data)
+    {
+        foreach (BattleStart.UserTeam user in data.users)
+        {
+            if (user.playerId != GameManager.instance.player.name)
+            {
+                GameObject player = GameManager.instance.pool.GetId(user.playerId);
+                PlayerPrefab playerScript = player.GetComponent<PlayerPrefab>();
+                playerScript.startSetHp(user.hp);
+            }
+
+            else if (user.playerId == GameManager.instance.player.name)
+            {
+                GameManager.instance.player.startSetHp(user.hp);
             }
         }
     }

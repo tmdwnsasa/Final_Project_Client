@@ -333,6 +333,7 @@ public class NetworkManager : MonoBehaviour
 
         GameManager.instance.matchStartUI.SetActive(true);
         GameManager.instance.exitBtn.SetActive(true);
+        GameManager.instance.player.hpSlider.gameObject.SetActive(false);
     }
 
     public void SendExitPacket()
@@ -435,10 +436,10 @@ public class NetworkManager : MonoBehaviour
         var response = Packets.Deserialize<Response>(packetData);
         Debug.Log($"HandlerId: {response.handlerId}, responseCode: {response.responseCode}, timestamp: {response.timestamp}");
 
-        if (response.responseCode == 10008)
-        {
-            Application.Quit();
-        }
+        // if (response.responseCode == 10008)
+        // {
+        //     Application.Quit();
+        // }
 
         if (response.responseCode != 0 && !uiNotice.activeSelf)
         {
@@ -570,8 +571,8 @@ public class NetworkManager : MonoBehaviour
         }
 
         isLobby = false;
-
         GameManager.instance.matchStartUI.SetActive(false);
         GameManager.instance.exitBtn.SetActive(false);
+        CharacterManager.instance.SetCharacterHp(response);
     }
 }
