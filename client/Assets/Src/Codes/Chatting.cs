@@ -25,7 +25,11 @@ public class Chatting : MonoBehaviour
     }
 
     public void updateChatting(string msg) {
-        chattingLog.text += '\n' + msg;
-        scrollRect.verticalNormalizedPosition = 0f;
+        if (msg.Contains("<color=")) { //font color included
+            chattingLog.text += '\n' + msg;
+        } else {
+            chattingLog.text += '\n' + msg;
+        }
+            scrollRect.verticalNormalizedPosition = 0f;
     }
 }
