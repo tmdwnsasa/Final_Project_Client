@@ -17,15 +17,19 @@ public class Chatting : MonoBehaviour
         }
     }
 
-    public void sendChatting() {
-        if(!string.IsNullOrWhiteSpace(inputField.text)) {
+    public void sendChatting()
+    {
+        if (!string.IsNullOrWhiteSpace(inputField.text))
+        {
             NetworkManager.instance.SendChattingPacket(inputField.text, (uint)0);
             inputField.text = "";
         }
     }
 
-    public void updateChatting(string msg) {
+    public void updateChatting(string msg)
+    {
         chattingLog.text += '\n' + msg;
+        Canvas.ForceUpdateCanvases();
         scrollRect.verticalNormalizedPosition = 0f;
     }
 }
