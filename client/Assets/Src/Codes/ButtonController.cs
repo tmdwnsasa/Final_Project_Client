@@ -71,4 +71,13 @@ public class ButtonController : MonoBehaviour
         NetworkManager.instance.SendExitPacket();
         GameManager.instance.exitBtn.transform.GetChild(0).GetComponent<Button>().interactable = false;
     }
+
+    //인벤토리 버튼
+    public void OnInventoryButtonClicked()
+    {
+        string sessionId = GameManager.instance.sessionId;
+
+        NetworkManager.instance.SendInventoryPacket(sessionId);
+        GameManager.instance.inventoryUI.transform.GetChild(0).GetComponent<Button>().interactable = false;
+    }
 }

@@ -367,3 +367,11 @@ public class BattleStart
     }
 }
 
+[ProtoContract]
+public class InventoryPayload
+{
+    [ProtoMember(1, IsRequired = true)]
+    public string sessionId { get; set; }
+
+}
+

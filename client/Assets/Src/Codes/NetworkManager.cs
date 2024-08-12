@@ -346,6 +346,16 @@ public class NetworkManager : MonoBehaviour
         SendPacket(exitPayload, (uint)Handlers.HandlerIds.EXIT);
     }
 
+        public void SendInventoryPacket(string sessionId)
+    {
+        InventoryPayload InventoryPayload = new InventoryPayload
+        {
+            sessionId = sessionId
+        };
+        Debug.Log($"User's Session Id : {sessionId}");
+        SendPacket(InventoryPayload, (uint)Handlers.HandlerIds.INVENTORY);
+    }
+
 
     void StartReceiving()
     {
@@ -475,6 +485,8 @@ public class NetworkManager : MonoBehaviour
                     break;
                 case (uint)Handlers.HandlerIds.SKILL:
                     break;
+                case (uint)Handlers.HandlerIds.INVENTORY:
+                    break;                   
                 case (uint)Handlers.HandlerIds.EXIT:
                     Application.Quit();
                     break;
