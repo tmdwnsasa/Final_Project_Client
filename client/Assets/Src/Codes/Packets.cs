@@ -344,7 +344,7 @@ public class BattleStart
     public List<UserTeam> users { get; set; }
 
     [ProtoMember(2)]
-    public string message { get; set; }
+    public string mapName { get; set; }
 
     [ProtoContract]
     public class UserTeam

@@ -570,6 +570,7 @@ public class NetworkManager : MonoBehaviour
                 // GameManager.instance.player.transform.position = new Vector2(user.x, user.y);
             }
         }
+        Debug.Log($"대전 지역 이름: {response.mapName}");
 
         isLobby = false;
         GameManager.instance.matchStartUI.SetActive(false);
