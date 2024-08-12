@@ -111,7 +111,6 @@ public class GameManager : MonoBehaviour
 
     public void CharacterChange(uint index)
     {
-        Debug.Log(index);
         characterId = index;
 
         if (characterChoiceUI.gameObject.activeSelf)
