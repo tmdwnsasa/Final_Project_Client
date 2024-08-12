@@ -436,10 +436,7 @@ public class NetworkManager : MonoBehaviour
         var response = Packets.Deserialize<Response>(packetData);
         Debug.Log($"HandlerId: {response.handlerId}, responseCode: {response.responseCode}, timestamp: {response.timestamp}");
 
-        // if (response.responseCode == 10008)
-        // {
-        //     Application.Quit();
-        // }
+        HandleErrorResponsePacket(response);
 
         if (response.responseCode != 0 && !uiNotice.activeSelf)
         {
@@ -541,6 +538,7 @@ public class NetworkManager : MonoBehaviour
     {
         var response = Packets.Deserialize<MatchMakingComplete>(packetData);
         Debug.Log($"{response.message}");
+        //GameManager.instance.matchStartUI.transform.GetChild(0).GetComponent<Button>().interactable = true;
     }
 
     void HandleGameEndPacket(byte[] packetData)
@@ -577,5 +575,24 @@ public class NetworkManager : MonoBehaviour
         GameManager.instance.matchStartUI.SetActive(false);
         GameManager.instance.exitBtn.SetActive(false);
         CharacterManager.instance.SetCharacterHp(response);
+    }
+
+    void HandleErrorResponsePacket(Response response) {
+        if (response.responseCode == 10008) {
+            Application.Quit();
+        }
+
+        if(response.responseCode == 10020 || response.responseCode == 10021 || response.responseCode == 10022) {
+            GameManager.instance.registerUI.transform.GetChild(3).GetComponent<Button>().interactable = true;
+        }
+
+        if(response.responseCode == 10023 || response.responseCode == 10006 || response.responseCode == 10024) {
+            GameManager.instance.loginUI.transform.GetChild(3).GetComponent<Button>().interactable = true;
+        }
+
+        if(response.responseCode == 10006 || response.responseCode == 10012 || response.responseCode == 10011) {
+            GameManager.instance.characterChoiceUI.transform.GetChild(1).GetComponent<Button>().interactable = true;
+            GameManager.instance.characterSelectUI.transform.GetChild(1).GetComponent<Button>().interactable = true;
+        }
     }
 }
