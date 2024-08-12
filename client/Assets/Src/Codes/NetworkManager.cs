@@ -578,19 +578,25 @@ public class NetworkManager : MonoBehaviour
     }
 
     void HandleErrorResponsePacket(Response response) {
-        if (response.responseCode == 10008) {
+        if (response.responseCode == (uint)ErrorCodes.ErrorCode.INVALID_SEQUENCE) {
             Application.Quit();
         }
 
-        if(response.responseCode == 10020 || response.responseCode == 10021 || response.responseCode == 10022) {
+        if(response.responseCode == (uint)ErrorCodes.ErrorCode.VALIDATE_ERROR ||
+        response.responseCode == (uint)ErrorCodes.ErrorCode.ALREADY_EXIST_ID ||
+        response.responseCode == (uint)ErrorCodes.ErrorCode.ALREADY_EXIST_NAME) {
             GameManager.instance.registerUI.transform.GetChild(3).GetComponent<Button>().interactable = true;
         }
 
-        if(response.responseCode == 10023 || response.responseCode == 10006 || response.responseCode == 10024) {
+        if(response.responseCode == (uint)ErrorCodes.ErrorCode.LOGGED_IN_ALREADY ||
+        response.responseCode == (uint)ErrorCodes.ErrorCode.USER_NOT_FOUND ||
+        response.responseCode == (uint)ErrorCodes.ErrorCode.MISMATCH_PASSWORD) {
             GameManager.instance.loginUI.transform.GetChild(3).GetComponent<Button>().interactable = true;
         }
 
-        if(response.responseCode == 10006 || response.responseCode == 10012 || response.responseCode == 10011) {
+        if(response.responseCode == (uint)ErrorCodes.ErrorCode.USER_NOT_FOUND ||
+        response.responseCode == (uint)ErrorCodes.ErrorCode.PLAYERID_NOT_FOUND ||
+        response.responseCode == (uint)ErrorCodes.ErrorCode.LOBBY_NOT_FOUND) {
             GameManager.instance.characterChoiceUI.transform.GetChild(1).GetComponent<Button>().interactable = true;
             GameManager.instance.characterSelectUI.transform.GetChild(1).GetComponent<Button>().interactable = true;
         }
