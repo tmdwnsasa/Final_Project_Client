@@ -11,8 +11,11 @@ public class ButtonController : MonoBehaviour
         string id = GameManager.instance.loginUI.transform.GetChild(2).GetChild(0).GetComponent<InputField>().text;
         string password = GameManager.instance.loginUI.transform.GetChild(2).GetChild(1).GetComponent<InputField>().text;
 
-        if (id != "" && password != "" && name != "")
+        if (id != "" && password != "" && name != "") {
             NetworkManager.instance.SendLoginPacket(id, password);
+            GameManager.instance.loginUI.transform.GetChild(3).GetComponent<Button>().interactable = false;
+        }
+            
     }
 
     // 계정 생성 버튼
@@ -22,8 +25,10 @@ public class ButtonController : MonoBehaviour
         string password = GameManager.instance.registerUI.transform.GetChild(2).GetChild(1).GetComponent<InputField>().text;
         string name = GameManager.instance.registerUI.transform.GetChild(2).GetChild(2).GetComponent<InputField>().text;
 
-        if (id != "" && password != "" && name != "")
+        if (id != "" && password != "" && name != "") {
             NetworkManager.instance.SendRegisterPacket(id, password, name);
+            GameManager.instance.registerUI.transform.GetChild(3).GetComponent<Button>().interactable = false;
+        }
     }
 
     // 케릭터 선택 버튼
@@ -34,6 +39,7 @@ public class ButtonController : MonoBehaviour
 
         NetworkManager.instance.SendCharacterEarnPacket(characterId);
         NetworkManager.instance.SendJoinLobbyPacket(characterId);
+        GameManager.instance.characterChoiceUI.transform.GetChild(1).GetComponent<Button>().interactable = false;
     }
 
     // 케릭터 고르기 버튼
@@ -42,6 +48,7 @@ public class ButtonController : MonoBehaviour
         uint characterId = GameManager.instance.characterId;
 
         NetworkManager.instance.SendJoinLobbyPacket(characterId);
+        GameManager.instance.characterSelectUI.transform.GetChild(1).GetComponent<Button>().interactable = false;
     }
 
     // 매칭/대결 버튼
@@ -50,6 +57,7 @@ public class ButtonController : MonoBehaviour
         string sessionId = GameManager.instance.sessionId;
 
         NetworkManager.instance.SendMatchPacket(sessionId);
+        GameManager.instance.matchStartUI.transform.GetChild(0).GetComponent<Button>().interactable = false;
     }
 
     // 로비 복귀 버튼
@@ -57,12 +65,14 @@ public class ButtonController : MonoBehaviour
     {
         NetworkManager.instance.SendReturnLobbyPacket();
         GameManager.instance.ReturnLobby();
+        GameManager.instance.gameEndUI.transform.GetChild(3).GetComponent<Button>().interactable = false;
     }
 
     //게임 종료 버튼
     public void OnExitButtonClicked()
     {
         NetworkManager.instance.SendExitPacket();
+        GameManager.instance.exitBtn.transform.GetChild(0).GetComponent<Button>().interactable = false;
     }
 
     //상점 버튼

@@ -59,6 +59,15 @@ public class PoolManager : MonoBehaviour
         }
     }
 
+    public void SetColliderAll() {
+        foreach (GameObject item in pool) {
+            CapsuleCollider2D collider = item.GetComponent<CapsuleCollider2D>();
+            if (!collider.enabled) {
+                collider.enabled = true;
+            }
+        }
+    }
+
     public void Remove(string userId) {
         if (userDictionary.TryGetValue(userId, out GameObject userObject)) {
             Debug.Log($"Removing user: {userId}");

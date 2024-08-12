@@ -17913,7 +17913,7 @@ Camera:
   far clip plane: 1000
   field of view: 34
   orthographic: 1
-  orthographic size: 7.7777777
+  orthographic size: 19.500643
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -23232,7 +23232,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
@@ -23611,7 +23611,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
@@ -32628,9 +32628,8 @@ MonoBehaviour:
   - {fileID: 1267830177, guid: 8f7a60065e3984c489b9c4d41bc3dc4e, type: 3}
   isLive: 0
   gameTime: 0
-  targetFrameRate: 30
+  targetFrameRate: 120
   version: 1.0.0
-  latency: 30
   characterId: 0
   sessionId: 
   playerId: 

@@ -19,6 +19,7 @@ public class NetworkManager : MonoBehaviour
 
     private string port = "5000";
     private string ip = "127.0.0.1";
+    // private string ip = "34.64.199.202";
     public GameObject uiNotice;
     private TcpClient tcpClient;
     private NetworkStream stream;
@@ -191,8 +192,6 @@ public class NetworkManager : MonoBehaviour
         Array.Copy(header, 0, packet, 0, header.Length);
         Array.Copy(data, 0, packet, header.Length, data.Length);
 
-        await Task.Delay(GameManager.instance.latency);
-
         // 패킷 전송
         stream.Write(packet, 0, packet.Length);
     }
@@ -265,8 +264,6 @@ public class NetworkManager : MonoBehaviour
         Array.Copy(header, 0, packet, 0, header.Length);
         Array.Copy(data, 0, packet, header.Length, data.Length);
 
-        await Task.Delay(GameManager.instance.latency);
-
         // 패킷 전송
         stream.Write(packet, 0, packet.Length);
     }
@@ -329,7 +326,10 @@ public class NetworkManager : MonoBehaviour
 
         GameManager.instance.isLive = true;
         GameManager.instance.player.ResetAnimation();
+        // GameManager.instance.player.transform.position = new Vector2(0, 0);
         isLobby = true;
+
+        GameManager.instance.pool.SetColliderAll();
 
         GameManager.instance.matchStartUI.SetActive(true);
         GameManager.instance.exitBtn.SetActive(true);
@@ -449,10 +449,7 @@ public class NetworkManager : MonoBehaviour
         var response = Packets.Deserialize<Response>(packetData);
         Debug.Log($"HandlerId: {response.handlerId}, responseCode: {response.responseCode}, timestamp: {response.timestamp}");
 
-        // if (response.responseCode == 10008)
-        // {
-        //     Application.Quit();
-        // }
+        HandleErrorResponsePacket(response);
 
         if (response.responseCode != 0 && !uiNotice.activeSelf)
         {
@@ -558,6 +555,7 @@ public class NetworkManager : MonoBehaviour
     {
         var response = Packets.Deserialize<MatchMakingComplete>(packetData);
         Debug.Log($"{response.message}");
+        //GameManager.instance.matchStartUI.transform.GetChild(0).GetComponent<Button>().interactable = true;
     }
 
     void HandleGameEndPacket(byte[] packetData)
@@ -585,11 +583,33 @@ public class NetworkManager : MonoBehaviour
         foreach (var user in response.users)
         {
             Debug.Log($"Player ID: {user.playerId}, Team: {user.team}, HP : {user.hp}, Position: ({user.x}, {user.y})");
+            if(user.playerId == GameManager.instance.player.name) {
+                // GameManager.instance.player.transform.position = new Vector2(user.x, user.y);
+            }
         }
 
         isLobby = false;
         GameManager.instance.matchStartUI.SetActive(false);
         GameManager.instance.exitBtn.SetActive(false);
         CharacterManager.instance.SetCharacterHp(response);
+    }
+
+    void HandleErrorResponsePacket(Response response) {
+        if (response.responseCode == 10008) {
+            Application.Quit();
+        }
+
+        if(response.responseCode == 10020 || response.responseCode == 10021 || response.responseCode == 10022) {
+            GameManager.instance.registerUI.transform.GetChild(3).GetComponent<Button>().interactable = true;
+        }
+
+        if(response.responseCode == 10023 || response.responseCode == 10006 || response.responseCode == 10024) {
+            GameManager.instance.loginUI.transform.GetChild(3).GetComponent<Button>().interactable = true;
+        }
+
+        if(response.responseCode == 10006 || response.responseCode == 10012 || response.responseCode == 10011) {
+            GameManager.instance.characterChoiceUI.transform.GetChild(1).GetComponent<Button>().interactable = true;
+            GameManager.instance.characterSelectUI.transform.GetChild(1).GetComponent<Button>().interactable = true;
+        }
     }
 }

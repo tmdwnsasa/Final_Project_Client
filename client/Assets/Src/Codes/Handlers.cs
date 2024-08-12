@@ -85,8 +85,6 @@ public class Handlers : MonoBehaviour
         GameManager.instance.sessionId = characterSelect.sessionId;
         GameManager.instance.possession = characterSelect.possession;
 
-        Debug.Log(GameManager.instance.possession[0]);
-
         GameManager.instance.GoCharacterSelect();
     }
 

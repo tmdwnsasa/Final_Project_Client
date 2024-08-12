@@ -238,6 +238,7 @@ public class Player : MonoBehaviour
             hpSlider.gameObject.SetActive(false);
             anim.SetBool("Dead", true);
             GameManager.instance.isLive = false;
+            gameObject.GetComponent<CapsuleCollider2D>().enabled = false;
         }
     }
 
@@ -252,5 +253,6 @@ public class Player : MonoBehaviour
     public void ResetAnimation()
     {
         anim.SetBool("Dead", false);
+        gameObject.GetComponent<CapsuleCollider2D>().enabled = true;
     }
 }
