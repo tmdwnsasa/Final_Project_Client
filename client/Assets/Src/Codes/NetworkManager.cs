@@ -343,9 +343,22 @@ public class NetworkManager : MonoBehaviour
             message = "exit"
         };
 
-        SendPacket(exitPayload, (uint)Handlers.HandlerIds.EXIT);
+
     }
 
+    public void SendStoreOpenPacket()
+    {
+        StoreOpenRequestPayload StoreOpenRequestPayload = new StoreOpenRequestPayload
+        {
+            message = "storeOpen"
+        };
+        SendPacket(StoreOpenRequestPayload, (uint)Handlers.HandlerIds.OPEN_STORE);
+    }
+
+    public void SendPurchaseCharacterPacket()
+    {
+
+    }
 
     void StartReceiving()
     {
@@ -480,6 +493,10 @@ public class NetworkManager : MonoBehaviour
                     break;
                 case (uint)Handlers.HandlerIds.EXIT:
                     Application.Quit();
+                    break;
+                case (uint)Handlers.HandlerIds.OPEN_STORE:
+                    Handlers.instance.StoreOpen(response.data);
+                    Debug.Log(1);
                     break;
             }
             ProcessResponseData(response.data);

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Handlers : MonoBehaviour
 {
@@ -22,7 +23,8 @@ public class Handlers : MonoBehaviour
         GAME_END = 15,
         RETURN_LOBBY = 16,
         EXIT = 20,
-        SKILL = 50
+        OPEN_STORE = 29,
+        SKILL = 50,
     }
 
     [Serializable]
@@ -53,6 +55,12 @@ public class Handlers : MonoBehaviour
         public float defense;
         public float critical;
         public int price;
+    }
+
+    [Serializable]
+    public struct UserMoney
+    {
+        public int money;
     }
 
     public void GetCharacterChoice(byte[] data)
@@ -94,5 +102,19 @@ public class Handlers : MonoBehaviour
         GameManager.instance.player.power = characterStats.power;
         GameManager.instance.player.defense = characterStats.defense;
         GameManager.instance.player.critical = characterStats.critical;
+    }
+
+    public void StoreOpen(byte[] data)
+    {
+        string jsonString = Encoding.UTF8.GetString(data);
+        UserMoney userMoney = JsonUtility.FromJson<UserMoney>(jsonString);
+        Debug.Log(userMoney);
+        Text userGold = GameManager.instance.storeUI.transform.GetChild(5).GetChild(0).GetComponent<Text>();
+        userGold.text = userMoney.money.ToString();
+        GameManager.instance.chattingUI.SetActive(false);
+        GameManager.instance.exitBtn.SetActive(false);
+        GameManager.instance.matchStartUI.SetActive(false);
+        GameManager.instance.storeBtn.SetActive(false);
+        GameManager.instance.storeUI.SetActive(true);
     }
 }

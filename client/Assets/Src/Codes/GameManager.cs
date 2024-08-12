@@ -33,7 +33,7 @@ public class GameManager : MonoBehaviour
     public PoolManager pool;
     public Player player;
     public Chatting chatting;
-    public GameObject hud;
+    // public GameObject hud;
     public GameObject loginUI;
     public GameObject registerUI;
     public GameObject chattingUI;
@@ -42,6 +42,12 @@ public class GameManager : MonoBehaviour
     public GameObject gameEndUI;
     public GameObject matchStartUI;
     public GameObject exitBtn;
+    public GameObject storeBtn;
+    public GameObject storeUI;
+    public GameObject purchaseCheckUI;
+    public GameObject successPurchaseUI;
+    public GameObject failPurchaseCheckUI;
+
 
     void Awake()
     {
@@ -56,7 +62,7 @@ public class GameManager : MonoBehaviour
         player.playerId = playerId;
         player.name = name;
         player.gameObject.SetActive(true);
-        hud.SetActive(true);
+        // hud.SetActive(true);
         loginUI.SetActive(false);
         registerUI.SetActive(false);
         characterChoiceUI.SetActive(false);
@@ -64,6 +70,11 @@ public class GameManager : MonoBehaviour
         chattingUI.SetActive(true);
         matchStartUI.SetActive(true);
         exitBtn.SetActive(true);
+        storeBtn.SetActive(true);
+        storeUI.SetActive(false);
+        purchaseCheckUI.SetActive(false);
+        successPurchaseUI.SetActive(false);
+        failPurchaseUI.SetActive(false);
 
         isLive = true;
 
@@ -253,5 +264,12 @@ public class GameManager : MonoBehaviour
     public void ReturnLobby()
     {
         gameEndUI.SetActive(false);
+    }
+
+    public void PurchaseCharacter(uint characterId){
+        Debug.Log(characterId);
+        Text characterName = storeUI.transform.GetChild(0).GetChild((int)characterId).GetChild(1).GetComponent<Text>();
+        Text purchaseName = purchaseCheckUI.transform.GetChild(3).GetComponent<Text>();
+        purchaseName.text = characterName.text;
     }
 }

@@ -365,5 +365,12 @@ public class BattleStart
         public float y { get; set; }
 
     }
+
 }
 
+[ProtoContract]
+public class StoreOpenRequestPayload
+{
+    [ProtoMember(1, IsRequired = true)]
+    public string message { get; set; }
+}
