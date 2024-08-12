@@ -113,6 +113,7 @@ public class PlayerPrefab : MonoBehaviour
         {
             hpSlider.gameObject.SetActive(false);
             anim.SetBool("Dead", true);
+            gameObject.GetComponent<CapsuleCollider2D>().enabled = false;
         }
     }
 

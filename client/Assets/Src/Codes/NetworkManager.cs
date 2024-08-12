@@ -19,6 +19,7 @@ public class NetworkManager : MonoBehaviour
 
     private string port = "5000";
     private string ip = "127.0.0.1";
+    // private string ip = "34.64.199.202";
     public GameObject uiNotice;
     private TcpClient tcpClient;
     private NetworkStream stream;
@@ -191,8 +192,6 @@ public class NetworkManager : MonoBehaviour
         Array.Copy(header, 0, packet, 0, header.Length);
         Array.Copy(data, 0, packet, header.Length, data.Length);
 
-        await Task.Delay(GameManager.instance.latency);
-
         // 패킷 전송
         stream.Write(packet, 0, packet.Length);
     }
@@ -265,8 +264,6 @@ public class NetworkManager : MonoBehaviour
         Array.Copy(header, 0, packet, 0, header.Length);
         Array.Copy(data, 0, packet, header.Length, data.Length);
 
-        await Task.Delay(GameManager.instance.latency);
-
         // 패킷 전송
         stream.Write(packet, 0, packet.Length);
     }
@@ -329,7 +326,10 @@ public class NetworkManager : MonoBehaviour
 
         GameManager.instance.isLive = true;
         GameManager.instance.player.ResetAnimation();
+        // GameManager.instance.player.transform.position = new Vector2(0, 0);
         isLobby = true;
+
+        GameManager.instance.pool.SetColliderAll();
 
         GameManager.instance.matchStartUI.SetActive(true);
         GameManager.instance.exitBtn.SetActive(true);
@@ -568,6 +568,9 @@ public class NetworkManager : MonoBehaviour
         foreach (var user in response.users)
         {
             Debug.Log($"Player ID: {user.playerId}, Team: {user.team}, HP : {user.hp}, Position: ({user.x}, {user.y})");
+            if(user.playerId == GameManager.instance.player.name) {
+                // GameManager.instance.player.transform.position = new Vector2(user.x, user.y);
+            }
         }
 
         isLobby = false;

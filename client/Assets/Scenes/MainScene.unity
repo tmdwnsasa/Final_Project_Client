@@ -32628,9 +32628,8 @@ MonoBehaviour:
   - {fileID: 1267830177, guid: 8f7a60065e3984c489b9c4d41bc3dc4e, type: 3}
   isLive: 0
   gameTime: 0
-  targetFrameRate: 30
+  targetFrameRate: 120
   version: 1.0.0
-  latency: 30
   characterId: 0
   sessionId: 
   playerId: 
