@@ -54,6 +54,9 @@ public class RegisterPayload
 
     [ProtoMember(3, IsRequired = true)]
     public string name { get; set; }
+
+    [ProtoMember(4, IsRequired = true)]
+    public int isPolice { get; set; }
 }
 
 [ProtoContract]

@@ -9,6 +9,7 @@ public class PlayerPrefab : MonoBehaviour
     public RuntimeAnimatorController[] animCon;
     private Animator anim;
     private SpriteRenderer spriter;
+    public Vector2 newPosition;
     private Vector3 lastPosition;
     private Vector3 currentPosition;
     private uint characterId;
@@ -23,6 +24,11 @@ public class PlayerPrefab : MonoBehaviour
         anim = GetComponent<Animator>();
         spriter = GetComponent<SpriteRenderer>();
         myText = GetComponentInChildren<TextMeshPro>();
+    }
+
+    private void Update()
+    {
+        UpdatePosition();
     }
 
     public void Init(uint characterId, string playerId)
@@ -51,11 +57,11 @@ public class PlayerPrefab : MonoBehaviour
     }
 
     // 서버로부터 위치 업데이트를 수신할 때 호출될 메서드
-    public void UpdatePosition(float x, float y)
+    public void UpdatePosition()
     {
-        lastPosition = currentPosition;
-        currentPosition = new Vector3(x, y);
-        transform.position = currentPosition;
+        lastPosition = transform.position;
+        currentPosition = newPosition;
+        transform.position = Vector3.Lerp(transform.position, newPosition, 0.2f);
 
         UpdateAnimation();
     }
@@ -77,7 +83,7 @@ public class PlayerPrefab : MonoBehaviour
 
         anim.SetFloat("Speed", inputVec.magnitude);
 
-        if (inputVec.x != 0)
+        if (inputVec.x != 0 && Mathf.Abs(inputVec.x) > 1.0f)
         {
             spriter.flipX = inputVec.x < 0;
         }

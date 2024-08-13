@@ -21,6 +21,9 @@ public class GameManager : MonoBehaviour
     public string version = "1.0.0";
     public int latency = 2;
 
+    [Header("# Register")]
+    public int isPolice = 0;
+
     [Header("# Player Info")]
     public uint characterId;
     public string sessionId;

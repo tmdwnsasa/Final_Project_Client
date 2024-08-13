@@ -61,4 +61,13 @@ public class ButtonController : MonoBehaviour
     {
         NetworkManager.instance.SendExitPacket();
     }
+
+    public void OnPoliceButtonClicked()
+    {
+        GameManager.instance.isPolice = 1;
+    }
+    public void OnFarmerButtonClicked()
+    {
+        GameManager.instance.isPolice = 2;
+    }
 }
