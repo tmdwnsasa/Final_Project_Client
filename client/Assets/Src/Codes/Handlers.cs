@@ -129,11 +129,12 @@ public class Handlers : MonoBehaviour
         string jsonString = Encoding.UTF8.GetString(data);
         PurchaseStateMessage purchaseStateMessage = JsonUtility.FromJson<PurchaseStateMessage>(jsonString);
         Text message = GameManager.instance.purchaseMessageUI.transform.GetChild(1).GetComponent<Text>();
-        Debug.Log(purchaseStateMessage.message);
         message.text = purchaseStateMessage.message;
         GameManager.instance.purchaseCheckUI.SetActive(false);
         GameManager.instance.purchaseMessageUI.SetActive(true);
-    public void ReturnLobbySetting() {
+    }
+    public void ReturnLobbySetting()
+    {
         GameManager.instance.isLive = true;
         GameManager.instance.player.ResetAnimation();
         // GameManager.instance.player.transform.position = new Vector2(0, 0);
