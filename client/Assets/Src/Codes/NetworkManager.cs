@@ -322,18 +322,7 @@ public class NetworkManager : MonoBehaviour
             message = "returnLobby"
         };
 
-        SendPacket(ReturnLobbyRequestPayload, (uint)Handlers.HandlerIds.RETURN_LOBBY);
-
-        GameManager.instance.isLive = true;
-        GameManager.instance.player.ResetAnimation();
-        // GameManager.instance.player.transform.position = new Vector2(0, 0);
-        isLobby = true;
-
-        GameManager.instance.pool.SetColliderAll();
-
-        GameManager.instance.matchStartUI.SetActive(true);
-        GameManager.instance.exitBtn.SetActive(true);
-        GameManager.instance.player.hpSlider.gameObject.SetActive(false);
+        SendPacket(ReturnLobbyRequestPayload, (uint)Handlers.HandlerIds.RETURN_LOBBY);        
     }
 
     public void SendExitPacket()
@@ -472,6 +461,10 @@ public class NetworkManager : MonoBehaviour
                     Handlers.instance.GetCharacterSelect(response.data);
                     break;
                 case (uint)Handlers.HandlerIds.MATCHMAKING:
+                    GameManager.instance.matchStartUI.transform.GetChild(0).GetComponent<Button>().interactable = true;
+                    break;
+                case (uint)Handlers.HandlerIds.RETURN_LOBBY:
+                    Handlers.instance.ReturnLobbySetting();
                     break;
                 case (uint)Handlers.HandlerIds.SKILL:
                     break;
@@ -529,16 +522,17 @@ public class NetworkManager : MonoBehaviour
         GameManager.instance.chatting.updateChatting($"{response.playerId} : {response.message} / {response.type}");
         Debug.Log($"{response.playerId} : {response.message} / {response.type}");
     }
+
     void HandleSkillPacket(byte[] packetData)
     {
         var response = Packets.Deserialize<SkillUpdate>(packetData);
         CharacterManager.instance.UpdateAttack(response);
     }
+
     void HandleMatchMakingPacket(byte[] packetData)
     {
         var response = Packets.Deserialize<MatchMakingComplete>(packetData);
         Debug.Log($"{response.message}");
-        //GameManager.instance.matchStartUI.transform.GetChild(0).GetComponent<Button>().interactable = true;
     }
 
     void HandleGameEndPacket(byte[] packetData)
