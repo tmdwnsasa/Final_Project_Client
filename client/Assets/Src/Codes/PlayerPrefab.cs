@@ -38,9 +38,9 @@ public class PlayerPrefab : MonoBehaviour
 
         this.characterId = characterId;
 
-        if (playerId.Length > 5)
+        if (playerId.Length > 6)
         {
-            myText.text = playerId[..5];
+            myText.text = playerId[..6];
         }
         else
         {
