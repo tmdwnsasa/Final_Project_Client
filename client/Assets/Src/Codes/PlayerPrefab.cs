@@ -18,6 +18,8 @@ public class PlayerPrefab : MonoBehaviour
     public float hp;
     public Slider hpSlider;
 
+    private float direction;
+
     void Awake()
     {
         anim = GetComponent<Animator>();
@@ -27,16 +29,18 @@ public class PlayerPrefab : MonoBehaviour
 
     public void Init(uint characterId, string playerId)
     {
+        gameObject.GetComponent<CapsuleCollider2D>().enabled = true;
         anim.runtimeAnimatorController = animCon[characterId];
         lastPosition = Vector3.zero;
         currentPosition = Vector3.zero;
+        direction = 0;
         hpSlider.gameObject.SetActive(false);
 
         this.characterId = characterId;
 
-        if (playerId.Length > 5)
+        if (playerId.Length > 6)
         {
-            myText.text = playerId[..5];
+            myText.text = playerId[..6];
         }
         else
         {
@@ -51,11 +55,12 @@ public class PlayerPrefab : MonoBehaviour
     }
 
     // 서버로부터 위치 업데이트를 수신할 때 호출될 메서드
-    public void UpdatePosition(float x, float y)
+    public void UpdatePosition(float x, float y, float dir)
     {
         lastPosition = currentPosition;
         currentPosition = new Vector3(x, y);
         transform.position = currentPosition;
+        direction = dir;
 
         UpdateAnimation();
     }
@@ -77,9 +82,9 @@ public class PlayerPrefab : MonoBehaviour
 
         anim.SetFloat("Speed", inputVec.magnitude);
 
-        if (inputVec.x != 0)
+        if (direction != 0)
         {
-            spriter.flipX = inputVec.x < 0;
+            spriter.flipX = direction < 0;
         }
     }
 

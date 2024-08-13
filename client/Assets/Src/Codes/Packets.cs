@@ -167,6 +167,9 @@ public class LocationUpdate
 
         [ProtoMember(4)]
         public float y { get; set; }
+        
+        [ProtoMember(5)]
+        public float direction { get; set; }
     }
 }
 
