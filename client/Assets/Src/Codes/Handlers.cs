@@ -2,10 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
+using static Handlers;
 
 public class Handlers : MonoBehaviour
 {
     public static Handlers instance;
+    public GameObject Player;
     public enum HandlerIds
     {
         LOGIN = 0,
@@ -30,6 +32,7 @@ public class Handlers : MonoBehaviour
     {
         public string playerId;
         public string name;
+        public int guild;
         public string sessionId;
     }
 
@@ -38,6 +41,7 @@ public class Handlers : MonoBehaviour
     {
         public string playerId;
         public string name;
+        public int guild;
         public string sessionId;
         public List<uint> possession;
     }
@@ -62,6 +66,7 @@ public class Handlers : MonoBehaviour
 
         GameManager.instance.playerId = characterChoice.playerId;
         GameManager.instance.name = characterChoice.name;
+        GameManager.instance.player.guild = characterChoice.guild;
         GameManager.instance.sessionId = characterChoice.sessionId;
 
         GameManager.instance.GoCharacterChoice();
@@ -74,6 +79,7 @@ public class Handlers : MonoBehaviour
 
         GameManager.instance.playerId = characterSelect.playerId;
         GameManager.instance.name = characterSelect.name;
+        GameManager.instance.player.guild = characterSelect.guild;
         GameManager.instance.sessionId = characterSelect.sessionId;
         GameManager.instance.possession = characterSelect.possession;
 

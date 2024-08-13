@@ -16,6 +16,7 @@ public class Player : MonoBehaviour
 
     public float nowHp;
     public float hp = 0;
+    public int guild = 0;
 
     public Slider hpSlider;
 
@@ -57,6 +58,15 @@ public class Player : MonoBehaviour
         isMinusY = false;
 
         hpSlider.value = 1;
+
+        if(guild == 1)
+        {
+            myText.color = Color.blue;
+        }
+        else if (guild == 2)
+        {
+            myText.color = Color.green;
+        }
     }
 
     void OnEnable()

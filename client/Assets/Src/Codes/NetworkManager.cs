@@ -18,7 +18,7 @@ public class NetworkManager : MonoBehaviour
     public static NetworkManager instance;
 
     private string port = "5000";
-    private string ip = "34.64.199.202";
+    private string ip = "127.0.0.1";
     public GameObject uiNotice;
     private TcpClient tcpClient;
     private NetworkStream stream;
@@ -197,15 +197,16 @@ public class NetworkManager : MonoBehaviour
         stream.Write(packet, 0, packet.Length);
     }
 
-    public void SendRegisterPacket(string id, string password, string name)
+    public void SendRegisterPacket(string id, string password, string name, int guild)
     {
         RegisterPayload registerPayload = new RegisterPayload
         {
             playerId = id,
             password = password,
             name = name,
+            guild = guild,
         };
-
+        Debug.Log(guild);
         // handlerId는 0으로 가정
         SendPacket(registerPayload, (uint)Handlers.HandlerIds.REGISTER);
     }

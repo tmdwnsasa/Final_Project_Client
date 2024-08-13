@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
     public int latency = 2;
 
     [Header("# Register")]
-    public int isPolice = 0;
+    public int guild = 0;
 
     [Header("# Player Info")]
     public uint characterId;

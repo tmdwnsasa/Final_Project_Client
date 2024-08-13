@@ -21,9 +21,10 @@ public class ButtonController : MonoBehaviour
         string id = GameManager.instance.registerUI.transform.GetChild(2).GetChild(0).GetComponent<InputField>().text;
         string password = GameManager.instance.registerUI.transform.GetChild(2).GetChild(1).GetComponent<InputField>().text;
         string name = GameManager.instance.registerUI.transform.GetChild(2).GetChild(2).GetComponent<InputField>().text;
+        int guild = GameManager.instance.guild;
 
         if (id != "" && password != "" && name != "")
-            NetworkManager.instance.SendRegisterPacket(id, password, name);
+            NetworkManager.instance.SendRegisterPacket(id, password, name, guild);
     }
 
     // 케릭터 선택 버튼
@@ -64,10 +65,12 @@ public class ButtonController : MonoBehaviour
 
     public void OnPoliceButtonClicked()
     {
-        GameManager.instance.isPolice = 1;
+        GameManager.instance.guild = 1;
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
     }
     public void OnFarmerButtonClicked()
     {
-        GameManager.instance.isPolice = 2;
+        GameManager.instance.guild = 2;
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
     }
 }

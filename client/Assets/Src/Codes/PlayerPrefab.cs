@@ -10,6 +10,8 @@ public class PlayerPrefab : MonoBehaviour
     private Animator anim;
     private SpriteRenderer spriter;
     public Vector2 newPosition;
+    public int guild;
+
     private Vector3 lastPosition;
     private Vector3 currentPosition;
     private uint characterId;
@@ -24,6 +26,15 @@ public class PlayerPrefab : MonoBehaviour
         anim = GetComponent<Animator>();
         spriter = GetComponent<SpriteRenderer>();
         myText = GetComponentInChildren<TextMeshPro>();
+
+        if (guild == 1)
+        {
+            myText.color = Color.blue;
+        }
+        else if (guild == 2)
+        {
+            myText.color = Color.green;
+        }
     }
 
     private void Update()
