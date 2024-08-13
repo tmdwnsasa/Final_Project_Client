@@ -23,7 +23,9 @@ public class Handlers : MonoBehaviour
         GAME_END = 15,
         RETURN_LOBBY = 16,
         EXIT = 20,
-        SKILL = 50
+        OPEN_STORE = 29,
+        PURCHASE_CHARACTER = 30,
+        SKILL = 50,
     }
 
     [Serializable]
@@ -54,6 +56,18 @@ public class Handlers : MonoBehaviour
         public float defense;
         public float critical;
         public int price;
+    }
+
+    [Serializable]
+    public struct UserMoney
+    {
+        public int money;
+    }
+
+    [Serializable]
+    public struct PurchaseStateMessage
+    {
+        public string message;
     }
 
     public void GetCharacterChoice(byte[] data)
@@ -95,7 +109,32 @@ public class Handlers : MonoBehaviour
         GameManager.instance.player.critical = characterStats.critical;
     }
 
-    public void ReturnLobbySetting() {
+    public void StoreOpen(byte[] data)
+    {
+        string jsonString = Encoding.UTF8.GetString(data);
+        UserMoney userMoney = JsonUtility.FromJson<UserMoney>(jsonString);
+        Text userGold = GameManager.instance.storeUI.transform.GetChild(5).GetChild(0).GetComponent<Text>();
+        userGold.text = userMoney.money.ToString();
+        GameManager.instance.chattingUI.SetActive(false);
+        GameManager.instance.exitBtn.SetActive(false);
+        GameManager.instance.matchStartUI.SetActive(false);
+        GameManager.instance.storeBtn.SetActive(false);
+        GameManager.instance.storeUI.SetActive(true);
+        GameManager.instance.purchaseMessageUI.SetActive(false);
+        GameManager.instance.purchaseCheckUI.transform.GetChild(0).GetComponent<Button>().interactable = true;
+    }
+
+    public void PurchaseMessage(byte[] data)
+    {
+        string jsonString = Encoding.UTF8.GetString(data);
+        PurchaseStateMessage purchaseStateMessage = JsonUtility.FromJson<PurchaseStateMessage>(jsonString);
+        Text message = GameManager.instance.purchaseMessageUI.transform.GetChild(1).GetComponent<Text>();
+        message.text = purchaseStateMessage.message;
+        GameManager.instance.purchaseCheckUI.SetActive(false);
+        GameManager.instance.purchaseMessageUI.SetActive(true);
+    }
+    public void ReturnLobbySetting()
+    {
         GameManager.instance.isLive = true;
         GameManager.instance.player.ResetAnimation();
         // GameManager.instance.player.transform.position = new Vector2(0, 0);
