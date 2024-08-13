@@ -44,8 +44,7 @@ public class GameManager : MonoBehaviour
     public GameObject storeBtn;
     public GameObject storeUI;
     public GameObject purchaseCheckUI;
-    public GameObject successPurchaseUI;
-    public GameObject failPurchaseCheckUI;
+    public GameObject purchaseMessageUI;
 
 
     void Awake()
@@ -72,8 +71,7 @@ public class GameManager : MonoBehaviour
         storeBtn.SetActive(true);
         storeUI.SetActive(false);
         purchaseCheckUI.SetActive(false);
-        successPurchaseUI.SetActive(false);
-        failPurchaseUI.SetActive(false);
+        purchaseMessageUI.SetActive(false);
 
         isLive = true;
 

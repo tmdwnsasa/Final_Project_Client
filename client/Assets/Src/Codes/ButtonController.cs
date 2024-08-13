@@ -57,6 +57,7 @@ public class ButtonController : MonoBehaviour
         string sessionId = GameManager.instance.sessionId;
 
         NetworkManager.instance.SendMatchPacket(sessionId);
+        GameManager.instance.storeBtn.GetComponent<Button>().interactable = false;;
         GameManager.instance.matchStartUI.transform.GetChild(0).GetComponent<Button>().interactable = false;
     }
 
@@ -79,6 +80,7 @@ public class ButtonController : MonoBehaviour
     public void OnStoreButtonClicked()
     {
         NetworkManager.instance.SendStoreOpenPacket();
+        GameManager.instance.storeBtn.GetComponent<Button>().interactable = false;
     }
 
     //상점 캐릭터 목록 버튼
@@ -128,16 +130,20 @@ public class ButtonController : MonoBehaviour
 
     //상점 캐릭터 구입 버튼
     public void OnPurchaseCharacterButtonClicked()
-    { 
-        if(){
-        GameManager.instance.successPurchaseUI.SetActive();
-        GameManager.instance.failPurchaseUI.SetActive();
-        }
+    {
+        Text name = GameManager.instance.purchaseCheckUI.transform.GetChild(3).GetComponent<Text>();
+        Text price = GameManager.instance.purchaseCheckUI.transform.GetChild(4).GetComponent<Text>();
+        Debug.Log(name.text);
+        Debug.Log(price.text);
+        NetworkManager.instance.SendPurchaseCharacterPacket(name.text, price.text);
+        GameManager.instance.purchaseCheckUI.transform.GetChild(0).GetComponent<Button>().interactable = false;
     }
 
     //상점 장비 구입 버튼
     public void OnPurchaseEquipmentButtonClicked()
-    { }
+    {
+        // GameManager.instance.characterSelectUI.transform.GetChild(1).GetComponent<Button>().interactable = false;
+     }
 
     //상점 구매 취소 버튼
     public void OnPurchaseCancelClicked()
@@ -145,13 +151,6 @@ public class ButtonController : MonoBehaviour
         GameManager.instance.purchaseCheckUI.SetActive(false);
         GameManager.instance.storeUI.SetActive(true);
     }
-
-    public void OnSuccessPurchaseCharacterButtonClicked()
-    { 
-    }
-
-    public void OnFailPurchaseCharacterButtonClicked()
-    { }
 
     //상점 나가기 버튼
     public void OnExitStoreButtonClicked()
@@ -161,5 +160,6 @@ public class ButtonController : MonoBehaviour
         GameManager.instance.matchStartUI.SetActive(true);
         GameManager.instance.storeBtn.SetActive(true);
         GameManager.instance.storeUI.SetActive(false);
+        GameManager.instance.storeBtn.GetComponent<Button>().interactable = true;
     }
 }

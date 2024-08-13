@@ -24,6 +24,7 @@ public class Handlers : MonoBehaviour
         RETURN_LOBBY = 16,
         EXIT = 20,
         OPEN_STORE = 29,
+        PURCHASE_CHARACTER = 30,
         SKILL = 50,
     }
 
@@ -61,6 +62,12 @@ public class Handlers : MonoBehaviour
     public struct UserMoney
     {
         public int money;
+    }
+
+    [Serializable]
+    public struct PurchaseStateMessage
+    {
+        public string message;
     }
 
     public void GetCharacterChoice(byte[] data)
@@ -106,7 +113,6 @@ public class Handlers : MonoBehaviour
     {
         string jsonString = Encoding.UTF8.GetString(data);
         UserMoney userMoney = JsonUtility.FromJson<UserMoney>(jsonString);
-        Debug.Log(userMoney);
         Text userGold = GameManager.instance.storeUI.transform.GetChild(5).GetChild(0).GetComponent<Text>();
         userGold.text = userMoney.money.ToString();
         GameManager.instance.chattingUI.SetActive(false);
@@ -114,5 +120,18 @@ public class Handlers : MonoBehaviour
         GameManager.instance.matchStartUI.SetActive(false);
         GameManager.instance.storeBtn.SetActive(false);
         GameManager.instance.storeUI.SetActive(true);
+        GameManager.instance.purchaseMessageUI.SetActive(false);
+        GameManager.instance.purchaseCheckUI.transform.GetChild(0).GetComponent<Button>().interactable = true;
+    }
+
+    public void PurchaseMessage(byte[] data)
+    {
+        string jsonString = Encoding.UTF8.GetString(data);
+        PurchaseStateMessage purchaseStateMessage = JsonUtility.FromJson<PurchaseStateMessage>(jsonString);
+        Text message = GameManager.instance.purchaseMessageUI.transform.GetChild(1).GetComponent<Text>();
+        Debug.Log(purchaseStateMessage.message);
+        message.text = purchaseStateMessage.message;
+        GameManager.instance.purchaseCheckUI.SetActive(false);
+        GameManager.instance.purchaseMessageUI.SetActive(true);
     }
 }

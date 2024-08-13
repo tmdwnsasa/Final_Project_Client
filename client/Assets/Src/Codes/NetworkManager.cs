@@ -355,9 +355,14 @@ public class NetworkManager : MonoBehaviour
         SendPacket(StoreOpenRequestPayload, (uint)Handlers.HandlerIds.OPEN_STORE);
     }
 
-    public void SendPurchaseCharacterPacket()
+    public void SendPurchaseCharacterPacket(string name, string price)
     {
-
+        PurchaseCharacterRequestPayload purchaseCharacterRequestPayload = new PurchaseCharacterRequestPayload
+        {
+            name = name,
+            price = price
+        };
+        SendPacket(purchaseCharacterRequestPayload, (uint)Handlers.HandlerIds.PURCHASE_CHARACTER);
     }
 
     void StartReceiving()
@@ -493,7 +498,9 @@ public class NetworkManager : MonoBehaviour
                     break;
                 case (uint)Handlers.HandlerIds.OPEN_STORE:
                     Handlers.instance.StoreOpen(response.data);
-                    Debug.Log(1);
+                    break;
+                case (uint)Handlers.HandlerIds.PURCHASE_CHARACTER:
+                    Handlers.instance.PurchaseMessage(response.data);
                     break;
             }
             ProcessResponseData(response.data);
@@ -583,7 +590,8 @@ public class NetworkManager : MonoBehaviour
         foreach (var user in response.users)
         {
             Debug.Log($"Player ID: {user.playerId}, Team: {user.team}, HP : {user.hp}, Position: ({user.x}, {user.y})");
-            if(user.playerId == GameManager.instance.player.name) {
+            if (user.playerId == GameManager.instance.player.name)
+            {
                 // GameManager.instance.player.transform.position = new Vector2(user.x, user.y);
             }
         }
@@ -594,20 +602,25 @@ public class NetworkManager : MonoBehaviour
         CharacterManager.instance.SetCharacterHp(response);
     }
 
-    void HandleErrorResponsePacket(Response response) {
-        if (response.responseCode == 10008) {
+    void HandleErrorResponsePacket(Response response)
+    {
+        if (response.responseCode == 10008)
+        {
             Application.Quit();
         }
 
-        if(response.responseCode == 10020 || response.responseCode == 10021 || response.responseCode == 10022) {
+        if (response.responseCode == 10020 || response.responseCode == 10021 || response.responseCode == 10022)
+        {
             GameManager.instance.registerUI.transform.GetChild(3).GetComponent<Button>().interactable = true;
         }
 
-        if(response.responseCode == 10023 || response.responseCode == 10006 || response.responseCode == 10024) {
+        if (response.responseCode == 10023 || response.responseCode == 10006 || response.responseCode == 10024)
+        {
             GameManager.instance.loginUI.transform.GetChild(3).GetComponent<Button>().interactable = true;
         }
 
-        if(response.responseCode == 10006 || response.responseCode == 10012 || response.responseCode == 10011) {
+        if (response.responseCode == 10006 || response.responseCode == 10012 || response.responseCode == 10011)
+        {
             GameManager.instance.characterChoiceUI.transform.GetChild(1).GetComponent<Button>().interactable = true;
             GameManager.instance.characterSelectUI.transform.GetChild(1).GetComponent<Button>().interactable = true;
         }

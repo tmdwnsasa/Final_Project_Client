@@ -374,3 +374,13 @@ public class StoreOpenRequestPayload
     [ProtoMember(1, IsRequired = true)]
     public string message { get; set; }
 }
+
+[ProtoContract]
+public class PurchaseCharacterRequestPayload
+{
+    [ProtoMember(1, IsRequired = true)]
+    public string name { get; set; }
+
+    [ProtoMember(2, IsRequired = true)]
+    public string price { get; set; }
+}
