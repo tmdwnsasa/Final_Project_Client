@@ -26,7 +26,7 @@ public class CharacterManager : MonoBehaviour
         {
             if (user.playerId == GameManager.instance.player.name)
             {
-                GameManager.instance.player.movePlayer(user.x, user.y);
+                GameManager.instance.player.newPosition = new Vector2(user.x, user.y);
             }
             else
             {

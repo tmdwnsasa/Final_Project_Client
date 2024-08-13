@@ -322,7 +322,7 @@ public class NetworkManager : MonoBehaviour
             message = "returnLobby"
         };
 
-        SendPacket(ReturnLobbyRequestPayload, (uint)Handlers.HandlerIds.RETURN_LOBBY);        
+        SendPacket(ReturnLobbyRequestPayload, (uint)Handlers.HandlerIds.RETURN_LOBBY);
     }
 
     public void SendExitPacket()
@@ -332,9 +332,27 @@ public class NetworkManager : MonoBehaviour
             message = "exit"
         };
 
-        SendPacket(exitPayload, (uint)Handlers.HandlerIds.EXIT);
+
     }
 
+    public void SendStoreOpenPacket()
+    {
+        StoreOpenRequestPayload StoreOpenRequestPayload = new StoreOpenRequestPayload
+        {
+            message = "storeOpen"
+        };
+        SendPacket(StoreOpenRequestPayload, (uint)Handlers.HandlerIds.OPEN_STORE);
+    }
+
+    public void SendPurchaseCharacterPacket(string name, string price)
+    {
+        PurchaseCharacterRequestPayload purchaseCharacterRequestPayload = new PurchaseCharacterRequestPayload
+        {
+            name = name,
+            price = price
+        };
+        SendPacket(purchaseCharacterRequestPayload, (uint)Handlers.HandlerIds.PURCHASE_CHARACTER);
+    }
 
     void StartReceiving()
     {
@@ -471,6 +489,12 @@ public class NetworkManager : MonoBehaviour
                 case (uint)Handlers.HandlerIds.EXIT:
                     Application.Quit();
                     break;
+                case (uint)Handlers.HandlerIds.OPEN_STORE:
+                    Handlers.instance.StoreOpen(response.data);
+                    break;
+                case (uint)Handlers.HandlerIds.PURCHASE_CHARACTER:
+                    Handlers.instance.PurchaseMessage(response.data);
+                    break;
             }
             ProcessResponseData(response.data);
         }
@@ -560,7 +584,8 @@ public class NetworkManager : MonoBehaviour
         foreach (var user in response.users)
         {
             Debug.Log($"Player ID: {user.playerId}, Team: {user.team}, HP : {user.hp}, Position: ({user.x}, {user.y})");
-            if(user.playerId == GameManager.instance.player.name) {
+            if (user.playerId == GameManager.instance.player.name)
+            {
                 // GameManager.instance.player.transform.position = new Vector2(user.x, user.y);
             }
         }
@@ -571,29 +596,34 @@ public class NetworkManager : MonoBehaviour
         CharacterManager.instance.SetCharacterHp(response);
     }
 
-    void HandleErrorResponsePacket(Response response) {
-        if (response.responseCode == (uint)ErrorCodes.ErrorCode.INVALID_SEQUENCE) {
+    void HandleErrorResponsePacket(Response response)
+    {
+        if (response.responseCode == (uint)ErrorCodes.ErrorCode.INVALID_SEQUENCE)
+        {
             Application.Quit();
         }
 
-        if(response.responseCode == (uint)ErrorCodes.ErrorCode.VALIDATE_ERROR || 
+        if (response.responseCode == (uint)ErrorCodes.ErrorCode.VALIDATE_ERROR ||
         response.responseCode == (uint)ErrorCodes.ErrorCode.ALREADY_EXIST_ID ||
-        response.responseCode == (uint)ErrorCodes.ErrorCode.ALREADY_EXIST_NAME) {
+        response.responseCode == (uint)ErrorCodes.ErrorCode.ALREADY_EXIST_NAME)
+        {
             GameManager.instance.registerUI.transform.GetChild(3).GetComponent<Button>().interactable = true;
             AudioManager.instance.PlaySfx(AudioManager.Sfx.LevelUp);
             StartCoroutine(NoticeRoutine(3));
         }
 
-        if(response.responseCode == (uint)ErrorCodes.ErrorCode.LOGGED_IN_ALREADY ||
+        if (response.responseCode == (uint)ErrorCodes.ErrorCode.LOGGED_IN_ALREADY ||
         response.responseCode == (uint)ErrorCodes.ErrorCode.USER_NOT_FOUND ||
-        response.responseCode == (uint)ErrorCodes.ErrorCode.MISMATCH_PASSWORD) {
+        response.responseCode == (uint)ErrorCodes.ErrorCode.MISMATCH_PASSWORD)
+        {
             GameManager.instance.loginUI.transform.GetChild(3).GetComponent<Button>().interactable = true;
             AudioManager.instance.PlaySfx(AudioManager.Sfx.LevelUp);
             StartCoroutine(NoticeRoutine(4));
         }
 
-        if(response.responseCode == (uint)ErrorCodes.ErrorCode.PLAYERID_NOT_FOUND ||
-        response.responseCode == (uint)ErrorCodes.ErrorCode.LOBBY_NOT_FOUND) {
+        if (response.responseCode == (uint)ErrorCodes.ErrorCode.PLAYERID_NOT_FOUND ||
+        response.responseCode == (uint)ErrorCodes.ErrorCode.LOBBY_NOT_FOUND)
+        {
             GameManager.instance.characterChoiceUI.transform.GetChild(1).GetComponent<Button>().interactable = true;
             GameManager.instance.characterSelectUI.transform.GetChild(1).GetComponent<Button>().interactable = true;
         }
