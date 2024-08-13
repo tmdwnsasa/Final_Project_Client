@@ -576,20 +576,23 @@ public class NetworkManager : MonoBehaviour
             Application.Quit();
         }
 
-        if(response.responseCode == (uint)ErrorCodes.ErrorCode.VALIDATE_ERROR ||
+        if(response.responseCode == (uint)ErrorCodes.ErrorCode.VALIDATE_ERROR || 
         response.responseCode == (uint)ErrorCodes.ErrorCode.ALREADY_EXIST_ID ||
         response.responseCode == (uint)ErrorCodes.ErrorCode.ALREADY_EXIST_NAME) {
             GameManager.instance.registerUI.transform.GetChild(3).GetComponent<Button>().interactable = true;
+            AudioManager.instance.PlaySfx(AudioManager.Sfx.LevelUp);
+            StartCoroutine(NoticeRoutine(3));
         }
 
         if(response.responseCode == (uint)ErrorCodes.ErrorCode.LOGGED_IN_ALREADY ||
         response.responseCode == (uint)ErrorCodes.ErrorCode.USER_NOT_FOUND ||
         response.responseCode == (uint)ErrorCodes.ErrorCode.MISMATCH_PASSWORD) {
             GameManager.instance.loginUI.transform.GetChild(3).GetComponent<Button>().interactable = true;
+            AudioManager.instance.PlaySfx(AudioManager.Sfx.LevelUp);
+            StartCoroutine(NoticeRoutine(4));
         }
 
-        if(response.responseCode == (uint)ErrorCodes.ErrorCode.USER_NOT_FOUND ||
-        response.responseCode == (uint)ErrorCodes.ErrorCode.PLAYERID_NOT_FOUND ||
+        if(response.responseCode == (uint)ErrorCodes.ErrorCode.PLAYERID_NOT_FOUND ||
         response.responseCode == (uint)ErrorCodes.ErrorCode.LOBBY_NOT_FOUND) {
             GameManager.instance.characterChoiceUI.transform.GetChild(1).GetComponent<Button>().interactable = true;
             GameManager.instance.characterSelectUI.transform.GetChild(1).GetComponent<Button>().interactable = true;
