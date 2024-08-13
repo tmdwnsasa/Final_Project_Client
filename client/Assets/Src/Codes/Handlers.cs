@@ -133,5 +133,15 @@ public class Handlers : MonoBehaviour
         message.text = purchaseStateMessage.message;
         GameManager.instance.purchaseCheckUI.SetActive(false);
         GameManager.instance.purchaseMessageUI.SetActive(true);
+    public void ReturnLobbySetting() {
+        GameManager.instance.isLive = true;
+        GameManager.instance.player.ResetAnimation();
+        // GameManager.instance.player.transform.position = new Vector2(0, 0);
+        NetworkManager.instance.isLobby = true;
+
+        GameManager.instance.matchStartUI.SetActive(true);
+        GameManager.instance.exitBtn.SetActive(true);
+        GameManager.instance.player.hpSlider.gameObject.SetActive(false);
+        GameManager.instance.gameEndUI.transform.GetChild(3).GetComponent<Button>().interactable = true;
     }
 }

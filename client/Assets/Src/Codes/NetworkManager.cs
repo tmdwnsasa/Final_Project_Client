@@ -323,17 +323,6 @@ public class NetworkManager : MonoBehaviour
         };
 
         SendPacket(ReturnLobbyRequestPayload, (uint)Handlers.HandlerIds.RETURN_LOBBY);
-
-        GameManager.instance.isLive = true;
-        GameManager.instance.player.ResetAnimation();
-        // GameManager.instance.player.transform.position = new Vector2(0, 0);
-        isLobby = true;
-
-        GameManager.instance.pool.SetColliderAll();
-
-        GameManager.instance.matchStartUI.SetActive(true);
-        GameManager.instance.exitBtn.SetActive(true);
-        GameManager.instance.player.hpSlider.gameObject.SetActive(false);
     }
 
     public void SendExitPacket()
@@ -490,6 +479,10 @@ public class NetworkManager : MonoBehaviour
                     Handlers.instance.GetCharacterSelect(response.data);
                     break;
                 case (uint)Handlers.HandlerIds.MATCHMAKING:
+                    GameManager.instance.matchStartUI.transform.GetChild(0).GetComponent<Button>().interactable = true;
+                    break;
+                case (uint)Handlers.HandlerIds.RETURN_LOBBY:
+                    Handlers.instance.ReturnLobbySetting();
                     break;
                 case (uint)Handlers.HandlerIds.SKILL:
                     break;
@@ -553,16 +546,17 @@ public class NetworkManager : MonoBehaviour
         GameManager.instance.chatting.updateChatting($"{response.playerId} : {response.message} / {response.type}");
         Debug.Log($"{response.playerId} : {response.message} / {response.type}");
     }
+
     void HandleSkillPacket(byte[] packetData)
     {
         var response = Packets.Deserialize<SkillUpdate>(packetData);
         CharacterManager.instance.UpdateAttack(response);
     }
+
     void HandleMatchMakingPacket(byte[] packetData)
     {
         var response = Packets.Deserialize<MatchMakingComplete>(packetData);
         Debug.Log($"{response.message}");
-        //GameManager.instance.matchStartUI.transform.GetChild(0).GetComponent<Button>().interactable = true;
     }
 
     void HandleGameEndPacket(byte[] packetData)
@@ -604,22 +598,31 @@ public class NetworkManager : MonoBehaviour
 
     void HandleErrorResponsePacket(Response response)
     {
-        if (response.responseCode == 10008)
+        if (response.responseCode == (uint)ErrorCodes.ErrorCode.INVALID_SEQUENCE)
         {
             Application.Quit();
         }
 
-        if (response.responseCode == 10020 || response.responseCode == 10021 || response.responseCode == 10022)
+        if (response.responseCode == (uint)ErrorCodes.ErrorCode.VALIDATE_ERROR ||
+        response.responseCode == (uint)ErrorCodes.ErrorCode.ALREADY_EXIST_ID ||
+        response.responseCode == (uint)ErrorCodes.ErrorCode.ALREADY_EXIST_NAME)
         {
             GameManager.instance.registerUI.transform.GetChild(3).GetComponent<Button>().interactable = true;
+            AudioManager.instance.PlaySfx(AudioManager.Sfx.LevelUp);
+            StartCoroutine(NoticeRoutine(3));
         }
 
-        if (response.responseCode == 10023 || response.responseCode == 10006 || response.responseCode == 10024)
+        if (response.responseCode == (uint)ErrorCodes.ErrorCode.LOGGED_IN_ALREADY ||
+        response.responseCode == (uint)ErrorCodes.ErrorCode.USER_NOT_FOUND ||
+        response.responseCode == (uint)ErrorCodes.ErrorCode.MISMATCH_PASSWORD)
         {
             GameManager.instance.loginUI.transform.GetChild(3).GetComponent<Button>().interactable = true;
+            AudioManager.instance.PlaySfx(AudioManager.Sfx.LevelUp);
+            StartCoroutine(NoticeRoutine(4));
         }
 
-        if (response.responseCode == 10006 || response.responseCode == 10012 || response.responseCode == 10011)
+        if (response.responseCode == (uint)ErrorCodes.ErrorCode.PLAYERID_NOT_FOUND ||
+        response.responseCode == (uint)ErrorCodes.ErrorCode.LOBBY_NOT_FOUND)
         {
             GameManager.instance.characterChoiceUI.transform.GetChild(1).GetComponent<Button>().interactable = true;
             GameManager.instance.characterSelectUI.transform.GetChild(1).GetComponent<Button>().interactable = true;
