@@ -78,6 +78,13 @@ public class ButtonController : MonoBehaviour
         string sessionId = GameManager.instance.sessionId;
 
         NetworkManager.instance.SendInventoryPacket(sessionId);
-        GameManager.instance.inventoryUI.transform.GetChild(0).GetComponent<Button>().interactable = false;
+        GameManager.instance.inventoryButton.transform.GetChild(0).GetComponent<Button>().interactable = false;
+        GameManager.instance.inventoryUI.SetActive(!GameManager.instance.inventoryUI.activeSelf);
+
+    }
+    //인벤토리 닫기 버튼
+    public void OnInventoryCloseButtonClicked()
+    {
+        GameManager.instance.inventoryUI.SetActive(false);
     }
 }

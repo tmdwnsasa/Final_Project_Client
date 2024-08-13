@@ -41,6 +41,7 @@ public class GameManager : MonoBehaviour
     public GameObject gameEndUI;
     public GameObject matchStartUI;
     public GameObject exitBtn;
+    public GameObject inventoryButton;
     public GameObject inventoryUI;
 
     void Awake()
@@ -64,7 +65,9 @@ public class GameManager : MonoBehaviour
         chattingUI.SetActive(true);
         matchStartUI.SetActive(true);
         exitBtn.SetActive(true);
-        inventoryUI.SetActive(true);
+        inventoryButton.SetActive(true);
+        inventoryUI.SetActive(false);
+
 
         isLive = true;
 
