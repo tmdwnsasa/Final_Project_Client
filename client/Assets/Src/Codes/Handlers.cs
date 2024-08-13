@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Handlers : MonoBehaviour
 {
@@ -92,5 +93,17 @@ public class Handlers : MonoBehaviour
         GameManager.instance.player.power = characterStats.power;
         GameManager.instance.player.defense = characterStats.defense;
         GameManager.instance.player.critical = characterStats.critical;
+    }
+
+    public void ReturnLobbySetting() {
+        GameManager.instance.isLive = true;
+        GameManager.instance.player.ResetAnimation();
+        // GameManager.instance.player.transform.position = new Vector2(0, 0);
+        NetworkManager.instance.isLobby = true;
+
+        GameManager.instance.matchStartUI.SetActive(true);
+        GameManager.instance.exitBtn.SetActive(true);
+        GameManager.instance.player.hpSlider.gameObject.SetActive(false);
+        GameManager.instance.gameEndUI.transform.GetChild(3).GetComponent<Button>().interactable = true;
     }
 }
