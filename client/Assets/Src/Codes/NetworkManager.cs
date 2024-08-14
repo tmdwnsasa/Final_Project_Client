@@ -331,7 +331,7 @@ public class NetworkManager : MonoBehaviour
         {
             message = "exit"
         };
-
+        SendPacket(exitPayload, (uint)Handlers.HandlerIds.EXIT);
 
     }
 
@@ -589,6 +589,7 @@ public class NetworkManager : MonoBehaviour
         isLobby = false;
         GameManager.instance.matchStartUI.SetActive(false);
         GameManager.instance.exitBtn.SetActive(false);
+        GameManager.instance.storeBtn.SetActive(false);
         CharacterManager.instance.SetCharacterHp(response);
     }
 

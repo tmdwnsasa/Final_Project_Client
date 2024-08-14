@@ -260,6 +260,8 @@ public class GameManager : MonoBehaviour
     public void ReturnLobby()
     {
         gameEndUI.SetActive(false);
+        storeBtn.SetActive(true);
+        storeBtn.GetComponent<Button>().interactable = true;
     }
 
     public void PurchaseCharacter(uint characterId){
