@@ -568,11 +568,7 @@ public class NetworkManager : MonoBehaviour
     void HandleAttackPacket(byte[] packetData)
     {
         var response = Packets.Deserialize<AttackedSuccess>(packetData);
-
-        foreach (var user in response.users)
-        {
-            Debug.Log($"{user.playerId} : {user.hp}");
-        }
+        Debug.Log($"{response.playerId} : {response.hp}");
 
         CharacterManager.instance.UpdateCharacterState(response);
     }
