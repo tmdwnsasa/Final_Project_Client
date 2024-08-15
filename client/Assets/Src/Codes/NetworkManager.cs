@@ -332,7 +332,7 @@ public class NetworkManager : MonoBehaviour
         {
             message = "exit"
         };
-
+        SendPacket(exitPayload, (uint)Handlers.HandlerIds.EXIT);
 
     }
 
@@ -573,11 +573,7 @@ public class NetworkManager : MonoBehaviour
     void HandleAttackPacket(byte[] packetData)
     {
         var response = Packets.Deserialize<AttackedSuccess>(packetData);
-
-        foreach (var user in response.users)
-        {
-            Debug.Log($"{user.playerId} : {user.hp}");
-        }
+        Debug.Log($"{response.playerId} : {response.hp}");
 
         CharacterManager.instance.UpdateCharacterState(response);
     }
@@ -609,6 +605,7 @@ public class NetworkManager : MonoBehaviour
         isLobby = false;
         GameManager.instance.matchStartUI.SetActive(false);
         GameManager.instance.exitBtn.SetActive(false);
+        GameManager.instance.storeBtn.SetActive(false);
         CharacterManager.instance.SetCharacterHp(response);
     }
 

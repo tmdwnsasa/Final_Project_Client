@@ -223,17 +223,10 @@ public class SkillCoolTimeUpdate
 public class AttackedSuccess
 {
     [ProtoMember(1)]
-    public List<UserAttackState> users { get; set; }
+    public string playerId { get; set; }
 
-    [ProtoContract]
-    public class UserAttackState
-    {
-        [ProtoMember(1)]
-        public string playerId { get; set; }
-
-        [ProtoMember(2)]
-        public float hp { get; set; }
-    }
+    [ProtoMember(2)]
+    public float hp { get; set; }
 }
 
 [ProtoContract]

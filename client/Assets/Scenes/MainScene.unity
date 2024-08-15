@@ -24407,8 +24407,8 @@ RectTransform:
   m_Children:
   - {fileID: 225839211}
   - {fileID: 927125877}
-  - {fileID: 975920742}
   - {fileID: 270171738}
+  - {fileID: 975920742}
   m_Father: {fileID: 1755040293}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -31378,7 +31378,7 @@ GameObject:
   - component: {fileID: 892650694}
   - component: {fileID: 892650693}
   m_Layer: 5
-  m_Name: CharacterButton (3)
+  m_Name: CharacterButton (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -33262,7 +33262,7 @@ GameObject:
   - component: {fileID: 1020502479}
   - component: {fileID: 1020502478}
   m_Layer: 5
-  m_Name: CharacterButton (2)
+  m_Name: CharacterButton (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -35747,8 +35747,8 @@ MonoBehaviour:
   farmers:
   - {fileID: -628906190, guid: 99a24620d31e5ce4e823c32d11e17c2c, type: 3}
   - {fileID: 1363809998, guid: 0c187a32c5bde4747be8d00770b07403, type: 3}
-  - {fileID: -2088749509, guid: 57a1443e67528144aa07582927559650, type: 3}
   - {fileID: 1267830177, guid: 8f7a60065e3984c489b9c4d41bc3dc4e, type: 3}
+  - {fileID: -2088749509, guid: 57a1443e67528144aa07582927559650, type: 3}
   isLive: 0
   gameTime: 0
   targetFrameRate: 120
@@ -45954,7 +45954,6 @@ MonoBehaviour:
   animCon:
   - {fileID: 9100000, guid: 6bbac7362c93f4ab8acdebb5c17b7cc0, type: 2}
   - {fileID: 22100000, guid: e7442b4b1dab2479584ab1d8aa08a473, type: 2}
-  - {fileID: 22100000, guid: 1aab438ac4cdc4d36b86fc36c80f39ad, type: 2}
   - {fileID: 22100000, guid: 19bee3ea924744a4b88dc35a07a6debf, type: 2}
   projectilePrefab: {fileID: 8957033140562300088, guid: 8dcc3a645595a1b4bbb6216fb1fe7ad0, type: 3}
   firePoint: {fileID: 1729806265}
@@ -55778,8 +55777,8 @@ RectTransform:
   m_Children:
   - {fileID: 1358398021}
   - {fileID: 1163592880}
-  - {fileID: 1020502477}
   - {fileID: 892650692}
+  - {fileID: 1020502477}
   m_Father: {fileID: 1465511746}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}

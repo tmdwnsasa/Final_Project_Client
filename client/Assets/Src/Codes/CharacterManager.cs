@@ -64,20 +64,15 @@ public class CharacterManager : MonoBehaviour
 
     public void UpdateCharacterState(AttackedSuccess data)
     {
-        foreach (AttackedSuccess.UserAttackState user in data.users)
+        if (data.playerId == GameManager.instance.player.name)
         {
-            if (user.playerId == GameManager.instance.player.name)
-            {
-                Debug.Log("Player Damaged");
-                GameManager.instance.player.SetHp(user.hp);
-            }
-            else
-            {
-                Debug.Log("Player Damaged");
-                GameObject player = GameManager.instance.pool.GetId(user.playerId);
-                PlayerPrefab playerScript = player.GetComponent<PlayerPrefab>();
-                playerScript.SetHp(user.hp);
-            }
+            GameManager.instance.player.SetHp(data.hp);
+        }
+        else
+        {
+            GameObject player = GameManager.instance.pool.GetId(data.playerId);
+            PlayerPrefab playerScript = player.GetComponent<PlayerPrefab>();
+            playerScript.SetHp(data.hp);
         }
     }
 

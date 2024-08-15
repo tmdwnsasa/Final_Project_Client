@@ -59,7 +59,7 @@ public class ButtonController : MonoBehaviour
         string sessionId = GameManager.instance.sessionId;
 
         NetworkManager.instance.SendMatchPacket(sessionId);
-        GameManager.instance.storeBtn.GetComponent<Button>().interactable = false; ;
+        GameManager.instance.storeBtn.GetComponent<Button>().interactable = false;
         GameManager.instance.matchStartUI.transform.GetChild(0).GetComponent<Button>().interactable = false;
     }
 
