@@ -207,6 +207,9 @@ public class SkillUpdate
 
     [ProtoMember(5)]
     public float rangeY { get; set; }
+
+    [ProtoMember(6)]
+    public uint skillType { get; set; }
 }
 
 [ProtoContract]

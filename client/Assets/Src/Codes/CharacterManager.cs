@@ -52,13 +52,13 @@ public class CharacterManager : MonoBehaviour
     {
         if (data.playerId == GameManager.instance.player.name)
         {
-            GameManager.instance.player.SetNearSkill(data.x, data.y, data.rangeX, data.rangeY);
+            GameManager.instance.player.SetNearSkill(data.x, data.y, data.rangeX, data.rangeY, data.skillType);
         }
         else
         {
             GameObject player = GameManager.instance.pool.GetId(data.playerId);
             PlayerPrefab playerScript = player.GetComponent<PlayerPrefab>();
-            playerScript.SetNearSkill(data.x, data.y, data.rangeX, data.rangeY);
+            playerScript.SetNearSkill(data.x, data.y, data.rangeX, data.rangeY, data.skillType);
         }
     }
 

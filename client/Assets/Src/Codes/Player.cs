@@ -34,6 +34,11 @@ public class Player : MonoBehaviour
     Animator anim;
     TextMeshPro myText;
 
+    //총알 관련 텍스트
+    public GameObject projectilePrefab;
+    public Transform firePoint;
+    public GameObject bulletManager;
+
     private Vector2 oldInputVec;
     private bool isPlusX;
     private bool isMinusX;
@@ -53,7 +58,6 @@ public class Player : MonoBehaviour
 
     public float x = 1, y = 1;
     public Vector2 BoxArea = new Vector2(0.5f, 0);
-    public float attackRangeX = 1, attackRangeY = 2;
     void Awake()
     {
         spriter = GetComponent<SpriteRenderer>();
@@ -168,6 +172,7 @@ public class Player : MonoBehaviour
 
             }
         }
+
     }
 
     // Update가 끝난이후 적용
@@ -234,12 +239,42 @@ public class Player : MonoBehaviour
         transform.position = Vector2.Lerp(transform.position, newPosition, 0.2f);
     }
 
-    public void SetNearSkill(float x, float y, float rangeX, float rangeY)
+    public void SetNearSkill(float x, float y, float rangeX, float rangeY, uint skillType)
     {
-        transform.GetChild(4).gameObject.SetActive(true);
-        transform.GetChild(4).localPosition = new Vector2(x, y);
-        transform.GetChild(4).localScale = new Vector3(rangeX, rangeY, 1);
-        StartCoroutine(AttackRangeCheck());
+        switch (skillType)
+        {
+            case 1:
+                transform.GetChild(4).gameObject.SetActive(true);
+                transform.GetChild(4).localPosition = new Vector2(x, y);
+                transform.GetChild(4).localScale = new Vector3(rangeX, rangeY, 1);
+                StartCoroutine(AttackRangeCheck());
+                break;
+            case 2:
+                GameObject projectile = Instantiate(projectilePrefab, transform.position + new Vector3(x, y), Quaternion.identity, bulletManager.transform);
+                BulletPrefab projScript = projectile.GetComponent<BulletPrefab>();
+
+                if (x > 0)
+                {
+                    projScript.direction = Vector2.right;
+                }
+
+                else if (y > 0)
+                {
+                    projScript.direction = Vector2.up;
+                }
+
+                else if (y < 0)
+                {
+                    projScript.direction = Vector2.down;
+                }
+                else if (x < 0)
+                {
+                    projScript.direction = Vector2.left;
+                }
+                break;
+            default:
+                break;
+        }
     }
 
     IEnumerator AttackRangeCheck()
