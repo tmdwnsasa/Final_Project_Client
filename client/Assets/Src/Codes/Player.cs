@@ -40,6 +40,17 @@ public class Player : MonoBehaviour
     private bool isPlusY;
     private bool isMinusY;
 
+    public string zSkill;
+    public float zSkill_CoolTime;
+    public uint zSkill_id;
+    public string xSkill;
+    public float xSkill_CoolTime;
+    public uint xSkill_id;
+
+    public bool directionX;
+
+    private bool isSkill;
+
     public float x = 1, y = 1;
     public Vector2 BoxArea = new Vector2(0.5f, 0);
     public float attackRangeX = 1, attackRangeY = 2;
@@ -57,7 +68,10 @@ public class Player : MonoBehaviour
         isMinusX = false;
         isPlusY = false;
         isMinusY = false;
-
+        isSkill = true;
+        directionX = true;
+        BoxArea.x = 0.5f;
+        BoxArea.y = 0f;
         hpSlider.value = 1;
     }
 
@@ -135,17 +149,23 @@ public class Player : MonoBehaviour
         if (!(inputVec.x != 0 && inputVec.y != 0))
         {
             //공격
-            if (Input.GetKeyDown(KeyCode.Z) && !NetworkManager.instance.isLobby)
+            if (Input.GetKeyDown(KeyCode.Z) && !NetworkManager.instance.isLobby && isSkill)
             {
                 if (x != 0)
                 {
+                    directionX = true;
                     //send 스킬 패킷을 보내고
-                    NetworkManager.instance.SendSkillUpdatePacket(BoxArea.x, BoxArea.y, attackRangeX, attackRangeY);
+                    NetworkManager.instance.SendSkillUpdatePacket(BoxArea.x, BoxArea.y, directionX, zSkill_id);
                 }
                 else
                 {
-                    NetworkManager.instance.SendSkillUpdatePacket(BoxArea.x, BoxArea.y, attackRangeY, attackRangeX);
+                    directionX = false;
+                    NetworkManager.instance.SendSkillUpdatePacket(BoxArea.x, BoxArea.y, directionX, zSkill_id);
                 }
+                isSkill = false;
+
+                StartCoroutine(CoolTimeCheck("zSkill"));
+
             }
         }
     }
@@ -228,6 +248,22 @@ public class Player : MonoBehaviour
         transform.GetChild(4).gameObject.SetActive(false);
     }
 
+    IEnumerator CoolTimeCheck(string Skill)
+    {
+        if ("zSkill" == Skill)
+        {
+            yield return new WaitForSeconds(zSkill_CoolTime);
+            isSkill = true;
+        }
+
+        else
+        {
+            yield return new WaitForSeconds(xSkill_CoolTime);
+            isSkill = true;
+        }
+    }
+
+
     public void SetHp(float hp)
     {
         nowHp = hp;
@@ -239,6 +275,14 @@ public class Player : MonoBehaviour
             anim.SetBool("Dead", true);
             GameManager.instance.isLive = false;
             gameObject.GetComponent<CapsuleCollider2D>().enabled = false;
+        }
+    }
+
+    public void SetSkill(string isSkill)
+    {
+        if ("isSkillZ" == isSkill)
+        {
+            this.isSkill = true;
         }
     }
 

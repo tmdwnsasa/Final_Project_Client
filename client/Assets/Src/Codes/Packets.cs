@@ -19,6 +19,7 @@ public class Packets : MonoBehaviour
         MATCHMAKING = 6,
         ATTACK = 40,
         SKILL = 50,
+        SKILLCOOLTIME = 51,
     }
 
     public static void Serialize<T>(IBufferWriter<byte> writer, T data)
@@ -141,10 +142,13 @@ public class SkillPayload
     public float y { get; set; }
 
     [ProtoMember(3, IsRequired = true)]
-    public float rangeX { get; set; }
+    public bool isDirectionX { get; set; }
 
     [ProtoMember(4, IsRequired = true)]
-    public float rangeY { get; set; }
+    public uint skill_id { get; set; }
+    [ProtoMember(5, IsRequired = true)]
+    public long timestamp { get; set; }
+
 }
 
 [ProtoContract]
@@ -167,7 +171,7 @@ public class LocationUpdate
 
         [ProtoMember(4)]
         public float y { get; set; }
-        
+
         [ProtoMember(5)]
         public float direction { get; set; }
     }
@@ -203,6 +207,13 @@ public class SkillUpdate
 
     [ProtoMember(5)]
     public float rangeY { get; set; }
+}
+
+[ProtoContract]
+public class SkillCoolTimeUpdate
+{
+    [ProtoMember(1)]
+    public string skillName { get; set; }
 }
 
 [ProtoContract]

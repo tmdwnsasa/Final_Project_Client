@@ -280,14 +280,15 @@ public class NetworkManager : MonoBehaviour
         SendPacket(locationUpdatePayload, (uint)Handlers.HandlerIds.UPDATE_LOCACTION);
     }
 
-    public void SendSkillUpdatePacket(float x, float y, float rangeX, float rangeY)
+    public void SendSkillUpdatePacket(float x, float y, bool isDirectionX, uint skill_id)
     {
         SkillPayload SkillPayload = new SkillPayload
         {
             x = x,
             y = y,
-            rangeX = rangeX,
-            rangeY = rangeY,
+            isDirectionX = isDirectionX,
+            skill_id = skill_id,
+            timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
         };
 
         SendPacket(SkillPayload, (uint)Handlers.HandlerIds.SKILL);
@@ -433,6 +434,9 @@ public class NetworkManager : MonoBehaviour
                     HandleAttackPacket(packetData);
                     break;
 
+                case Packets.PacketType.SKILLCOOLTIME:
+                    HandleCoolTimePacket(packetData);
+                    break;
             }
         }
     }
@@ -575,6 +579,17 @@ public class NetworkManager : MonoBehaviour
         }
 
         CharacterManager.instance.UpdateCharacterState(response);
+    }
+
+    void HandleCoolTimePacket(byte[] packetData)
+    {
+        var response = Packets.Deserialize<SkillCoolTimeUpdate>(packetData);
+
+
+        Debug.Log($" 현재 쿨타임이 돈 스킬 : {response}");
+
+
+        GameManager.instance.player.SetSkill(response.skillName);
     }
 
     //recieve GAME_START packet
