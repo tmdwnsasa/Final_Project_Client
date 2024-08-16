@@ -45,6 +45,9 @@ public class GameManager : MonoBehaviour
     public GameObject storeUI;
     public GameObject purchaseCheckUI;
     public GameObject purchaseMessageUI;
+    public GameObject mapBtn;
+    public GameObject mapUI;
+    public GameObject AnnouncementMap;
 
 
     void Awake()
@@ -72,6 +75,9 @@ public class GameManager : MonoBehaviour
         storeUI.SetActive(false);
         purchaseCheckUI.SetActive(false);
         purchaseMessageUI.SetActive(false);
+        mapBtn.SetActive(true);
+        mapUI.SetActive(false);
+        AnnouncementMap.SetActive(false);
 
         isLive = true;
 
@@ -228,6 +234,7 @@ public class GameManager : MonoBehaviour
         // Text user4Death = GameEndUI.transform.GetChild(2).GetChild(18).GetComponent<Text>();
         // Text user4Damage = GameEndUI.transform.GetChild(2).GetChild(19).GetComponent<Text>();
 
+        GameManager.instance.AnnouncementMap.SetActive(false);
         gameEndUI.SetActive(true);
         if (result == "Win")
         {

@@ -25,6 +25,7 @@ public class Handlers : MonoBehaviour
         EXIT = 20,
         OPEN_STORE = 29,
         PURCHASE_CHARACTER = 30,
+        OPEN_MAP = 40,
         SKILL = 50,
     }
 
@@ -68,6 +69,20 @@ public class Handlers : MonoBehaviour
     public struct PurchaseStateMessage
     {
         public string message;
+    }
+
+    [Serializable]
+    public struct MapData
+    {
+        public string mapName;
+        public bool isDisputedArea;
+        public string ownedBy;
+    }
+
+    [Serializable]
+    public struct MapDataArrayWrapper
+    {
+        public MapData[] mapData;
     }
 
     public void GetCharacterChoice(byte[] data)
@@ -121,6 +136,7 @@ public class Handlers : MonoBehaviour
         GameManager.instance.storeBtn.SetActive(false);
         GameManager.instance.storeUI.SetActive(true);
         GameManager.instance.purchaseMessageUI.SetActive(false);
+        GameManager.instance.mapBtn.SetActive(false);
         GameManager.instance.purchaseCheckUI.transform.GetChild(0).GetComponent<Button>().interactable = true;
     }
 
@@ -133,6 +149,32 @@ public class Handlers : MonoBehaviour
         GameManager.instance.purchaseCheckUI.SetActive(false);
         GameManager.instance.purchaseMessageUI.SetActive(true);
     }
+
+    public void OpenMap(byte[] data)
+    {
+        string jsonString = Encoding.UTF8.GetString(data);
+        MapDataArrayWrapper mapDataArray = JsonUtility.FromJson<MapDataArrayWrapper>(jsonString);
+        for (int i = 0; i < mapDataArray.mapData.Length; i++)
+        {
+            MapData map = mapDataArray.mapData[i];
+            Image mapImage = GameManager.instance.mapUI.transform.GetChild(2).GetChild(i).GetComponent<Image>();
+            if (map.isDisputedArea == true)
+            {
+                mapImage.color = new Color(255/255f, 78/255f, 64/255f);
+            }
+            if (map.ownedBy == "red")
+            {
+                mapImage.color = new Color(64/255f, 141/255f, 255/255f);
+
+            }
+            if (map.ownedBy == "blue")
+            {
+                mapImage.color = new Color(79/255f, 233/255f, 72/255f);
+
+            }
+        }
+    }
+
     public void ReturnLobbySetting()
     {
         GameManager.instance.isLive = true;
@@ -142,6 +184,7 @@ public class Handlers : MonoBehaviour
 
         GameManager.instance.matchStartUI.SetActive(true);
         GameManager.instance.exitBtn.SetActive(true);
+        GameManager.instance.mapBtn.SetActive(true);
         GameManager.instance.player.hpSlider.gameObject.SetActive(false);
         GameManager.instance.gameEndUI.transform.GetChild(3).GetComponent<Button>().interactable = true;
     }
