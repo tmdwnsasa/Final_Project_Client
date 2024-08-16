@@ -15,27 +15,20 @@ public class CharacterManager : MonoBehaviour
 
     public void CreateOtherPlayers(CreateUser data)
     {
-        HashSet<string> newUsers = new HashSet<string>();
         GameObject player = GameManager.instance.pool.Init(data.name, data.characterId, data.guild);
-        newUsers.Add(data.name);
-        currentUsers = newUsers;
+        currentUsers.Add(data.name);
     }
 
     public void CreateOtherPlayers(string name, uint characterId, uint guild)
     {
-        HashSet<string> newUsers = new HashSet<string>();
 
         GameObject player = GameManager.instance.pool.Init(name, characterId, guild);
-        newUsers.Add(name);
-        currentUsers = newUsers;
+        currentUsers.Add(name);
     }
 
     public void RemoveOtherPlayers(RemoveUser data)
     {
-        HashSet<string> newUsers = new HashSet<string>();
-
         GameManager.instance.pool.Remove(data.name);
-
         currentUsers.Remove(data.name);
     }
 
