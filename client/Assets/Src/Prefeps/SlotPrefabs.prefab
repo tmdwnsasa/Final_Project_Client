@@ -215,8 +215,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a2c4f8fe2af14bf0ba1328bbeeaed46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  slotPrefab: {fileID: 0}
-  slotsParent: {fileID: 0}
+  slotPrefab: {fileID: 7726494829486580258}
+  slotsParent: {fileID: 7308564631900230417}
   weaponSprites:
   - {fileID: 143021600, guid: 0d5e657ee5a074e4baa53d5b248a01d2, type: 3}
   - {fileID: -1972582131, guid: 0d5e657ee5a074e4baa53d5b248a01d2, type: 3}

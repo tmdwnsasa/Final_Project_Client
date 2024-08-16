@@ -23944,7 +23944,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7b181aca4fc4684b983f4224fb387ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedItemId: 0
 --- !u!4 &564488355
 Transform:
   m_ObjectHideFlags: 0
@@ -37611,8 +37610,7 @@ MonoBehaviour:
   exitBtn: {fileID: 1455111996}
   inventoryButton: {fileID: 1860704981}
   inventoryUI: {fileID: 916926236}
-  equipItemMessageUI: {fileID: 823593357}
-  unequipItemMessageUI: {fileID: 0}
+  equipUnequipItemMessageUI: {fileID: 823593357}
   storeBtn: {fileID: 2147328371}
   storeUI: {fileID: 341855149}
   purchaseCheckUI: {fileID: 378650381}
