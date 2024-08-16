@@ -311,7 +311,7 @@ public class NetworkManager : MonoBehaviour
         {
             sessionId = sessionId
         };
-        Debug.Log($"User's Session Id : {sessionId}");
+        //Debug.Log($"User's Session Id : {sessionId}");
         SendPacket(MatchingPayload, (uint)Handlers.HandlerIds.MATCHMAKING);
     }
 
@@ -323,17 +323,6 @@ public class NetworkManager : MonoBehaviour
         };
 
         SendPacket(ReturnLobbyRequestPayload, (uint)Handlers.HandlerIds.RETURN_LOBBY);
-
-        GameManager.instance.isLive = true;
-        GameManager.instance.player.ResetAnimation();
-        // GameManager.instance.player.transform.position = new Vector2(0, 0);
-        isLobby = true;
-
-        GameManager.instance.pool.SetColliderAll();
-
-        GameManager.instance.matchStartUI.SetActive(true);
-        GameManager.instance.exitBtn.SetActive(true);
-        GameManager.instance.player.hpSlider.gameObject.SetActive(false);
     }
 
     public void SendExitPacket()
@@ -343,19 +332,57 @@ public class NetworkManager : MonoBehaviour
             message = "exit"
         };
 
-        SendPacket(exitPayload, (uint)Handlers.HandlerIds.EXIT);
+
     }
 
-        public void SendInventoryPacket(string sessionId)
+    public void SendInventoryPacket(string sessionId)
     {
         InventoryPayload InventoryPayload = new InventoryPayload
         {
             sessionId = sessionId
         };
-        Debug.Log($"User's Session Id : {sessionId}");
+        //Debug.Log($"User's Session Id : {sessionId}");
         SendPacket(InventoryPayload, (uint)Handlers.HandlerIds.INVENTORY);
     }
 
+    public void SendEquipItemPacket(int itemId)
+    {
+        EquipItemPayload equipPayload = new EquipItemPayload
+        {
+            itemId = itemId,
+        };
+
+        SendPacket(equipPayload, (uint)Handlers.HandlerIds.EQUIP_ITEM);
+    }
+
+    public void SendUnequipItemPacket(int itemId)
+    {
+        UnequipItemPayload unequipPayload = new UnequipItemPayload
+        {
+            itemId = itemId,
+        };
+
+        SendPacket(unequipPayload, (uint)Handlers.HandlerIds.UNEQUIP_ITEM);
+    }
+
+    public void SendStoreOpenPacket()
+    {
+        StoreOpenRequestPayload StoreOpenRequestPayload = new StoreOpenRequestPayload
+        {
+            message = "storeOpen"
+        };
+        SendPacket(StoreOpenRequestPayload, (uint)Handlers.HandlerIds.OPEN_STORE);
+    }
+
+    public void SendPurchaseCharacterPacket(string name, string price)
+    {
+        PurchaseCharacterRequestPayload purchaseCharacterRequestPayload = new PurchaseCharacterRequestPayload
+        {
+            name = name,
+            price = price
+        };
+        SendPacket(purchaseCharacterRequestPayload, (uint)Handlers.HandlerIds.PURCHASE_CHARACTER);
+    }
 
     void StartReceiving()
     {
@@ -482,13 +509,32 @@ public class NetworkManager : MonoBehaviour
                     Handlers.instance.GetCharacterSelect(response.data);
                     break;
                 case (uint)Handlers.HandlerIds.MATCHMAKING:
+                    GameManager.instance.matchStartUI.transform.GetChild(0).GetComponent<Button>().interactable = true;
+                    break;
+                case (uint)Handlers.HandlerIds.RETURN_LOBBY:
+                    Handlers.instance.ReturnLobbySetting();
                     break;
                 case (uint)Handlers.HandlerIds.SKILL:
                     break;
                 case (uint)Handlers.HandlerIds.INVENTORY:
-                    break;                   
+                    Handlers.instance.SetCharactersCombinedStats(response.data);
+                    Handlers.instance.SetUserMoney(response.data);
+                    Handlers.instance.SetInventoryItemData(response.data);
+                    break;
+                case (uint)Handlers.HandlerIds.EQUIP_ITEM:
+                    Handlers.instance.UpdateEquipItem(response.data);
+                    break;
+                case (uint)Handlers.HandlerIds.UNEQUIP_ITEM:
+                    Handlers.instance.UpdateUnequipItem(response.data);
+                    break;
                 case (uint)Handlers.HandlerIds.EXIT:
                     Application.Quit();
+                    break;
+                case (uint)Handlers.HandlerIds.OPEN_STORE:
+                    Handlers.instance.StoreOpen(response.data);
+                    break;
+                case (uint)Handlers.HandlerIds.PURCHASE_CHARACTER:
+                    Handlers.instance.PurchaseMessage(response.data);
                     break;
             }
             ProcessResponseData(response.data);
@@ -541,16 +587,17 @@ public class NetworkManager : MonoBehaviour
         GameManager.instance.chatting.updateChatting($"{response.playerId} : {response.message} / {response.type}");
         Debug.Log($"{response.playerId} : {response.message} / {response.type}");
     }
+
     void HandleSkillPacket(byte[] packetData)
     {
         var response = Packets.Deserialize<SkillUpdate>(packetData);
         CharacterManager.instance.UpdateAttack(response);
     }
+
     void HandleMatchMakingPacket(byte[] packetData)
     {
         var response = Packets.Deserialize<MatchMakingComplete>(packetData);
         Debug.Log($"{response.message}");
-        //GameManager.instance.matchStartUI.transform.GetChild(0).GetComponent<Button>().interactable = true;
     }
 
     void HandleGameEndPacket(byte[] packetData)
@@ -578,7 +625,8 @@ public class NetworkManager : MonoBehaviour
         foreach (var user in response.users)
         {
             Debug.Log($"Player ID: {user.playerId}, Team: {user.team}, HP : {user.hp}, Position: ({user.x}, {user.y})");
-            if(user.playerId == GameManager.instance.player.name) {
+            if (user.playerId == GameManager.instance.player.name)
+            {
                 // GameManager.instance.player.transform.position = new Vector2(user.x, user.y);
             }
         }
@@ -589,26 +637,34 @@ public class NetworkManager : MonoBehaviour
         CharacterManager.instance.SetCharacterHp(response);
     }
 
-    void HandleErrorResponsePacket(Response response) {
-        if (response.responseCode == (uint)ErrorCodes.ErrorCode.INVALID_SEQUENCE) {
+    void HandleErrorResponsePacket(Response response)
+    {
+        if (response.responseCode == (uint)ErrorCodes.ErrorCode.INVALID_SEQUENCE)
+        {
             Application.Quit();
         }
 
-        if(response.responseCode == (uint)ErrorCodes.ErrorCode.VALIDATE_ERROR ||
+        if (response.responseCode == (uint)ErrorCodes.ErrorCode.VALIDATE_ERROR ||
         response.responseCode == (uint)ErrorCodes.ErrorCode.ALREADY_EXIST_ID ||
-        response.responseCode == (uint)ErrorCodes.ErrorCode.ALREADY_EXIST_NAME) {
+        response.responseCode == (uint)ErrorCodes.ErrorCode.ALREADY_EXIST_NAME)
+        {
             GameManager.instance.registerUI.transform.GetChild(3).GetComponent<Button>().interactable = true;
+            AudioManager.instance.PlaySfx(AudioManager.Sfx.LevelUp);
+            StartCoroutine(NoticeRoutine(3));
         }
 
-        if(response.responseCode == (uint)ErrorCodes.ErrorCode.LOGGED_IN_ALREADY ||
+        if (response.responseCode == (uint)ErrorCodes.ErrorCode.LOGGED_IN_ALREADY ||
         response.responseCode == (uint)ErrorCodes.ErrorCode.USER_NOT_FOUND ||
-        response.responseCode == (uint)ErrorCodes.ErrorCode.MISMATCH_PASSWORD) {
+        response.responseCode == (uint)ErrorCodes.ErrorCode.MISMATCH_PASSWORD)
+        {
             GameManager.instance.loginUI.transform.GetChild(3).GetComponent<Button>().interactable = true;
+            AudioManager.instance.PlaySfx(AudioManager.Sfx.LevelUp);
+            StartCoroutine(NoticeRoutine(4));
         }
 
-        if(response.responseCode == (uint)ErrorCodes.ErrorCode.USER_NOT_FOUND ||
-        response.responseCode == (uint)ErrorCodes.ErrorCode.PLAYERID_NOT_FOUND ||
-        response.responseCode == (uint)ErrorCodes.ErrorCode.LOBBY_NOT_FOUND) {
+        if (response.responseCode == (uint)ErrorCodes.ErrorCode.PLAYERID_NOT_FOUND ||
+        response.responseCode == (uint)ErrorCodes.ErrorCode.LOBBY_NOT_FOUND)
+        {
             GameManager.instance.characterChoiceUI.transform.GetChild(1).GetComponent<Button>().interactable = true;
             GameManager.instance.characterSelectUI.transform.GetChild(1).GetComponent<Button>().interactable = true;
         }

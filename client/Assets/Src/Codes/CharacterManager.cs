@@ -26,14 +26,14 @@ public class CharacterManager : MonoBehaviour
         {
             if (user.playerId == GameManager.instance.player.name)
             {
-                GameManager.instance.player.movePlayer(user.x, user.y);
+                GameManager.instance.player.newPosition = new Vector2(user.x, user.y);
             }
             else
             {
                 newUsers.Add(user.playerId);
                 GameObject player = GameManager.instance.pool.Get(user.playerId, user.characterId);
                 PlayerPrefab playerScript = player.GetComponent<PlayerPrefab>();
-                playerScript.UpdatePosition(user.x, user.y);
+                playerScript.UpdatePosition(user.x, user.y, user.direction);
             }
         }
 
