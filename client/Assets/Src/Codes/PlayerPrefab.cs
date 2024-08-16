@@ -9,6 +9,9 @@ public class PlayerPrefab : MonoBehaviour
     public RuntimeAnimatorController[] animCon;
     private Animator anim;//inventory inven
     private SpriteRenderer spriter;
+    public Vector2 newPosition;
+    public int guild;
+
     private Vector3 lastPosition;
     private Vector3 currentPosition;
     private uint characterId;//
@@ -18,16 +21,30 @@ public class PlayerPrefab : MonoBehaviour
     public float hp;
     public Slider hpSlider;
 
-    private float direction;
+    public float direction;
 
     void Awake()
     {
         anim = GetComponent<Animator>();
         spriter = GetComponent<SpriteRenderer>();
         myText = GetComponentInChildren<TextMeshPro>();
+
+        if (guild == 1)
+        {
+            myText.color = Color.blue;
+        }
+        else if (guild == 2)
+        {
+            myText.color = Color.green;
+        }
     }
 
-    public void Init(uint characterId, string playerId)
+    private void Update()
+    {
+        UpdatePosition();
+    }
+
+    public void Init(string playerId, uint characterId, uint guild)
     {
         gameObject.GetComponent<CapsuleCollider2D>().enabled = true;
         anim.runtimeAnimatorController = animCon[characterId];
@@ -46,6 +63,10 @@ public class PlayerPrefab : MonoBehaviour
         {
             myText.text = playerId;
         }
+        if (guild == 1)
+            myText.color = Color.blue;
+        else if (guild == 2)
+            myText.color = Color.green;
         myText.GetComponent<MeshRenderer>().sortingOrder = 6;
     }
 
@@ -55,12 +76,11 @@ public class PlayerPrefab : MonoBehaviour
     }
 
     // 서버로부터 위치 업데이트를 수신할 때 호출될 메서드
-    public void UpdatePosition(float x, float y, float dir)
+    public void UpdatePosition()
     {
-        lastPosition = currentPosition;
-        currentPosition = new Vector3(x, y);
-        transform.position = currentPosition;
-        direction = dir;
+        lastPosition = transform.position;
+        currentPosition = newPosition;
+        transform.position = Vector3.Lerp(transform.position, newPosition, 0.2f);
 
         UpdateAnimation();
     }
