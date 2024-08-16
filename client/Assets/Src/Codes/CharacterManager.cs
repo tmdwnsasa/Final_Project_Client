@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor.Rendering;
 using UnityEngine;
 public class CharacterManager : MonoBehaviour
 {
@@ -52,13 +53,13 @@ public class CharacterManager : MonoBehaviour
     {
         if (data.playerId == GameManager.instance.player.name)
         {
-            GameManager.instance.player.SetNearSkill(data.x, data.y, data.rangeX, data.rangeY, data.skillType);
+            GameManager.instance.player.SetSkill(data.x, data.y, data.rangeX, data.rangeY, data.skillType, data.prefabNum);
         }
         else
         {
             GameObject player = GameManager.instance.pool.GetId(data.playerId);
             PlayerPrefab playerScript = player.GetComponent<PlayerPrefab>();
-            playerScript.SetNearSkill(data.x, data.y, data.rangeX, data.rangeY, data.skillType);
+            playerScript.SetSkill(data.x, data.y, data.rangeX, data.rangeY, data.skillType, data.prefabNum);
         }
     }
 
@@ -90,6 +91,38 @@ public class CharacterManager : MonoBehaviour
             else if (user.playerId == GameManager.instance.player.name)
             {
                 GameManager.instance.player.startSetHp(user.hp);
+            }
+        }
+    }
+
+    public void SetCharacterTag(BattleStart data)
+    {
+        foreach (BattleStart.UserTeam user in data.users)
+        {
+            if (user.playerId != GameManager.instance.player.name)
+            {
+                GameObject player = GameManager.instance.pool.GetId(user.playerId);
+                PlayerPrefab playerScript = player.GetComponent<PlayerPrefab>();
+                if (user.team.Contains("red"))
+                {
+                    playerScript.gameObject.tag = "red";
+                }
+                else
+                {
+                    playerScript.gameObject.tag = "blue";
+                }
+            }
+
+            else if (user.playerId == GameManager.instance.player.name)
+            {
+                if (user.team.Contains("red"))
+                {
+                    GameManager.instance.player.tag = "red";
+                }
+                else
+                {
+                    GameManager.instance.player.tag = "blue";
+                }
             }
         }
     }

@@ -19,7 +19,7 @@ public class Packets : MonoBehaviour
         MATCHMAKING = 6,
         ATTACK = 40,
         SKILL = 50,
-        SKILLCOOLTIME = 51,
+        REMOVESKILL = 51,
     }
 
     public static void Serialize<T>(IBufferWriter<byte> writer, T data)
@@ -146,9 +146,9 @@ public class SkillPayload
 
     [ProtoMember(4, IsRequired = true)]
     public uint skill_id { get; set; }
+
     [ProtoMember(5, IsRequired = true)]
     public long timestamp { get; set; }
-
 }
 
 [ProtoContract]
@@ -210,14 +210,21 @@ public class SkillUpdate
 
     [ProtoMember(6)]
     public uint skillType { get; set; }
+
+    [ProtoMember(7)]
+    public string prefabNum { get; set; }
 }
 
 [ProtoContract]
-public class SkillCoolTimeUpdate
+public class RemoveSkillPayload
 {
     [ProtoMember(1)]
-    public string skillName { get; set; }
+    public string prefabNum { get; set; }
+
+    [ProtoMember(2)]
+    public uint skillType { get; set; }
 }
+
 
 [ProtoContract]
 public class AttackedSuccess

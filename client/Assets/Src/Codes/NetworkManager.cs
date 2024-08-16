@@ -290,9 +290,20 @@ public class NetworkManager : MonoBehaviour
             skill_id = skill_id,
             timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
         };
-
         SendPacket(SkillPayload, (uint)Handlers.HandlerIds.SKILL);
     }
+
+    public void SendRemoveSkillPacket(string prefabNum, uint skillType)
+    {
+        RemoveSkillPayload RemoveSkillPayload = new RemoveSkillPayload
+        {
+            prefabNum = prefabNum,
+            skillType = skillType
+        };
+
+        SendPacket(RemoveSkillPayload, (uint)Handlers.HandlerIds.REMOVESKILL);
+    }
+
 
     public void SendChattingPacket(string message, uint type)
     {
@@ -433,10 +444,6 @@ public class NetworkManager : MonoBehaviour
                 case Packets.PacketType.ATTACK:
                     HandleAttackPacket(packetData);
                     break;
-
-                case Packets.PacketType.SKILLCOOLTIME:
-                    HandleCoolTimePacket(packetData);
-                    break;
             }
         }
     }
@@ -498,6 +505,8 @@ public class NetworkManager : MonoBehaviour
                     break;
                 case (uint)Handlers.HandlerIds.PURCHASE_CHARACTER:
                     Handlers.instance.PurchaseMessage(response.data);
+                    break;
+                case (uint)Handlers.HandlerIds.REMOVESKILL:
                     break;
             }
             ProcessResponseData(response.data);
@@ -578,17 +587,6 @@ public class NetworkManager : MonoBehaviour
         CharacterManager.instance.UpdateCharacterState(response);
     }
 
-    void HandleCoolTimePacket(byte[] packetData)
-    {
-        var response = Packets.Deserialize<SkillCoolTimeUpdate>(packetData);
-
-
-        Debug.Log($" 현재 쿨타임이 돈 스킬 : {response}");
-
-
-        GameManager.instance.player.SetSkill(response.skillName);
-    }
-
     //recieve GAME_START packet
     void HandleBattleStartPacket(byte[] packetData)
     {
@@ -607,6 +605,7 @@ public class NetworkManager : MonoBehaviour
         GameManager.instance.exitBtn.SetActive(false);
         GameManager.instance.storeBtn.SetActive(false);
         CharacterManager.instance.SetCharacterHp(response);
+        CharacterManager.instance.SetCharacterTag(response);
     }
 
     void HandleErrorResponsePacket(Response response)

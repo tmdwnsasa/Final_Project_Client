@@ -239,7 +239,7 @@ public class Player : MonoBehaviour
         transform.position = Vector2.Lerp(transform.position, newPosition, 0.2f);
     }
 
-    public void SetNearSkill(float x, float y, float rangeX, float rangeY, uint skillType)
+    public void SetSkill(float x, float y, float rangeX, float rangeY, uint skillType, string prefabNum)
     {
         switch (skillType)
         {
@@ -247,11 +247,15 @@ public class Player : MonoBehaviour
                 transform.GetChild(4).gameObject.SetActive(true);
                 transform.GetChild(4).localPosition = new Vector2(x, y);
                 transform.GetChild(4).localScale = new Vector3(rangeX, rangeY, 1);
+
                 StartCoroutine(AttackRangeCheck());
                 break;
             case 2:
                 GameObject projectile = Instantiate(projectilePrefab, transform.position + new Vector3(x, y), Quaternion.identity, bulletManager.transform);
                 BulletPrefab projScript = projectile.GetComponent<BulletPrefab>();
+                projectile.gameObject.tag = gameObject.tag;
+                projScript.bulletNum = prefabNum;
+                projScript.skillType = skillType;
 
                 if (x > 0)
                 {

@@ -93,7 +93,7 @@ public class PlayerPrefab : MonoBehaviour
         }
     }
 
-    public void SetNearSkill(float x, float y, float rangeX, float rangeY, uint skill_type)
+    public void SetSkill(float x, float y, float rangeX, float rangeY, uint skill_type, string prefabNum)
     {
         switch (skill_type)
         {
@@ -106,7 +106,9 @@ public class PlayerPrefab : MonoBehaviour
             case 2:
                 GameObject projectile = Instantiate(projectilePrefab, transform.position + new Vector3(x, y), Quaternion.identity, bulletManager.transform);
                 BulletPrefab projScript = projectile.GetComponent<BulletPrefab>();
-
+                projectile.gameObject.tag = gameObject.tag;
+                projScript.bulletNum = prefabNum;
+                projScript.skillType = skill_type;
                 if (x > 0)
                 {
                     projScript.direction = Vector2.right;

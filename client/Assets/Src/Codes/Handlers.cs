@@ -26,7 +26,7 @@ public class Handlers : MonoBehaviour
         OPEN_STORE = 29,
         PURCHASE_CHARACTER = 30,
         SKILL = 50,
-        SKILLCOOLTIME = 51
+        REMOVESKILL = 51
     }
 
     [Serializable]
