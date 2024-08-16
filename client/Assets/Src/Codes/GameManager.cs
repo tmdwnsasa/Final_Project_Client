@@ -20,6 +20,9 @@ public class GameManager : MonoBehaviour
     public int targetFrameRate;
     public string version = "1.0.0";
 
+    [Header("# Register")]
+    public int guild = 0;
+
     [Header("# Player Info")]
     public uint characterId;
     public string sessionId;
@@ -267,6 +270,8 @@ public class GameManager : MonoBehaviour
     public void ReturnLobby()
     {
         gameEndUI.SetActive(false);
+        storeBtn.SetActive(true);
+        storeBtn.GetComponent<Button>().interactable = true;
     }
 
     public void PurchaseCharacter(uint characterId){

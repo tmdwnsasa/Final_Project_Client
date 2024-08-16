@@ -2,11 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
+using static Handlers;
+using static UnityEngine.UIElements.UxmlAttributeDescription;
 using UnityEngine.UI;
 
 public class Handlers : MonoBehaviour
 {
     public static Handlers instance;
+    public GameObject Player;
     public enum HandlerIds
     {
         LOGIN = 0,
@@ -34,6 +37,7 @@ public class Handlers : MonoBehaviour
     {
         public string playerId;
         public string name;
+        public int guild;
         public string sessionId;
     }
 
@@ -42,8 +46,17 @@ public class Handlers : MonoBehaviour
     {
         public string playerId;
         public string name;
+        public int guild;
         public string sessionId;
         public List<uint> possession;
+    }
+
+    [Serializable]
+    public struct UserData
+    {
+        public string playerId;
+        public uint characterId;
+        public uint guild;
     }
 
     [Serializable]
@@ -57,6 +70,13 @@ public class Handlers : MonoBehaviour
         public float defense;
         public float critical;
         public int price;
+        public List<UserData> userDatas;
+    }
+
+    [Serializable]
+    public struct CharacterDatas
+    {
+        public List<UserData> userDatas;
     }
 
     [Serializable]
@@ -92,6 +112,7 @@ public class Handlers : MonoBehaviour
 
         GameManager.instance.playerId = characterChoice.playerId;
         GameManager.instance.name = characterChoice.name;
+        GameManager.instance.player.guild = characterChoice.guild;
         GameManager.instance.sessionId = characterChoice.sessionId;
 
         GameManager.instance.GoCharacterChoice();
@@ -104,6 +125,7 @@ public class Handlers : MonoBehaviour
 
         GameManager.instance.playerId = characterSelect.playerId;
         GameManager.instance.name = characterSelect.name;
+        GameManager.instance.player.guild = characterSelect.guild;
         GameManager.instance.sessionId = characterSelect.sessionId;
         GameManager.instance.possession = characterSelect.possession;
 
@@ -122,6 +144,12 @@ public class Handlers : MonoBehaviour
         GameManager.instance.player.power = characterStats.power;
         GameManager.instance.player.defense = characterStats.defense;
         GameManager.instance.player.critical = characterStats.critical;
+
+        //�ٸ� �÷��̾� ���� ����
+        foreach (var user in characterStats.userDatas)
+        {
+            CharacterManager.instance.CreateOtherPlayers(user.playerId, user.characterId, user.guild);
+        }
     }
 
     public void StoreOpen(byte[] data)
@@ -177,6 +205,13 @@ public class Handlers : MonoBehaviour
 
     public void ReturnLobbySetting()
     {
+        string jsonString = Encoding.UTF8.GetString(data);
+        CharacterDatas characterDatas = JsonUtility.FromJson<CharacterDatas>(jsonString);
+        foreach (var user in characterDatas.userDatas)
+        {
+            CharacterManager.instance.CreateOtherPlayers(user.playerId, user.characterId, user.guild);
+        }
+
         GameManager.instance.isLive = true;
         GameManager.instance.player.ResetAnimation();
         // GameManager.instance.player.transform.position = new Vector2(0, 0);

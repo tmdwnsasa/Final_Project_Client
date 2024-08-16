@@ -17,6 +17,8 @@ public class Packets : MonoBehaviour
         GAME_END = 4,
         CHATTING = 5,
         MATCHMAKING = 6,
+        CREATE_USER = 7,
+        REMOVE_USER = 8,
         ATTACK = 40,
         SKILL = 50,
     }
@@ -54,6 +56,9 @@ public class RegisterPayload
 
     [ProtoMember(3, IsRequired = true)]
     public string name { get; set; }
+
+    [ProtoMember(4, IsRequired = true)]
+    public int guild { get; set; }
 }
 
 [ProtoContract]
@@ -209,17 +214,10 @@ public class SkillUpdate
 public class AttackedSuccess
 {
     [ProtoMember(1)]
-    public List<UserAttackState> users { get; set; }
+    public string playerId { get; set; }
 
-    [ProtoContract]
-    public class UserAttackState
-    {
-        [ProtoMember(1)]
-        public string playerId { get; set; }
-
-        [ProtoMember(2)]
-        public float hp { get; set; }
-    }
+    [ProtoMember(2)]
+    public float hp { get; set; }
 }
 
 [ProtoContract]
@@ -339,6 +337,30 @@ public class MatchMakingComplete
 
 }
 
+[ProtoContract]
+public class CreateUser
+{
+    [ProtoMember(1, IsRequired = true)]
+    public string name { get; set; }
+
+    [ProtoMember(2, IsRequired = true)]
+    public uint characterId { get; set; }
+
+    [ProtoMember(3, IsRequired = true)]
+    public uint guild { get; set; }
+
+}
+
+[ProtoContract]
+public class RemoveUser
+{
+    [ProtoMember(1, IsRequired = true)]
+    public string name { get; set; }
+
+    [ProtoMember(2, IsRequired = true)]
+    public uint characterId { get; set; }
+
+}
 
 [ProtoContract]
 public class BattleStart
