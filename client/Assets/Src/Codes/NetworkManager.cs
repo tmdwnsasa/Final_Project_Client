@@ -355,6 +355,15 @@ public class NetworkManager : MonoBehaviour
         SendPacket(purchaseCharacterRequestPayload, (uint)Handlers.HandlerIds.PURCHASE_CHARACTER);
     }
 
+    public void SendOpenMapPacket()
+    {
+        OpenMapPayload openMapPayload = new OpenMapPayload
+        {
+            message = "mapOpen"
+        };
+        SendPacket(openMapPayload, (uint)Handlers.HandlerIds.OPEN_MAP);
+    }
+
     void StartReceiving()
     {
         _ = ReceivePacketsAsync();
@@ -504,6 +513,9 @@ public class NetworkManager : MonoBehaviour
                 case (uint)Handlers.HandlerIds.PURCHASE_CHARACTER:
                     Handlers.instance.PurchaseMessage(response.data);
                     break;
+                case (uint)Handlers.HandlerIds.OPEN_MAP:
+                    Handlers.instance.OpenMap(response.data);
+                    break;
             }
             ProcessResponseData(response.data);
         }
@@ -605,11 +617,16 @@ public class NetworkManager : MonoBehaviour
                 // GameManager.instance.player.transform.position = new Vector2(user.x, user.y);
             }
         }
+        Text announcementMap = GameManager.instance.AnnouncementMap.transform.GetChild(0).GetComponent<Text>();
+        announcementMap.text = $"대전 지역 이름: {response.mapName}";
+        Debug.Log(response.mapName);
 
         isLobby = false;
         GameManager.instance.matchStartUI.SetActive(false);
         GameManager.instance.exitBtn.SetActive(false);
         GameManager.instance.storeBtn.SetActive(false);
+        GameManager.instance.mapBtn.SetActive(false);
+        GameManager.instance.AnnouncementMap.SetActive(true);
         CharacterManager.instance.SetCharacterHp(response);
     }
 

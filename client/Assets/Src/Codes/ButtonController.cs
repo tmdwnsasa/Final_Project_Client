@@ -164,6 +164,7 @@ public class ButtonController : MonoBehaviour
         GameManager.instance.matchStartUI.SetActive(true);
         GameManager.instance.storeBtn.SetActive(true);
         GameManager.instance.storeUI.SetActive(false);
+        GameManager.instance.mapBtn.SetActive(true);
         GameManager.instance.storeBtn.GetComponent<Button>().interactable = true;
     }
 
@@ -176,5 +177,31 @@ public class ButtonController : MonoBehaviour
     {
         GameManager.instance.guild = 2;
         AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
+    }
+
+    //진영별 점령 땅 확인 버튼
+    public void OnCheckMapButtonClicked()
+    {
+        NetworkManager.instance.SendOpenMapPacket();
+        GameManager.instance.chattingUI.SetActive(false);
+        GameManager.instance.exitBtn.SetActive(false);
+        GameManager.instance.matchStartUI.SetActive(false);
+        GameManager.instance.storeBtn.SetActive(false);
+        GameManager.instance.mapBtn.SetActive(false);
+        GameManager.instance.mapUI.SetActive(true);
+        GameManager.instance.mapBtn.GetComponent<Button>().interactable = false;
+    }
+
+    // 맵 나가기 버튼
+    public void OnExitMapButtonClicked()
+    {
+
+        GameManager.instance.chattingUI.SetActive(true);
+        GameManager.instance.exitBtn.SetActive(true);
+        GameManager.instance.matchStartUI.SetActive(true);
+        GameManager.instance.storeBtn.SetActive(true);
+        GameManager.instance.mapBtn.SetActive(true);
+        GameManager.instance.mapUI.SetActive(false);
+        GameManager.instance.mapBtn.GetComponent<Button>().interactable = true;
     }
 }

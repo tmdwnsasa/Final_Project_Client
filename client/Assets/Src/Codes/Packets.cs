@@ -369,7 +369,7 @@ public class BattleStart
     public List<UserTeam> users { get; set; }
 
     [ProtoMember(2)]
-    public string message { get; set; }
+    public string mapName { get; set; }
 
     [ProtoContract]
     public class UserTeam
@@ -408,4 +408,31 @@ public class PurchaseCharacterRequestPayload
 
     [ProtoMember(2, IsRequired = true)]
     public string price { get; set; }
+}
+
+[ProtoContract]
+public class OpenMapPayload
+{
+    [ProtoMember(1, IsRequired = true)]
+    public string message { get; set; }
+}
+
+[ProtoContract]
+public class MapPayload
+{
+    [ProtoMember(1)]
+    public List<Map> maps { get; set; }
+    
+    [ProtoContract]
+    public class Map
+    {
+        [ProtoMember(1)]
+        public string mapName { get; set; }
+
+        [ProtoMember(2)]
+        public bool isDisputedArea { get; set; }
+
+        [ProtoMember(3)]
+        public string ownedBy { get; set; }
+    }
 }
