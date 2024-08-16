@@ -19,6 +19,7 @@ public class NetworkManager : MonoBehaviour
 
     private string port = "5000";
     private string ip = "127.0.0.1";
+    // private string ip = "34.64.199.202";
     public GameObject uiNotice;
     private TcpClient tcpClient;
     private NetworkStream stream;
@@ -191,8 +192,6 @@ public class NetworkManager : MonoBehaviour
         Array.Copy(header, 0, packet, 0, header.Length);
         Array.Copy(data, 0, packet, header.Length, data.Length);
 
-        await Task.Delay(GameManager.instance.latency);
-
         // 패킷 전송
         stream.Write(packet, 0, packet.Length);
     }
@@ -266,8 +265,6 @@ public class NetworkManager : MonoBehaviour
         Array.Copy(header, 0, packet, 0, header.Length);
         Array.Copy(data, 0, packet, header.Length, data.Length);
 
-        await Task.Delay(GameManager.instance.latency);
-
         // 패킷 전송
         stream.Write(packet, 0, packet.Length);
     }
@@ -327,14 +324,6 @@ public class NetworkManager : MonoBehaviour
         };
 
         SendPacket(ReturnLobbyRequestPayload, (uint)Handlers.HandlerIds.RETURN_LOBBY);
-
-        GameManager.instance.isLive = true;
-        GameManager.instance.player.ResetAnimation();
-        isLobby = true;
-
-        GameManager.instance.matchStartUI.SetActive(true);
-        GameManager.instance.exitBtn.SetActive(true);
-        GameManager.instance.player.hpSlider.gameObject.SetActive(false);
     }
 
     public void SendExitPacket()
@@ -343,10 +332,28 @@ public class NetworkManager : MonoBehaviour
         {
             message = "exit"
         };
-
         SendPacket(exitPayload, (uint)Handlers.HandlerIds.EXIT);
+
     }
 
+    public void SendStoreOpenPacket()
+    {
+        StoreOpenRequestPayload StoreOpenRequestPayload = new StoreOpenRequestPayload
+        {
+            message = "storeOpen"
+        };
+        SendPacket(StoreOpenRequestPayload, (uint)Handlers.HandlerIds.OPEN_STORE);
+    }
+
+    public void SendPurchaseCharacterPacket(string name, string price)
+    {
+        PurchaseCharacterRequestPayload purchaseCharacterRequestPayload = new PurchaseCharacterRequestPayload
+        {
+            name = name,
+            price = price
+        };
+        SendPacket(purchaseCharacterRequestPayload, (uint)Handlers.HandlerIds.PURCHASE_CHARACTER);
+    }
 
     void StartReceiving()
     {
@@ -443,10 +450,7 @@ public class NetworkManager : MonoBehaviour
         var response = Packets.Deserialize<Response>(packetData);
         Debug.Log($"HandlerId: {response.handlerId}, responseCode: {response.responseCode}, timestamp: {response.timestamp}");
 
-        // if (response.responseCode == 10008)
-        // {
-        //     Application.Quit();
-        // }
+        HandleErrorResponsePacket(response);
 
         if (response.responseCode != 0 && !uiNotice.activeSelf)
         {
@@ -482,11 +486,21 @@ public class NetworkManager : MonoBehaviour
                     Handlers.instance.GetCharacterSelect(response.data);
                     break;
                 case (uint)Handlers.HandlerIds.MATCHMAKING:
+                    GameManager.instance.matchStartUI.transform.GetChild(0).GetComponent<Button>().interactable = true;
+                    break;
+                case (uint)Handlers.HandlerIds.RETURN_LOBBY:
+                    Handlers.instance.ReturnLobbySetting();
                     break;
                 case (uint)Handlers.HandlerIds.SKILL:
                     break;
                 case (uint)Handlers.HandlerIds.EXIT:
                     Application.Quit();
+                    break;
+                case (uint)Handlers.HandlerIds.OPEN_STORE:
+                    Handlers.instance.StoreOpen(response.data);
+                    break;
+                case (uint)Handlers.HandlerIds.PURCHASE_CHARACTER:
+                    Handlers.instance.PurchaseMessage(response.data);
                     break;
             }
             ProcessResponseData(response.data);
@@ -539,11 +553,13 @@ public class NetworkManager : MonoBehaviour
         GameManager.instance.chatting.updateChatting($"{response.playerId} : {response.message} / {response.type}");
         Debug.Log($"{response.playerId} : {response.message} / {response.type}");
     }
+
     void HandleSkillPacket(byte[] packetData)
     {
         var response = Packets.Deserialize<SkillUpdate>(packetData);
         CharacterManager.instance.UpdateAttack(response);
     }
+
     void HandleMatchMakingPacket(byte[] packetData)
     {
         var response = Packets.Deserialize<MatchMakingComplete>(packetData);
@@ -570,11 +586,7 @@ public class NetworkManager : MonoBehaviour
     void HandleAttackPacket(byte[] packetData)
     {
         var response = Packets.Deserialize<AttackedSuccess>(packetData);
-
-        foreach (var user in response.users)
-        {
-            Debug.Log($"{user.playerId} : {user.hp}");
-        }
+        Debug.Log($"{response.playerId} : {response.hp}");
 
         CharacterManager.instance.UpdateCharacterState(response);
     }
@@ -586,11 +598,49 @@ public class NetworkManager : MonoBehaviour
         foreach (var user in response.users)
         {
             Debug.Log($"Player ID: {user.playerId}, Team: {user.team}, HP : {user.hp}, Position: ({user.x}, {user.y})");
+            if (user.playerId == GameManager.instance.player.name)
+            {
+                // GameManager.instance.player.transform.position = new Vector2(user.x, user.y);
+            }
         }
 
         isLobby = false;
         GameManager.instance.matchStartUI.SetActive(false);
         GameManager.instance.exitBtn.SetActive(false);
+        GameManager.instance.storeBtn.SetActive(false);
         CharacterManager.instance.SetCharacterHp(response);
+    }
+
+    void HandleErrorResponsePacket(Response response)
+    {
+        if (response.responseCode == (uint)ErrorCodes.ErrorCode.INVALID_SEQUENCE)
+        {
+            Application.Quit();
+        }
+
+        if (response.responseCode == (uint)ErrorCodes.ErrorCode.VALIDATE_ERROR ||
+        response.responseCode == (uint)ErrorCodes.ErrorCode.ALREADY_EXIST_ID ||
+        response.responseCode == (uint)ErrorCodes.ErrorCode.ALREADY_EXIST_NAME)
+        {
+            GameManager.instance.registerUI.transform.GetChild(3).GetComponent<Button>().interactable = true;
+            AudioManager.instance.PlaySfx(AudioManager.Sfx.LevelUp);
+            StartCoroutine(NoticeRoutine(3));
+        }
+
+        if (response.responseCode == (uint)ErrorCodes.ErrorCode.LOGGED_IN_ALREADY ||
+        response.responseCode == (uint)ErrorCodes.ErrorCode.USER_NOT_FOUND ||
+        response.responseCode == (uint)ErrorCodes.ErrorCode.MISMATCH_PASSWORD)
+        {
+            GameManager.instance.loginUI.transform.GetChild(3).GetComponent<Button>().interactable = true;
+            AudioManager.instance.PlaySfx(AudioManager.Sfx.LevelUp);
+            StartCoroutine(NoticeRoutine(4));
+        }
+
+        if (response.responseCode == (uint)ErrorCodes.ErrorCode.PLAYERID_NOT_FOUND ||
+        response.responseCode == (uint)ErrorCodes.ErrorCode.LOBBY_NOT_FOUND)
+        {
+            GameManager.instance.characterChoiceUI.transform.GetChild(1).GetComponent<Button>().interactable = true;
+            GameManager.instance.characterSelectUI.transform.GetChild(1).GetComponent<Button>().interactable = true;
+        }
     }
 }

@@ -21,6 +21,8 @@ public class PlayerPrefab : MonoBehaviour
     public float hp;
     public Slider hpSlider;
 
+    public float direction;
+
     void Awake()
     {
         anim = GetComponent<Animator>();
@@ -44,16 +46,18 @@ public class PlayerPrefab : MonoBehaviour
 
     public void Init(string playerId, uint characterId, uint guild)
     {
+        gameObject.GetComponent<CapsuleCollider2D>().enabled = true;
         anim.runtimeAnimatorController = animCon[characterId];
         lastPosition = Vector3.zero;
         currentPosition = Vector3.zero;
+        direction = 0;
         hpSlider.gameObject.SetActive(false);
 
         this.characterId = characterId;
 
-        if (playerId.Length > 5)
+        if (playerId.Length > 6)
         {
-            myText.text = playerId[..5];
+            myText.text = playerId[..6];
         }
         else
         {
@@ -98,9 +102,9 @@ public class PlayerPrefab : MonoBehaviour
 
         anim.SetFloat("Speed", inputVec.magnitude);
 
-        if (inputVec.x != 0 && Mathf.Abs(inputVec.x) > 1.0f)
+        if (direction != 0)
         {
-            spriter.flipX = inputVec.x < 0;
+            spriter.flipX = direction < 0;
         }
     }
 
@@ -134,6 +138,7 @@ public class PlayerPrefab : MonoBehaviour
         {
             hpSlider.gameObject.SetActive(false);
             anim.SetBool("Dead", true);
+            gameObject.GetComponent<CapsuleCollider2D>().enabled = false;
         }
     }
 

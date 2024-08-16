@@ -11,6 +11,8 @@ public class Player : MonoBehaviour
 {
     public Vector2 inputVec;
 
+    public Vector2 newPosition;
+
     public int characterId;
     public string characterName;
 
@@ -80,13 +82,14 @@ public class Player : MonoBehaviour
             myText.text = name;
         }
         myText.GetComponent<MeshRenderer>().sortingOrder = 6;
-
+        Debug.Log(GameManager.instance.characterId);
         anim.runtimeAnimatorController = animCon[GameManager.instance.characterId];
     }
 
     // Update is called once per frame
     void Update()
     {
+        movePlayer();
         if (!GameManager.instance.isLive || GameManager.instance.chatting.inputField.isFocused)
         {
             inputVec = new Vector2(0, 0);
@@ -216,9 +219,9 @@ public class Player : MonoBehaviour
         isMinusY = false;
     }
 
-    public void movePlayer(float x, float y)
+    public void movePlayer()
     {
-        transform.position = new Vector2(x, y);
+        transform.position = Vector2.Lerp(transform.position, newPosition, 0.2f);
     }
 
     public void SetNearSkill(float x, float y, float rangeX, float rangeY)
@@ -245,6 +248,7 @@ public class Player : MonoBehaviour
             hpSlider.gameObject.SetActive(false);
             anim.SetBool("Dead", true);
             GameManager.instance.isLive = false;
+            gameObject.GetComponent<CapsuleCollider2D>().enabled = false;
         }
     }
 
@@ -259,5 +263,6 @@ public class Player : MonoBehaviour
     public void ResetAnimation()
     {
         anim.SetBool("Dead", false);
+        gameObject.GetComponent<CapsuleCollider2D>().enabled = true;
     }
 }

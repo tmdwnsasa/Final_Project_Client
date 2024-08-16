@@ -45,13 +45,14 @@ public class CharacterManager : MonoBehaviour
         {
             if (user.playerId == GameManager.instance.player.name)
             {
-                GameManager.instance.player.movePlayer(user.x, user.y);
+                GameManager.instance.player.newPosition = new Vector2(user.x, user.y);
             }
             else
             {
                 GameObject player = GameManager.instance.pool.Get(user.playerId, user.characterId);
                 PlayerPrefab playerScript = player.GetComponent<PlayerPrefab>();
                 playerScript.newPosition = new Vector2(user.x, user.y);
+                playerScript.direction = user.direction;
             }
         }
     }
@@ -72,20 +73,15 @@ public class CharacterManager : MonoBehaviour
 
     public void UpdateCharacterState(AttackedSuccess data)
     {
-        foreach (AttackedSuccess.UserAttackState user in data.users)
+        if (data.playerId == GameManager.instance.player.name)
         {
-            if (user.playerId == GameManager.instance.player.name)
-            {
-                Debug.Log("Player Damaged");
-                GameManager.instance.player.SetHp(user.hp);
-            }
-            else
-            {
-                Debug.Log("Player Damaged");
-                GameObject player = GameManager.instance.pool.GetId(user.playerId);
-                PlayerPrefab playerScript = player.GetComponent<PlayerPrefab>();
-                playerScript.SetHp(user.hp);
-            }
+            GameManager.instance.player.SetHp(data.hp);
+        }
+        else
+        {
+            GameObject player = GameManager.instance.pool.GetId(data.playerId);
+            PlayerPrefab playerScript = player.GetComponent<PlayerPrefab>();
+            playerScript.SetHp(data.hp);
         }
     }
 
