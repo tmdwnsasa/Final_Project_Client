@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 using static Handlers;
+using static UnityEngine.UIElements.UxmlAttributeDescription;
 
 public class Handlers : MonoBehaviour
 {
@@ -47,6 +48,14 @@ public class Handlers : MonoBehaviour
     }
 
     [Serializable]
+    public struct UserData
+    {
+        public string playerId;
+        public uint characterId;
+        public uint guild;
+    }
+
+    [Serializable]
     public struct CharacterStats
     {
         public int characterId;
@@ -57,6 +66,7 @@ public class Handlers : MonoBehaviour
         public float defense;
         public float critical;
         public int price;
+        public List<UserData> userDatas;
     }
 
     public void GetCharacterChoice(byte[] data)
@@ -83,8 +93,6 @@ public class Handlers : MonoBehaviour
         GameManager.instance.sessionId = characterSelect.sessionId;
         GameManager.instance.possession = characterSelect.possession;
 
-        Debug.Log(GameManager.instance.possession[0]);
-
         GameManager.instance.GoCharacterSelect();
     }
 
@@ -100,5 +108,11 @@ public class Handlers : MonoBehaviour
         GameManager.instance.player.power = characterStats.power;
         GameManager.instance.player.defense = characterStats.defense;
         GameManager.instance.player.critical = characterStats.critical;
+
+        //다른 플레이어 정보 생성
+        foreach (var user in characterStats.userDatas)
+        {
+            CharacterManager.instance.CreateOtherPlayers(user.playerId, user.characterId, user.guild);
+        }
     }
 }

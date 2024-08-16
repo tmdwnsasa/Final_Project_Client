@@ -13,15 +13,34 @@ public class CharacterManager : MonoBehaviour
         instance = this;
     }
 
-    public void Spawn(LocationUpdate data)
+    public void CreateOtherPlayers(CreateUser data)
     {
-        // if (!GameManager.instance.isLive)
-        // {
-        //     return;
-        // }
+        HashSet<string> newUsers = new HashSet<string>();
+        GameObject player = GameManager.instance.pool.Init(data.name, data.characterId, data.guild);
+        newUsers.Add(data.name);
+        currentUsers = newUsers;
+    }
 
+    public void CreateOtherPlayers(string name, uint characterId, uint guild)
+    {
         HashSet<string> newUsers = new HashSet<string>();
 
+        GameObject player = GameManager.instance.pool.Init(name, characterId, guild);
+        newUsers.Add(name);
+        currentUsers = newUsers;
+    }
+
+    public void RemoveOtherPlayers(RemoveUser data)
+    {
+        HashSet<string> newUsers = new HashSet<string>();
+
+        GameManager.instance.pool.Remove(data.name);
+
+        currentUsers.Remove(data.name);
+    }
+
+    public void MoveAllPlayers(LocationUpdate data)
+    {
         foreach (LocationUpdate.UserLocation user in data.users)
         {
             if (user.playerId == GameManager.instance.player.name)
@@ -30,22 +49,11 @@ public class CharacterManager : MonoBehaviour
             }
             else
             {
-                newUsers.Add(user.playerId);
                 GameObject player = GameManager.instance.pool.Get(user.playerId, user.characterId);
                 PlayerPrefab playerScript = player.GetComponent<PlayerPrefab>();
-                playerScript.UpdatePosition();
+                playerScript.newPosition = new Vector2(user.x, user.y);
             }
         }
-
-        foreach (string userId in currentUsers)
-        {
-            if (!newUsers.Contains(userId))
-            {
-                GameManager.instance.pool.Remove(userId);
-            }
-        }
-
-        currentUsers = newUsers;
     }
 
     public void UpdateAttack(SkillUpdate data)

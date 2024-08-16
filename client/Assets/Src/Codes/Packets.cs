@@ -17,6 +17,8 @@ public class Packets : MonoBehaviour
         GAME_END = 4,
         CHATTING = 5,
         MATCHMAKING = 6,
+        CREATE_USER = 7,
+        REMOVE_USER = 8,
         ATTACK = 40,
         SKILL = 50,
     }
@@ -339,6 +341,30 @@ public class MatchMakingComplete
 
 }
 
+[ProtoContract]
+public class CreateUser
+{
+    [ProtoMember(1, IsRequired = true)]
+    public string name { get; set; }
+
+    [ProtoMember(2, IsRequired = true)]
+    public uint characterId { get; set; }
+
+    [ProtoMember(3, IsRequired = true)]
+    public uint guild { get; set; }
+
+}
+
+[ProtoContract]
+public class RemoveUser
+{
+    [ProtoMember(1, IsRequired = true)]
+    public string name { get; set; }
+
+    [ProtoMember(2, IsRequired = true)]
+    public uint characterId { get; set; }
+
+}
 
 [ProtoContract]
 public class BattleStart

@@ -42,7 +42,7 @@ public class PlayerPrefab : MonoBehaviour
         UpdatePosition();
     }
 
-    public void Init(uint characterId, string playerId)
+    public void Init(string playerId, uint characterId, uint guild)
     {
         anim.runtimeAnimatorController = animCon[characterId];
         lastPosition = Vector3.zero;
@@ -59,6 +59,10 @@ public class PlayerPrefab : MonoBehaviour
         {
             myText.text = playerId;
         }
+        if (guild == 1)
+            myText.color = Color.blue;
+        else if (guild == 2)
+            myText.color = Color.green;
         myText.GetComponent<MeshRenderer>().sortingOrder = 6;
     }
 

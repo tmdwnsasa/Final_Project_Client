@@ -394,7 +394,7 @@ public class NetworkManager : MonoBehaviour
             byte[] packetData = incompleteData.GetRange(5, packetLength - 5).ToArray();
             incompleteData.RemoveRange(0, packetLength);
 
-            // Debug.Log($"Received packet: Length = {packetLength}, Type = {packetType}");
+            Debug.Log($"Received packet: Length = {packetLength}, Type = {packetType}");
 
             switch (packetType)
             {
@@ -412,6 +412,12 @@ public class NetworkManager : MonoBehaviour
                     break;
                 case Packets.PacketType.MATCHMAKING:
                     HandleMatchMakingPacket(packetData);
+                    break;
+                case Packets.PacketType.CREATE_USER:
+                    HandleCreateUserPacket(packetData);
+                    break;
+                case Packets.PacketType.REMOVE_USER:
+                    HandleRemoveUserPacket(packetData);
                     break;
                 case Packets.PacketType.GAME_START:
                     HandleBattleStartPacket(packetData);
@@ -466,8 +472,8 @@ public class NetworkManager : MonoBehaviour
                 case (uint)Handlers.HandlerIds.JOIN_GAME:
                     break;
                 case (uint)Handlers.HandlerIds.JOIN_LOBBY:
-                    Handlers.instance.SetCharacterStats(response.data);
                     GameManager.instance.GameStart();
+                    Handlers.instance.SetCharacterStats(response.data);
                     break;
                 case (uint)Handlers.HandlerIds.CHOICE_CHARACTER:
                     Handlers.instance.GetCharacterChoice(response.data);
@@ -518,7 +524,7 @@ public class NetworkManager : MonoBehaviour
                 response = new LocationUpdate { users = new List<LocationUpdate.UserLocation>() };
             }
 
-            CharacterManager.instance.Spawn(response);
+            CharacterManager.instance.MoveAllPlayers(response);
         }
         catch (Exception e)
         {
@@ -541,7 +547,18 @@ public class NetworkManager : MonoBehaviour
     void HandleMatchMakingPacket(byte[] packetData)
     {
         var response = Packets.Deserialize<MatchMakingComplete>(packetData);
-        Debug.Log($"{response.message}");
+
+    }
+
+    void HandleCreateUserPacket(byte[] packetData)
+    {
+        var response = Packets.Deserialize<CreateUser>(packetData);
+        CharacterManager.instance.CreateOtherPlayers(response);
+    }
+    void HandleRemoveUserPacket(byte[] packetData)
+    {
+        var response = Packets.Deserialize<RemoveUser>(packetData);
+        CharacterManager.instance.RemoveOtherPlayers(response);
     }
 
     void HandleGameEndPacket(byte[] packetData)
