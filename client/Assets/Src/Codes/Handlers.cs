@@ -203,7 +203,7 @@ public class Handlers : MonoBehaviour
         }
     }
 
-    public void ReturnLobbySetting()
+    public void ReturnLobbySetting(byte[] data)
     {
         string jsonString = Encoding.UTF8.GetString(data);
         CharacterDatas characterDatas = JsonUtility.FromJson<CharacterDatas>(jsonString);
