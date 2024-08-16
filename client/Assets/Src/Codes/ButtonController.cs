@@ -108,19 +108,19 @@ public class ButtonController : MonoBehaviour
     //    }
     //}
 
-    public int selectedItemId;
+    //public int selectedItemId;
 
-    public void OnEquipItemClicked()
-    {
-        NetworkManager.instance.SendEquipItemPacket(selectedItemId);
-        GameManager.instance.equipItemMessageUI.SetActive(false);
-    }
+    //public void OnEquipItemClicked()
+    //{
+    //    NetworkManager.instance.SendEquipItemPacket(selectedItemId);
+    //    GameManager.instance.equipItemMessageUI.SetActive(false);
+    //}
 
-    public void OnUnequipItemClicked()
-    {
-        NetworkManager.instance.SendUnequipItemPacket(selectedItemId);
-        GameManager.instance.unequipItemMessageUI.SetActive(false);
-    }
+    //public void OnUnequipItemClicked()
+    //{
+    //    NetworkManager.instance.SendUnequipItemPacket(selectedItemId);
+    //    GameManager.instance.unequipItemMessageUI.SetActive(false);
+    //}
 
     //인벤토리 닫기 버튼
     public void OnInventoryCloseButtonClicked()
