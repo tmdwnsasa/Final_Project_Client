@@ -401,7 +401,7 @@ public class NetworkManager : MonoBehaviour
             byte[] packetData = incompleteData.GetRange(5, packetLength - 5).ToArray();
             incompleteData.RemoveRange(0, packetLength);
 
-            Debug.Log($"Received packet: Length = {packetLength}, Type = {packetType}");
+            //Debug.Log($"Received packet: Length = {packetLength}, Type = {packetType}");
 
             switch (packetType)
             {
@@ -421,9 +421,11 @@ public class NetworkManager : MonoBehaviour
                     HandleMatchMakingPacket(packetData);
                     break;
                 case Packets.PacketType.CREATE_USER:
+                    Debug.Log("생성");
                     HandleCreateUserPacket(packetData);
                     break;
                 case Packets.PacketType.REMOVE_USER:
+                    Debug.Log("삭제");
                     HandleRemoveUserPacket(packetData);
                     break;
                 case Packets.PacketType.GAME_START:
