@@ -25,10 +25,10 @@ public class ButtonController : MonoBehaviour
         string id = GameManager.instance.registerUI.transform.GetChild(2).GetChild(0).GetComponent<InputField>().text;
         string password = GameManager.instance.registerUI.transform.GetChild(2).GetChild(1).GetComponent<InputField>().text;
         string name = GameManager.instance.registerUI.transform.GetChild(2).GetChild(2).GetComponent<InputField>().text;
+        int guild = GameManager.instance.guild;
 
-        if (id != "" && password != "" && name != "")
-        {
-            NetworkManager.instance.SendRegisterPacket(id, password, name);
+        if (id != "" && password != "" && name != "") {
+            NetworkManager.instance.SendRegisterPacket(id, password, name, guild);
             GameManager.instance.registerUI.transform.GetChild(3).GetComponent<Button>().interactable = false;
         }
     }
@@ -165,5 +165,16 @@ public class ButtonController : MonoBehaviour
         GameManager.instance.storeBtn.SetActive(true);
         GameManager.instance.storeUI.SetActive(false);
         GameManager.instance.storeBtn.GetComponent<Button>().interactable = true;
+    }
+
+    public void OnPoliceButtonClicked()
+    {
+        GameManager.instance.guild = 1;
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
+    }
+    public void OnFarmerButtonClicked()
+    {
+        GameManager.instance.guild = 2;
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
     }
 }

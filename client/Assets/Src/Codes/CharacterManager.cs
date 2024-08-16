@@ -13,15 +13,27 @@ public class CharacterManager : MonoBehaviour
         instance = this;
     }
 
-    public void Spawn(LocationUpdate data)
+    public void CreateOtherPlayers(CreateUser data)
     {
-        // if (!GameManager.instance.isLive)
-        // {
-        //     return;
-        // }
+        GameObject player = GameManager.instance.pool.Init(data.name, data.characterId, data.guild);
+        currentUsers.Add(data.name);
+    }
 
-        HashSet<string> newUsers = new HashSet<string>();
+    public void CreateOtherPlayers(string name, uint characterId, uint guild)
+    {
 
+        GameObject player = GameManager.instance.pool.Init(name, characterId, guild);
+        currentUsers.Add(name);
+    }
+
+    public void RemoveOtherPlayers(RemoveUser data)
+    {
+        GameManager.instance.pool.Remove(data.name);
+        currentUsers.Remove(data.name);
+    }
+
+    public void MoveAllPlayers(LocationUpdate data)
+    {
         foreach (LocationUpdate.UserLocation user in data.users)
         {
             if (user.playerId == GameManager.instance.player.name)
@@ -30,22 +42,12 @@ public class CharacterManager : MonoBehaviour
             }
             else
             {
-                newUsers.Add(user.playerId);
                 GameObject player = GameManager.instance.pool.Get(user.playerId, user.characterId);
                 PlayerPrefab playerScript = player.GetComponent<PlayerPrefab>();
-                playerScript.UpdatePosition(user.x, user.y, user.direction);
+                playerScript.newPosition = new Vector2(user.x, user.y);
+                playerScript.direction = user.direction;
             }
         }
-
-        foreach (string userId in currentUsers)
-        {
-            if (!newUsers.Contains(userId))
-            {
-                GameManager.instance.pool.Remove(userId);
-            }
-        }
-
-        currentUsers = newUsers;
     }
 
     public void UpdateAttack(SkillUpdate data)

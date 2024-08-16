@@ -20,6 +20,9 @@ public class GameManager : MonoBehaviour
     public int targetFrameRate;
     public string version = "1.0.0";
 
+    [Header("# Register")]
+    public int guild = 0;
+
     [Header("# Player Info")]
     public uint characterId;
     public string sessionId;
