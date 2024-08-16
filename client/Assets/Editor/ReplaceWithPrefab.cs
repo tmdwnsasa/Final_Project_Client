@@ -8,7 +8,7 @@ public class ReplaceWithPrefab : MonoBehaviour
     static void ReplaceSelectedWithPrefab()
     {
         // 프로젝트 폴더에서 원하는 프리팹을 로드합니다.
-        GameObject prefab = (GameObject)AssetDatabase.LoadAssetAtPath("Assets/Src/Prefeps/SlotPrefab.prefab", typeof(GameObject));
+        GameObject prefab = (GameObject)AssetDatabase.LoadAssetAtPath("Assets/Src/Prefeps/EquipPrefabs.prefab", typeof(GameObject));
         if (prefab == null)
         {
             Debug.LogError("Prefab not found at specified path. Please check the path.");
