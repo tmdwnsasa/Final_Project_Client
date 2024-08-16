@@ -489,7 +489,7 @@ public class NetworkManager : MonoBehaviour
                     GameManager.instance.matchStartUI.transform.GetChild(0).GetComponent<Button>().interactable = true;
                     break;
                 case (uint)Handlers.HandlerIds.RETURN_LOBBY:
-                    Handlers.instance.ReturnLobbySetting();
+                    Handlers.instance.ReturnLobbySetting(response.data);
                     break;
                 case (uint)Handlers.HandlerIds.SKILL:
                     break;

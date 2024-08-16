@@ -73,6 +73,12 @@ public class Handlers : MonoBehaviour
     }
 
     [Serializable]
+    public struct CharacterDatas
+    {
+        public List<UserData> userDatas;
+    }
+
+    [Serializable]
     public struct UserMoney
     {
         public int money;
@@ -124,7 +130,7 @@ public class Handlers : MonoBehaviour
         GameManager.instance.player.defense = characterStats.defense;
         GameManager.instance.player.critical = characterStats.critical;
 
-        //´Ù¸¥ ÇÃ·¹ÀÌ¾î Á¤º¸ »ý¼º
+        //ï¿½Ù¸ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         foreach (var user in characterStats.userDatas)
         {
             CharacterManager.instance.CreateOtherPlayers(user.playerId, user.characterId, user.guild);
@@ -155,8 +161,15 @@ public class Handlers : MonoBehaviour
         GameManager.instance.purchaseCheckUI.SetActive(false);
         GameManager.instance.purchaseMessageUI.SetActive(true);
     }
-    public void ReturnLobbySetting()
+    public void ReturnLobbySetting(byte[] data)
     {
+        string jsonString = Encoding.UTF8.GetString(data);
+        CharacterDatas characterDatas = JsonUtility.FromJson<CharacterDatas>(jsonString);
+        foreach (var user in characterDatas.userDatas)
+        {
+            CharacterManager.instance.CreateOtherPlayers(user.playerId, user.characterId, user.guild);
+        }
+
         GameManager.instance.isLive = true;
         GameManager.instance.player.ResetAnimation();
         // GameManager.instance.player.transform.position = new Vector2(0, 0);
