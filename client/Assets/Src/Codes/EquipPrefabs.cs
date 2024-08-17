@@ -10,7 +10,7 @@ public class EquipPrefabs : MonoBehaviour
         if (slotImage != null)
         {
             slotImage.sprite = newImage;
-            Debug.Log("Slot image set to: " + newImage.name);
+            Debug.Log("Equipped slot image set to: " + newImage.name);
 
             // Ensure the image is enabled and active
             slotImage.enabled = true;

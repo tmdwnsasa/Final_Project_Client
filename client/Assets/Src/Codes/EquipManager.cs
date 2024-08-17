@@ -6,24 +6,20 @@ public class EquipManager : MonoBehaviour
 {
     public EquipPrefabs equipPrefab; // Reference to prefab
     public Transform slotsParent; // Parent transform for slots
-    public Sprite[] weaponSprites; // Array of weapon sprites
-
-
     private Dictionary<int, Sprite> itemSpriteMapping; // Dictionary to map item ID to sprites
+    private InventoryManager inventoryManager;
+
 
     void Start()
     {
-        // Log the size of the weaponSprites array
-        Debug.Log("weaponSprites array size: " + weaponSprites.Length);
-
-        // Initialize itemSpriteMapping dictionary
-        itemSpriteMapping = new Dictionary<int, Sprite>();
-
-        // Map item IDs to their corresponding sprites
-        for (int i = 0; i < weaponSprites.Length; i++)
+        inventoryManager = FindObjectOfType<InventoryManager>();
+        if (inventoryManager != null)
         {
-            Debug.Log($"Mapping weapon{i} to sprite: {weaponSprites[i]?.name}");
-            itemSpriteMapping.Add(i + 1, weaponSprites[i]);
+            itemSpriteMapping = inventoryManager.GetItemSpriteMapping();
+        }
+        else
+        {
+            Debug.LogError("InventoryManager not found in the scene.");
         }
 
         Handlers.instance.OnInventoryDataUpdated += HandleInventoryDataUpdated;
@@ -33,12 +29,6 @@ public class EquipManager : MonoBehaviour
     {
         // Access InventoryData from Handlers
         InventoryData inventoryData = Handlers.instance.inventoryData;
-
-        // Ensure inventoryData has initialized lists
-        if (inventoryData.allItems == null)
-        {
-            inventoryData.allItems = new List<Item>();
-        }
 
         if (inventoryData.equippedItems == null)
         {
@@ -65,11 +55,11 @@ public class EquipManager : MonoBehaviour
                         if (itemSpriteMapping.TryGetValue(item.itemId, out Sprite itemSprite))
                         {
                             existingSlot.SetSlotImage(itemSprite); // Set image on the existing slot
-                            Debug.Log($"Slot for item {item.itemId} reused and image set: {itemSprite.name}");
+                            Debug.Log($"Slot for equipped item {item.itemId} reused and image set: {itemSprite.name}");
                         }
                         else
                         {
-                            Debug.LogError($"No sprite found for item ID: {item.itemId}");
+                            Debug.LogError($"No sprite found for equipped item ID: {item.itemId}");
                         }
                     }
                     else
@@ -86,7 +76,7 @@ public class EquipManager : MonoBehaviour
         }
         else
         {
-            Debug.LogError("No items in inventoryData.");
+            Debug.LogError("No items in inventoryData (equipped).");
         }
     }
 }

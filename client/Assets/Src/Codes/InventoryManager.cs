@@ -29,6 +29,11 @@ public class InventoryManager : MonoBehaviour
         Handlers.instance.OnInventoryDataUpdated += HandleInventoryDataUpdated;
     }
 
+    public Dictionary<int, Sprite> GetItemSpriteMapping()
+    {
+        return itemSpriteMapping;
+    }
+
     private void HandleInventoryDataUpdated()
     {
         // Access InventoryData from Handlers
@@ -38,11 +43,6 @@ public class InventoryManager : MonoBehaviour
         if (inventoryData.allItems == null)
         {
             inventoryData.allItems = new List<Item>();
-        }
-
-        if (inventoryData.equippedItems == null)
-        {
-            inventoryData.equippedItems = new List<Item>();
         }
 
         DisplayInventoryItems(inventoryData);
