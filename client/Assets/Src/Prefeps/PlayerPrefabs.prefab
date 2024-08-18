@@ -195,9 +195,12 @@ MonoBehaviour:
   - {fileID: 22100000, guid: e7442b4b1dab2479584ab1d8aa08a473, type: 2}
   - {fileID: 22100000, guid: 19bee3ea924744a4b88dc35a07a6debf, type: 2}
   - {fileID: 22100000, guid: 1aab438ac4cdc4d36b86fc36c80f39ad, type: 2}
+  newPosition: {x: 0, y: 0}
+  guild: 0
   nowHp: 0
   hp: 0
   hpSlider: {fileID: 8056572602600457068}
+  direction: 0
   projectilePrefab: {fileID: 8957033140562300088, guid: 8dcc3a645595a1b4bbb6216fb1fe7ad0, type: 3}
   firePoint: {fileID: 0}
   bulletManager: {fileID: 697321697412763631}
@@ -385,7 +388,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 0}
   m_FillRect: {fileID: 6267463116164690900}
   m_HandleRect: {fileID: 0}

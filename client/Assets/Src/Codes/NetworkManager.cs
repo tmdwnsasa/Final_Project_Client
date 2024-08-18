@@ -584,7 +584,6 @@ public class NetworkManager : MonoBehaviour
     void HandleSkillPacket(byte[] packetData)
     {
         var response = Packets.Deserialize<SkillUpdate>(packetData);
-        Debug.Log("현재 스킬 이름은 : " + response.skillType);
         CharacterManager.instance.UpdateAttack(response);
     }
 
