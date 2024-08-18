@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Collections;
 using static Handlers;
 
 public class InventoryManager : MonoBehaviour
@@ -8,22 +9,47 @@ public class InventoryManager : MonoBehaviour
     public Transform slotsParent; // Parent transform for slots
     public Sprite[] weaponSprites; // Array of weapon sprites
 
-
     private Dictionary<int, Sprite> itemSpriteMapping; // Dictionary to map item ID to sprites
 
     void Start()
     {
-        // Log the size of the weaponSprites array
-        Debug.Log("weaponSprites array size: " + weaponSprites.Length);
-
         // Initialize itemSpriteMapping dictionary
-        itemSpriteMapping = new Dictionary<int, Sprite>();
+        InitializeItemSpriteMapping();
 
-        // Map item IDs to their corresponding sprites
-        for (int i = 0; i < weaponSprites.Length; i++)
+        // Start the coroutine to wait for Handlers initialization
+        StartCoroutine(WaitForHandlersInitialization());
+    }
+
+    private void InitializeItemSpriteMapping()
+    {
+        if (itemSpriteMapping == null)
         {
-            Debug.Log($"Mapping weapon{i} to sprite: {weaponSprites[i]?.name}");
-            itemSpriteMapping.Add(i + 1, weaponSprites[i]);
+            itemSpriteMapping = new Dictionary<int, Sprite>();
+
+            // Map item IDs to their corresponding sprites
+            for (int i = 0; i < weaponSprites.Length; i++)
+            {
+                itemSpriteMapping.Add(i + 1, weaponSprites[i]);
+            }
+
+            Debug.Log($"itemSpriteMapping initialized with {itemSpriteMapping.Count} entries.");
+        }
+    }
+
+    private IEnumerator WaitForHandlersInitialization()
+    {
+        if (Handlers.instance == null)
+        {
+            Debug.Log("Handlers.instance is null, initializing Handlers.");
+            GameObject handlersObject = new GameObject("Handlers");
+            handlersObject.AddComponent<Handlers>();
+        }
+
+        // Wait until Handlers.instance is initialized
+        while (Handlers.instance == null)
+        {
+            Debug.Log("Waiting for Handlers.instance to be initialized in InventoryManager.");
+            yield return null; // Wait for the next frame
         }
 
         Handlers.instance.OnInventoryDataUpdated += HandleInventoryDataUpdated;
@@ -31,6 +57,10 @@ public class InventoryManager : MonoBehaviour
 
     public Dictionary<int, Sprite> GetItemSpriteMapping()
     {
+        if (itemSpriteMapping == null)
+        {
+            InitializeItemSpriteMapping();
+        }
         return itemSpriteMapping;
     }
 
@@ -42,11 +72,11 @@ public class InventoryManager : MonoBehaviour
         // Ensure inventoryData has initialized lists
         if (inventoryData.allItems == null)
         {
+            Debug.LogWarning("allItems was null, initializing an empty list.");
             inventoryData.allItems = new List<Item>();
         }
 
         DisplayInventoryItems(inventoryData);
-
     }
 
     void DisplayInventoryItems(InventoryData inventoryData)
@@ -65,7 +95,6 @@ public class InventoryManager : MonoBehaviour
                         if (itemSpriteMapping.TryGetValue(item.itemId, out Sprite itemSprite))
                         {
                             existingSlot.SetSlotImage(itemSprite); // Set image on the existing slot
-                            Debug.Log($"Slot for item {item.itemId} reused and image set: {itemSprite.name}");
                         }
                         else
                         {
@@ -90,4 +119,3 @@ public class InventoryManager : MonoBehaviour
         }
     }
 }
-

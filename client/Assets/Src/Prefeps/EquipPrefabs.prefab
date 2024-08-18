@@ -217,11 +217,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   equipPrefab: {fileID: -6066448430830966864}
   slotsParent: {fileID: 7308564631900230417}
-  weaponSprites:
-  - {fileID: 143021600, guid: 0d5e657ee5a074e4baa53d5b248a01d2, type: 3}
-  - {fileID: -1972582131, guid: 0d5e657ee5a074e4baa53d5b248a01d2, type: 3}
-  - {fileID: 1349035616, guid: 0d5e657ee5a074e4baa53d5b248a01d2, type: 3}
-  - {fileID: -353751291, guid: 0d5e657ee5a074e4baa53d5b248a01d2, type: 3}
 --- !u!114 &-6066448430830966864
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -235,6 +230,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotImage: {fileID: 1880271634249016415}
+  itemNameText: {fileID: 3991580269423424499}
 --- !u!1 &3226783129436191411
 GameObject:
   m_ObjectHideFlags: 0

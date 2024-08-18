@@ -4,19 +4,18 @@ using UnityEngine.UI;
 public class EquipPrefabs : MonoBehaviour
 {
     public Image slotImage; // 슬롯 이미지
+    public Text itemNameText;
 
     public void SetSlotImage(Sprite newImage)
     {
         if (slotImage != null)
         {
             slotImage.sprite = newImage;
-            Debug.Log("Equipped slot image set to: " + newImage.name);
+            //Debug.Log("Equipped slot image set to: " + newImage.name);
 
-            // Ensure the image is enabled and active
             slotImage.enabled = true;
             slotImage.gameObject.SetActive(true);
 
-            // Keep Back0 visible and on the background
             foreach (Transform child in transform)
             {
                 Image imageComponent = child.GetComponent<Image>();
@@ -36,6 +35,19 @@ public class EquipPrefabs : MonoBehaviour
         else
         {
             Debug.LogError("Slot image is not assigned in SlotPrefabs.");
+        }
+    }
+
+    public void SetItemName(string itemSpriteName)
+    {
+        if (itemNameText != null)
+        {
+            itemNameText.text = itemSpriteName;
+            Debug.Log("Item name set to: " + itemSpriteName);
+        }
+        else
+        {
+            Debug.LogError("Item name text component is not assigned in EquipPrefabs.");
         }
     }
 }

@@ -142,13 +142,13 @@ public class Handlers : MonoBehaviour
     }
 
 
-
-    private void Awake()
+    void Awake()
     {
         if (instance == null)
         {
             instance = this;
-            DontDestroyOnLoad(gameObject); 
+            DontDestroyOnLoad(gameObject);
+            Debug.Log("Handlers instance initialized in Awake.");
         }
         else
         {
@@ -336,7 +336,7 @@ public class Handlers : MonoBehaviour
         string jsonString = Encoding.UTF8.GetString(data);
 
         Handlers.instance.inventoryData = JsonUtility.FromJson<InventoryData>(jsonString);
-        Debug.Log($"Received updatedInventoryData with {inventoryData.allItems.Count} items and {inventoryData.equippedItems.Count} equipped items.");
+        Debug.Log($"Received InventoryData with {inventoryData.allItems.Count} items and {inventoryData.equippedItems.Count} equipped items.");
 
 
 
@@ -349,7 +349,10 @@ public class Handlers : MonoBehaviour
             {
             Handlers.instance.inventoryData.equippedItems = new List<Item>();
             }
-            OnInventoryDataUpdated?.Invoke();
+
+        Debug.Log("Invoking OnInventoryDataUpdated event.");
+
+        OnInventoryDataUpdated?.Invoke();
     }
 
 
