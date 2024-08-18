@@ -21,6 +21,7 @@ public class Packets : MonoBehaviour
         REMOVE_USER = 8,
         ATTACK = 40,
         SKILL = 50,
+        REMOVESKILL = 51,
     }
 
     public static void Serialize<T>(IBufferWriter<byte> writer, T data)
@@ -146,10 +147,13 @@ public class SkillPayload
     public float y { get; set; }
 
     [ProtoMember(3, IsRequired = true)]
-    public float rangeX { get; set; }
+    public bool isDirectionX { get; set; }
 
     [ProtoMember(4, IsRequired = true)]
-    public float rangeY { get; set; }
+    public uint skill_id { get; set; }
+
+    [ProtoMember(5, IsRequired = true)]
+    public long timestamp { get; set; }
 }
 
 [ProtoContract]
@@ -172,7 +176,7 @@ public class LocationUpdate
 
         [ProtoMember(4)]
         public float y { get; set; }
-        
+
         [ProtoMember(5)]
         public float direction { get; set; }
     }
@@ -208,7 +212,24 @@ public class SkillUpdate
 
     [ProtoMember(5)]
     public float rangeY { get; set; }
+
+    [ProtoMember(6)]
+    public uint skillType { get; set; }
+
+    [ProtoMember(7)]
+    public string prefabNum { get; set; }
 }
+
+[ProtoContract]
+public class RemoveSkillPayload
+{
+    [ProtoMember(1)]
+    public string prefabNum { get; set; }
+
+    [ProtoMember(2)]
+    public uint skillType { get; set; }
+}
+
 
 [ProtoContract]
 public class AttackedSuccess

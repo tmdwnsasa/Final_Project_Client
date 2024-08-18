@@ -281,18 +281,30 @@ public class NetworkManager : MonoBehaviour
         SendPacket(locationUpdatePayload, (uint)Handlers.HandlerIds.UPDATE_LOCACTION);
     }
 
-    public void SendSkillUpdatePacket(float x, float y, float rangeX, float rangeY)
+    public void SendSkillUpdatePacket(float x, float y, bool isDirectionX, uint skill_id)
     {
         SkillPayload SkillPayload = new SkillPayload
         {
             x = x,
             y = y,
-            rangeX = rangeX,
-            rangeY = rangeY,
+            isDirectionX = isDirectionX,
+            skill_id = skill_id,
+            timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
         };
-
         SendPacket(SkillPayload, (uint)Handlers.HandlerIds.SKILL);
     }
+
+    public void SendRemoveSkillPacket(string prefabNum, uint skillType)
+    {
+        RemoveSkillPayload RemoveSkillPayload = new RemoveSkillPayload
+        {
+            prefabNum = prefabNum,
+            skillType = skillType
+        };
+
+        SendPacket(RemoveSkillPayload, (uint)Handlers.HandlerIds.REMOVESKILL);
+    }
+
 
     public void SendChattingPacket(string message, uint type)
     {
@@ -450,7 +462,6 @@ public class NetworkManager : MonoBehaviour
                 case Packets.PacketType.ATTACK:
                     HandleAttackPacket(packetData);
                     break;
-
             }
         }
     }
@@ -512,6 +523,8 @@ public class NetworkManager : MonoBehaviour
                     break;
                 case (uint)Handlers.HandlerIds.PURCHASE_CHARACTER:
                     Handlers.instance.PurchaseMessage(response.data);
+                    break;
+                case (uint)Handlers.HandlerIds.REMOVESKILL:
                     break;
                 case (uint)Handlers.HandlerIds.OPEN_MAP:
                     Handlers.instance.OpenMap(response.data);
@@ -628,6 +641,7 @@ public class NetworkManager : MonoBehaviour
         GameManager.instance.mapBtn.SetActive(false);
         GameManager.instance.AnnouncementMap.SetActive(true);
         CharacterManager.instance.SetCharacterHp(response);
+        CharacterManager.instance.SetCharacterTag(response);
     }
 
     void HandleErrorResponsePacket(Response response)

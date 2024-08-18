@@ -23,6 +23,11 @@ public class PlayerPrefab : MonoBehaviour
 
     public float direction;
 
+    //총알 관련 텍스트
+    public GameObject projectilePrefab;
+    public Transform firePoint;
+    public GameObject bulletManager;
+
     void Awake()
     {
         anim = GetComponent<Animator>();
@@ -108,12 +113,44 @@ public class PlayerPrefab : MonoBehaviour
         }
     }
 
-    public void SetNearSkill(float x, float y, float rangeX, float rangeY)
+    public void SetSkill(float x, float y, float rangeX, float rangeY, uint skill_type, string prefabNum)
     {
-        transform.GetChild(4).gameObject.SetActive(true);
-        transform.GetChild(4).localPosition = new Vector2(x, y);
-        transform.GetChild(4).localScale = new Vector3(rangeX, rangeY, 1);
-        StartCoroutine(AttackRangeCheck());
+        switch (skill_type)
+        {
+            case 1:
+                transform.GetChild(4).gameObject.SetActive(true);
+                transform.GetChild(4).localPosition = new Vector2(x, y);
+                transform.GetChild(4).localScale = new Vector3(rangeX, rangeY, 1);
+                StartCoroutine(AttackRangeCheck());
+                break;
+            case 2:
+                GameObject projectile = Instantiate(projectilePrefab, transform.position + new Vector3(x, y), Quaternion.identity, bulletManager.transform);
+                BulletPrefab projScript = projectile.GetComponent<BulletPrefab>();
+                projectile.gameObject.tag = gameObject.tag;
+                projScript.bulletNum = prefabNum;
+                projScript.skillType = skill_type;
+                if (x > 0)
+                {
+                    projScript.direction = Vector2.right;
+                }
+
+                else if (y > 0)
+                {
+                    projScript.direction = Vector2.up;
+                }
+
+                else if (y < 0)
+                {
+                    projScript.direction = Vector2.down;
+                }
+                else if (x < 0)
+                {
+                    projScript.direction = Vector2.left;
+                }
+                break;
+            default:
+                break;
+        }
     }
 
     void OnCollisionStay2D(Collision2D collision)
