@@ -57,6 +57,7 @@ public class PlayerPrefab : MonoBehaviour
         currentPosition = Vector3.zero;
         direction = 0;
         hpSlider.gameObject.SetActive(false);
+        transform.GetChild(4).gameObject.SetActive(false);
 
         this.characterId = characterId;
 
