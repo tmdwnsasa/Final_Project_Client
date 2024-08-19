@@ -105,9 +105,9 @@ public class CharacterManager : MonoBehaviour
             {
                 GameObject player = GameManager.instance.pool.GetId(user.playerId);
                 PlayerPrefab playerScript = player.GetComponent<PlayerPrefab>();
-                if (user.team.Contains("red"))
+                if (user.team.Contains("green"))
                 {
-                    playerScript.gameObject.tag = "red";
+                    playerScript.gameObject.tag = "green";
                 }
                 else
                 {
@@ -117,9 +117,9 @@ public class CharacterManager : MonoBehaviour
 
             else if (user.playerId == GameManager.instance.player.name)
             {
-                if (user.team.Contains("red"))
+                if (user.team.Contains("green"))
                 {
-                    GameManager.instance.player.tag = "red";
+                    GameManager.instance.player.tag = "green";
                 }
                 else
                 {

@@ -220,12 +220,12 @@ public class Handlers : MonoBehaviour
             {
                 mapImage.color = new Color(255 / 255f, 78 / 255f, 64 / 255f);
             }
-            if (map.ownedBy == "red")
+            if (map.ownedBy == "blue")
             {
                 mapImage.color = new Color(64 / 255f, 141 / 255f, 255 / 255f);
 
             }
-            if (map.ownedBy == "blue")
+            if (map.ownedBy == "green")
             {
                 mapImage.color = new Color(79 / 255f, 233 / 255f, 72 / 255f);
 

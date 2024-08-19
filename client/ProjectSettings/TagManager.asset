@@ -9,8 +9,8 @@ TagManager:
   - Enemy
   - Bullet
   - wall
-  - red
   - blue
+  - green
   layers:
   - Default
   - TransparentFX
