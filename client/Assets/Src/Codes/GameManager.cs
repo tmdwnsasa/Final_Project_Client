@@ -301,3 +301,4 @@ public class GameManager : MonoBehaviour
         purchaseName.text = equipmentName.text;
     }
 }
+
