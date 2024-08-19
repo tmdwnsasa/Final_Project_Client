@@ -2,11 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
+using static Handlers;
+using static UnityEngine.UIElements.UxmlAttributeDescription;
 using UnityEngine.UI;
 
 public class Handlers : MonoBehaviour
 {
     public static Handlers instance;
+    public GameObject Player;
     public enum HandlerIds
     {
         LOGIN = 0,
@@ -26,7 +29,9 @@ public class Handlers : MonoBehaviour
         OPEN_STORE = 29,
         PURCHASE_CHARACTER = 30,
         PURCHASE_EQUIPMENT = 31,
+        OPEN_MAP = 40,
         SKILL = 50,
+        REMOVESKILL = 51
     }
 
     [Serializable]
@@ -34,6 +39,7 @@ public class Handlers : MonoBehaviour
     {
         public string playerId;
         public string name;
+        public int guild;
         public string sessionId;
     }
 
@@ -42,8 +48,17 @@ public class Handlers : MonoBehaviour
     {
         public string playerId;
         public string name;
+        public int guild;
         public string sessionId;
         public List<uint> possession;
+    }
+
+    [Serializable]
+    public struct UserData
+    {
+        public string playerId;
+        public uint characterId;
+        public uint guild;
     }
 
     [Serializable]
@@ -57,6 +72,31 @@ public class Handlers : MonoBehaviour
         public float defense;
         public float critical;
         public int price;
+
+        public characterSkill zSkill;
+
+        public characterSkill xSkill;
+        public List<UserData> userDatas;
+    }
+
+    [Serializable]
+    public struct characterSkill
+    {
+        public uint skill_id;
+        public string skill_name;
+        public int skill_type;
+        public int character_id;
+        public float damage_factor;
+        public float cool_time;
+        public float range_x;
+        public float range_y;
+        public int scale;
+    }
+
+    [Serializable]
+    public struct CharacterDatas
+    {
+        public List<UserData> userDatas;
     }
 
     [Serializable]
@@ -71,6 +111,20 @@ public class Handlers : MonoBehaviour
         public string message;
     }
 
+    [Serializable]
+    public struct MapData
+    {
+        public string mapName;
+        public bool isDisputedArea;
+        public string ownedBy;
+    }
+
+    [Serializable]
+    public struct MapDataArrayWrapper
+    {
+        public MapData[] mapData;
+    }
+
     public void GetCharacterChoice(byte[] data)
     {
         string jsonString = Encoding.UTF8.GetString(data);
@@ -78,6 +132,7 @@ public class Handlers : MonoBehaviour
 
         GameManager.instance.playerId = characterChoice.playerId;
         GameManager.instance.name = characterChoice.name;
+        GameManager.instance.player.guild = characterChoice.guild;
         GameManager.instance.sessionId = characterChoice.sessionId;
 
         GameManager.instance.GoCharacterChoice();
@@ -90,6 +145,7 @@ public class Handlers : MonoBehaviour
 
         GameManager.instance.playerId = characterSelect.playerId;
         GameManager.instance.name = characterSelect.name;
+        GameManager.instance.player.guild = characterSelect.guild;
         GameManager.instance.sessionId = characterSelect.sessionId;
         GameManager.instance.possession = characterSelect.possession;
 
@@ -101,6 +157,8 @@ public class Handlers : MonoBehaviour
         string jsonString = Encoding.UTF8.GetString(data);
         CharacterStats characterStats = JsonUtility.FromJson<CharacterStats>(jsonString);
 
+        Debug.Log("characterZSkill : " + characterStats.zSkill.skill_name);
+
         GameManager.instance.player.characterId = characterStats.characterId;
         GameManager.instance.player.characterName = characterStats.characterName;
         GameManager.instance.player.hp = characterStats.hp;
@@ -108,6 +166,18 @@ public class Handlers : MonoBehaviour
         GameManager.instance.player.power = characterStats.power;
         GameManager.instance.player.defense = characterStats.defense;
         GameManager.instance.player.critical = characterStats.critical;
+
+        GameManager.instance.player.zSkill = characterStats.zSkill.skill_name;
+        GameManager.instance.player.xSkill = characterStats.xSkill.skill_name;
+        GameManager.instance.player.zSkill_id = characterStats.zSkill.skill_id;
+        GameManager.instance.player.xSkill_id = characterStats.xSkill.skill_id;
+        GameManager.instance.player.zSkill_CoolTime = characterStats.zSkill.cool_time;
+        GameManager.instance.player.xSkill_CoolTime = characterStats.xSkill.cool_time;
+        //�ٸ� �÷��̾� ���� ����
+        foreach (var user in characterStats.userDatas)
+        {
+            CharacterManager.instance.CreateOtherPlayers(user.playerId, user.characterId, user.guild);
+        }
     }
 
     public void StoreOpen(byte[] data)
@@ -123,6 +193,8 @@ public class Handlers : MonoBehaviour
         GameManager.instance.storeUI.SetActive(true);
         GameManager.instance.purchaseMessageUI.SetActive(false);
         GameManager.instance.characterPurchaseCheckUI.transform.GetChild(0).GetComponent<Button>().interactable = true;
+        GameManager.instance.mapBtn.SetActive(false);
+        GameManager.instance.purchaseCheckUI.transform.GetChild(0).GetComponent<Button>().interactable = true;
     }
 
     public void PurchaseMessage(byte[] data)
@@ -134,8 +206,41 @@ public class Handlers : MonoBehaviour
         GameManager.instance.characterPurchaseCheckUI.SetActive(false);
         GameManager.instance.purchaseMessageUI.SetActive(true);
     }
-    public void ReturnLobbySetting()
+
+    public void OpenMap(byte[] data)
     {
+        string jsonString = Encoding.UTF8.GetString(data);
+        MapDataArrayWrapper mapDataArray = JsonUtility.FromJson<MapDataArrayWrapper>(jsonString);
+        for (int i = 0; i < mapDataArray.mapData.Length; i++)
+        {
+            MapData map = mapDataArray.mapData[i];
+            Image mapImage = GameManager.instance.mapUI.transform.GetChild(2).GetChild(i).GetComponent<Image>();
+            if (map.isDisputedArea == true)
+            {
+                mapImage.color = new Color(255 / 255f, 78 / 255f, 64 / 255f);
+            }
+            if (map.ownedBy == "red")
+            {
+                mapImage.color = new Color(64 / 255f, 141 / 255f, 255 / 255f);
+
+            }
+            if (map.ownedBy == "blue")
+            {
+                mapImage.color = new Color(79 / 255f, 233 / 255f, 72 / 255f);
+
+            }
+        }
+    }
+
+    public void ReturnLobbySetting(byte[] data)
+    {
+        string jsonString = Encoding.UTF8.GetString(data);
+        CharacterDatas characterDatas = JsonUtility.FromJson<CharacterDatas>(jsonString);
+        foreach (var user in characterDatas.userDatas)
+        {
+            CharacterManager.instance.CreateOtherPlayers(user.playerId, user.characterId, user.guild);
+        }
+
         GameManager.instance.isLive = true;
         GameManager.instance.player.ResetAnimation();
         // GameManager.instance.player.transform.position = new Vector2(0, 0);
@@ -143,6 +248,7 @@ public class Handlers : MonoBehaviour
 
         GameManager.instance.matchStartUI.SetActive(true);
         GameManager.instance.exitBtn.SetActive(true);
+        GameManager.instance.mapBtn.SetActive(true);
         GameManager.instance.player.hpSlider.gameObject.SetActive(false);
         GameManager.instance.gameEndUI.transform.GetChild(3).GetComponent<Button>().interactable = true;
     }

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor.Rendering;
 using UnityEngine;
 public class CharacterManager : MonoBehaviour
 {
@@ -13,15 +14,27 @@ public class CharacterManager : MonoBehaviour
         instance = this;
     }
 
-    public void Spawn(LocationUpdate data)
+    public void CreateOtherPlayers(CreateUser data)
     {
-        // if (!GameManager.instance.isLive)
-        // {
-        //     return;
-        // }
+        GameObject player = GameManager.instance.pool.Init(data.name, data.characterId, data.guild);
+        currentUsers.Add(data.name);
+    }
 
-        HashSet<string> newUsers = new HashSet<string>();
+    public void CreateOtherPlayers(string name, uint characterId, uint guild)
+    {
 
+        GameObject player = GameManager.instance.pool.Init(name, characterId, guild);
+        currentUsers.Add(name);
+    }
+
+    public void RemoveOtherPlayers(RemoveUser data)
+    {
+        GameManager.instance.pool.Remove(data.name);
+        currentUsers.Remove(data.name);
+    }
+
+    public void MoveAllPlayers(LocationUpdate data)
+    {
         foreach (LocationUpdate.UserLocation user in data.users)
         {
             if (user.playerId == GameManager.instance.player.name)
@@ -30,35 +43,25 @@ public class CharacterManager : MonoBehaviour
             }
             else
             {
-                newUsers.Add(user.playerId);
                 GameObject player = GameManager.instance.pool.Get(user.playerId, user.characterId);
                 PlayerPrefab playerScript = player.GetComponent<PlayerPrefab>();
-                playerScript.UpdatePosition(user.x, user.y, user.direction);
+                playerScript.newPosition = new Vector2(user.x, user.y);
+                playerScript.direction = user.direction;
             }
         }
-
-        foreach (string userId in currentUsers)
-        {
-            if (!newUsers.Contains(userId))
-            {
-                GameManager.instance.pool.Remove(userId);
-            }
-        }
-
-        currentUsers = newUsers;
     }
 
     public void UpdateAttack(SkillUpdate data)
     {
         if (data.playerId == GameManager.instance.player.name)
         {
-            GameManager.instance.player.SetNearSkill(data.x, data.y, data.rangeX, data.rangeY);
+            GameManager.instance.player.SetSkill(data.x, data.y, data.rangeX, data.rangeY, data.skillType, data.prefabNum);
         }
         else
         {
             GameObject player = GameManager.instance.pool.GetId(data.playerId);
             PlayerPrefab playerScript = player.GetComponent<PlayerPrefab>();
-            playerScript.SetNearSkill(data.x, data.y, data.rangeX, data.rangeY);
+            playerScript.SetSkill(data.x, data.y, data.rangeX, data.rangeY, data.skillType, data.prefabNum);
         }
     }
 
@@ -90,6 +93,38 @@ public class CharacterManager : MonoBehaviour
             else if (user.playerId == GameManager.instance.player.name)
             {
                 GameManager.instance.player.startSetHp(user.hp);
+            }
+        }
+    }
+
+    public void SetCharacterTag(BattleStart data)
+    {
+        foreach (BattleStart.UserTeam user in data.users)
+        {
+            if (user.playerId != GameManager.instance.player.name)
+            {
+                GameObject player = GameManager.instance.pool.GetId(user.playerId);
+                PlayerPrefab playerScript = player.GetComponent<PlayerPrefab>();
+                if (user.team.Contains("red"))
+                {
+                    playerScript.gameObject.tag = "red";
+                }
+                else
+                {
+                    playerScript.gameObject.tag = "blue";
+                }
+            }
+
+            else if (user.playerId == GameManager.instance.player.name)
+            {
+                if (user.team.Contains("red"))
+                {
+                    GameManager.instance.player.tag = "red";
+                }
+                else
+                {
+                    GameManager.instance.player.tag = "blue";
+                }
             }
         }
     }
