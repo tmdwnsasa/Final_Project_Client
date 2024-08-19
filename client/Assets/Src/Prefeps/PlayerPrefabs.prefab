@@ -40,6 +40,7 @@ Transform:
   - {fileID: 2927296194015843318}
   - {fileID: 4619533907233956405}
   - {fileID: 1160174901352406636}
+  - {fileID: 7198342832526454795}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &3943364028396552577
@@ -194,9 +195,15 @@ MonoBehaviour:
   - {fileID: 22100000, guid: e7442b4b1dab2479584ab1d8aa08a473, type: 2}
   - {fileID: 22100000, guid: 19bee3ea924744a4b88dc35a07a6debf, type: 2}
   - {fileID: 22100000, guid: 1aab438ac4cdc4d36b86fc36c80f39ad, type: 2}
+  newPosition: {x: 0, y: 0}
+  guild: 0
   nowHp: 0
   hp: 0
   hpSlider: {fileID: 8056572602600457068}
+  direction: 0
+  projectilePrefab: {fileID: 8957033140562300088, guid: 8dcc3a645595a1b4bbb6216fb1fe7ad0, type: 3}
+  firePoint: {fileID: 0}
+  bulletManager: {fileID: 697321697412763631}
 --- !u!1 &663373628936276144
 GameObject:
   m_ObjectHideFlags: 0
@@ -272,6 +279,37 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1 &697321697412763631
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7198342832526454795}
+  m_Layer: 0
+  m_Name: bulletManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7198342832526454795
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 697321697412763631}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 1.0078971, y: 0.23407954, z: 0.37659168}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6025899164885977098}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &835081091715534080
 GameObject:
   m_ObjectHideFlags: 0
@@ -350,7 +388,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 0}
   m_FillRect: {fileID: 6267463116164690900}
   m_HandleRect: {fileID: 0}

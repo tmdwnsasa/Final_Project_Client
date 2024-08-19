@@ -35,15 +35,30 @@ public class Player : MonoBehaviour
     Animator anim;
     TextMeshPro myText;
 
+    //총알 관련 텍스트
+    public GameObject projectilePrefab;
+    public Transform firePoint;
+    public GameObject bulletManager;
+
     private Vector2 oldInputVec;
     private bool isPlusX;
     private bool isMinusX;
     private bool isPlusY;
     private bool isMinusY;
 
+    public string zSkill;
+    public float zSkill_CoolTime;
+    public uint zSkill_id;
+    public string xSkill;
+    public float xSkill_CoolTime;
+    public uint xSkill_id;
+
+    public bool directionX;
+
+    private bool isSkill;
+
     public float x = 1, y = 1;
     public Vector2 BoxArea = new Vector2(0.5f, 0);
-    public float attackRangeX = 1, attackRangeY = 2;
     void Awake()
     {
         spriter = GetComponent<SpriteRenderer>();
@@ -58,7 +73,10 @@ public class Player : MonoBehaviour
         isMinusX = false;
         isPlusY = false;
         isMinusY = false;
-
+        isSkill = true;
+        directionX = true;
+        BoxArea.x = 0.5f;
+        BoxArea.y = 0f;
         hpSlider.value = 1;
 
         if(guild == 1)
@@ -145,19 +163,26 @@ public class Player : MonoBehaviour
         if (!(inputVec.x != 0 && inputVec.y != 0))
         {
             //공격
-            if (Input.GetKeyDown(KeyCode.Z) && !NetworkManager.instance.isLobby)
+            if (Input.GetKeyDown(KeyCode.Z) && !NetworkManager.instance.isLobby && isSkill)
             {
                 if (x != 0)
                 {
+                    directionX = true;
                     //send 스킬 패킷을 보내고
-                    NetworkManager.instance.SendSkillUpdatePacket(BoxArea.x, BoxArea.y, attackRangeX, attackRangeY);
+                    NetworkManager.instance.SendSkillUpdatePacket(BoxArea.x, BoxArea.y, directionX, zSkill_id);
                 }
                 else
                 {
-                    NetworkManager.instance.SendSkillUpdatePacket(BoxArea.x, BoxArea.y, attackRangeY, attackRangeX);
+                    directionX = false;
+                    NetworkManager.instance.SendSkillUpdatePacket(BoxArea.x, BoxArea.y, directionX, zSkill_id);
                 }
+                isSkill = false;
+
+                StartCoroutine(CoolTimeCheck("zSkill"));
+
             }
         }
+
     }
 
     // Update가 끝난이후 적용
@@ -224,12 +249,46 @@ public class Player : MonoBehaviour
         transform.position = Vector2.Lerp(transform.position, newPosition, 0.2f);
     }
 
-    public void SetNearSkill(float x, float y, float rangeX, float rangeY)
+    public void SetSkill(float x, float y, float rangeX, float rangeY, uint skillType, string prefabNum)
     {
-        transform.GetChild(4).gameObject.SetActive(true);
-        transform.GetChild(4).localPosition = new Vector2(x, y);
-        transform.GetChild(4).localScale = new Vector3(rangeX, rangeY, 1);
-        StartCoroutine(AttackRangeCheck());
+        switch (skillType)
+        {
+            case 1:
+                transform.GetChild(4).gameObject.SetActive(true);
+                transform.GetChild(4).localPosition = new Vector2(x, y);
+                transform.GetChild(4).localScale = new Vector3(rangeX, rangeY, 1);
+
+                StartCoroutine(AttackRangeCheck());
+                break;
+            case 2:
+                GameObject projectile = Instantiate(projectilePrefab, transform.position + new Vector3(x, y), Quaternion.identity, bulletManager.transform);
+                BulletPrefab projScript = projectile.GetComponent<BulletPrefab>();
+                projectile.gameObject.tag = gameObject.tag;
+                projScript.bulletNum = prefabNum;
+                projScript.skillType = skillType;
+
+                if (x > 0)
+                {
+                    projScript.direction = Vector2.right;
+                }
+
+                else if (y > 0)
+                {
+                    projScript.direction = Vector2.up;
+                }
+
+                else if (y < 0)
+                {
+                    projScript.direction = Vector2.down;
+                }
+                else if (x < 0)
+                {
+                    projScript.direction = Vector2.left;
+                }
+                break;
+            default:
+                break;
+        }
     }
 
     IEnumerator AttackRangeCheck()
@@ -237,6 +296,22 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(1.0f);
         transform.GetChild(4).gameObject.SetActive(false);
     }
+
+    IEnumerator CoolTimeCheck(string Skill)
+    {
+        if ("zSkill" == Skill)
+        {
+            yield return new WaitForSeconds(zSkill_CoolTime);
+            isSkill = true;
+        }
+
+        else
+        {
+            yield return new WaitForSeconds(xSkill_CoolTime);
+            isSkill = true;
+        }
+    }
+
 
     public void SetHp(float hp)
     {
@@ -249,6 +324,14 @@ public class Player : MonoBehaviour
             anim.SetBool("Dead", true);
             GameManager.instance.isLive = false;
             gameObject.GetComponent<CapsuleCollider2D>().enabled = false;
+        }
+    }
+
+    public void SetSkill(string isSkill)
+    {
+        if ("isSkillZ" == isSkill)
+        {
+            this.isSkill = true;
         }
     }
 

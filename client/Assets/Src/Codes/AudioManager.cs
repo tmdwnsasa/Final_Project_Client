@@ -22,12 +22,14 @@ public class AudioManager : MonoBehaviour
     public enum Sfx { Dead, Hit, LevelUp = 3, Lose, Melee, Range = 7, Select, Win }
 
 
-    void Awake() {
+    void Awake()
+    {
         instance = this;
         Init();
     }
 
-    void Init() {
+    void Init()
+    {
         // 배경음 플레이어 초기화
         GameObject bgmObject = new GameObject("BgmPlayer");
         bgmObject.transform.parent = transform;
@@ -43,7 +45,8 @@ public class AudioManager : MonoBehaviour
         sfxObject.transform.parent = transform;
         sfxPlayers = new AudioSource[channels];
 
-        for(int i = 0; i < sfxPlayers.Length; i++) {
+        for (int i = 0; i < sfxPlayers.Length; i++)
+        {
             sfxPlayers[i] = sfxObject.AddComponent<AudioSource>();
             sfxPlayers[i].playOnAwake = false;
             sfxPlayers[i].bypassListenerEffects = true;
@@ -51,29 +54,40 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    public void PlayBgm (bool isPlay) {
-        if (isPlay) {
-            bgmPlayer.Play();
-        } else {
+    public void PlayBgm(bool isPlay)
+    {
+        if (isPlay)
+        {
+            //bgmPlayer.Play();
+            //테스트할때 잠시 브금 꺼둠! 이부분 꼭 머지하기전에 고치기
+            bgmPlayer.Stop();
+        }
+        else
+        {
             bgmPlayer.Stop();
         }
     }
 
-    public void EffectBgm (bool isPlay) {
+    public void EffectBgm(bool isPlay)
+    {
         bgmEffect.enabled = isPlay;
     }
 
-    public void PlaySfx(Sfx sfx) {
+    public void PlaySfx(Sfx sfx)
+    {
 
-        for(int i = 0; i < sfxPlayers.Length; i++) {
+        for (int i = 0; i < sfxPlayers.Length; i++)
+        {
             int loopIndex = (i + channelIndex) % sfxPlayers.Length;
 
-            if (sfxPlayers[loopIndex].isPlaying) {
+            if (sfxPlayers[loopIndex].isPlaying)
+            {
                 continue;
             }
 
             int ranIndex = 0;
-            if (sfx == Sfx.Hit || sfx == Sfx.Melee) {
+            if (sfx == Sfx.Hit || sfx == Sfx.Melee)
+            {
                 ranIndex = Random.Range(0, 2);
             }
 

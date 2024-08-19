@@ -239,7 +239,7 @@ public class ButtonController : MonoBehaviour
         GameManager.instance.storeBtn.SetActive(false);
         GameManager.instance.mapBtn.SetActive(false);
         GameManager.instance.mapUI.SetActive(true);
-        GameManager.instance.mapBtn.GetComponent<Button>().interactable = false;
+        //GameManager.instance.mapBtn.GetComponent<Button>().interactable = false;
     }
 
     // 맵 나가기 버튼
@@ -252,6 +252,6 @@ public class ButtonController : MonoBehaviour
         GameManager.instance.storeBtn.SetActive(true);
         GameManager.instance.mapBtn.SetActive(true);
         GameManager.instance.mapUI.SetActive(false);
-        GameManager.instance.mapBtn.GetComponent<Button>().interactable = true;
+        //GameManager.instance.mapBtn.GetComponent<Button>().interactable = true;
     }
 }

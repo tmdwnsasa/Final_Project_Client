@@ -38,6 +38,7 @@ public class Handlers : MonoBehaviour
         PURCHASE_CHARACTER = 30,
         OPEN_MAP = 40,
         SKILL = 50,
+        REMOVESKILL = 51
     }
 
     [Serializable]
@@ -78,7 +79,25 @@ public class Handlers : MonoBehaviour
         public float defense;
         public float critical;
         public int price;
+
+        public characterSkill zSkill;
+
+        public characterSkill xSkill;
         public List<UserData> userDatas;
+    }
+
+    [Serializable]
+    public struct characterSkill
+    {
+        public uint skill_id;
+        public string skill_name;
+        public int skill_type;
+        public int character_id;
+        public float damage_factor;
+        public float cool_time;
+        public float range_x;
+        public float range_y;
+        public int scale;
     }
 
     [Serializable]
@@ -202,6 +221,8 @@ public class Handlers : MonoBehaviour
         string jsonString = Encoding.UTF8.GetString(data);
         CharacterStats characterStats = JsonUtility.FromJson<CharacterStats>(jsonString);
 
+        Debug.Log("characterZSkill : " + characterStats.zSkill.skill_name);
+
         GameManager.instance.player.characterId = characterStats.characterId;
         GameManager.instance.player.characterName = characterStats.characterName;
         GameManager.instance.player.hp = characterStats.hp;
@@ -210,6 +231,12 @@ public class Handlers : MonoBehaviour
         GameManager.instance.player.defense = characterStats.defense;
         GameManager.instance.player.critical = characterStats.critical;
 
+        GameManager.instance.player.zSkill = characterStats.zSkill.skill_name;
+        GameManager.instance.player.xSkill = characterStats.xSkill.skill_name;
+        GameManager.instance.player.zSkill_id = characterStats.zSkill.skill_id;
+        GameManager.instance.player.xSkill_id = characterStats.xSkill.skill_id;
+        GameManager.instance.player.zSkill_CoolTime = characterStats.zSkill.cool_time;
+        GameManager.instance.player.xSkill_CoolTime = characterStats.xSkill.cool_time;
         //�ٸ� �÷��̾� ���� ����
         foreach (var user in characterStats.userDatas)
         {
@@ -253,16 +280,16 @@ public class Handlers : MonoBehaviour
             Image mapImage = GameManager.instance.mapUI.transform.GetChild(2).GetChild(i).GetComponent<Image>();
             if (map.isDisputedArea == true)
             {
-                mapImage.color = new Color(255/255f, 78/255f, 64/255f);
+                mapImage.color = new Color(255 / 255f, 78 / 255f, 64 / 255f);
             }
             if (map.ownedBy == "red")
             {
-                mapImage.color = new Color(64/255f, 141/255f, 255/255f);
+                mapImage.color = new Color(64 / 255f, 141 / 255f, 255 / 255f);
 
             }
             if (map.ownedBy == "blue")
             {
-                mapImage.color = new Color(79/255f, 233/255f, 72/255f);
+                mapImage.color = new Color(79 / 255f, 233 / 255f, 72 / 255f);
 
             }
         }
