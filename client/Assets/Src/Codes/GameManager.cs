@@ -49,7 +49,8 @@ public class GameManager : MonoBehaviour
     public GameObject equipUnequipItemMessageUI;
     public GameObject storeBtn;
     public GameObject storeUI;
-    public GameObject purchaseCheckUI;
+    public GameObject characterPurchaseCheckUI;
+    public GameObject equipmentPurchaseCheckUI;
     public GameObject purchaseMessageUI;
     public GameObject mapBtn;
     public GameObject mapUI;
@@ -82,7 +83,8 @@ public class GameManager : MonoBehaviour
         equipUnequipItemMessageUI.SetActive(false);
         storeBtn.SetActive(true);
         storeUI.SetActive(false);
-        purchaseCheckUI.SetActive(false);
+        characterPurchaseCheckUI.SetActive(false);
+        equipmentPurchaseCheckUI.SetActive(false);
         purchaseMessageUI.SetActive(false);
         mapBtn.SetActive(true);
         mapUI.SetActive(false);
@@ -281,9 +283,16 @@ public class GameManager : MonoBehaviour
     }
 
     public void PurchaseCharacter(uint characterId){
-        Debug.Log(characterId);
+        // Debug.Log(characterId);
         Text characterName = storeUI.transform.GetChild(0).GetChild((int)characterId).GetChild(1).GetComponent<Text>();
-        Text purchaseName = purchaseCheckUI.transform.GetChild(3).GetComponent<Text>();
+        Text purchaseName = characterPurchaseCheckUI.transform.GetChild(3).GetComponent<Text>();
         purchaseName.text = characterName.text;
+    }
+
+    public void PurchaseEquipment(uint equipmentIndex){
+        Debug.Log(equipmentIndex);
+        Text equipmentName = storeUI.transform.GetChild(1).GetChild(0).GetChild(0).GetChild(0).GetChild((int)equipmentIndex).GetChild(2).GetComponent<Text>();
+        Text purchaseName = equipmentPurchaseCheckUI.transform.GetChild(3).GetComponent<Text>();
+        purchaseName.text = equipmentName.text;
     }
 }

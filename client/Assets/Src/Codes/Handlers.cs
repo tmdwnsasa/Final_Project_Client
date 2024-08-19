@@ -36,6 +36,7 @@ public class Handlers : MonoBehaviour
         EXIT = 20,
         OPEN_STORE = 29,
         PURCHASE_CHARACTER = 30,
+        PURCHASE_EQUIPMENT = 31,
         OPEN_MAP = 40,
         SKILL = 50,
         REMOVESKILL = 51
@@ -256,8 +257,9 @@ public class Handlers : MonoBehaviour
         GameManager.instance.storeBtn.SetActive(false);
         GameManager.instance.storeUI.SetActive(true);
         GameManager.instance.purchaseMessageUI.SetActive(false);
+        GameManager.instance.characterPurchaseCheckUI.transform.GetChild(0).GetComponent<Button>().interactable = true;
+        GameManager.instance.equipmentPurchaseCheckUI.transform.GetChild(0).GetComponent<Button>().interactable = true;
         GameManager.instance.mapBtn.SetActive(false);
-        GameManager.instance.purchaseCheckUI.transform.GetChild(0).GetComponent<Button>().interactable = true;
     }
 
     public void PurchaseMessage(byte[] data)
@@ -266,7 +268,8 @@ public class Handlers : MonoBehaviour
         PurchaseStateMessage purchaseStateMessage = JsonUtility.FromJson<PurchaseStateMessage>(jsonString);
         Text message = GameManager.instance.purchaseMessageUI.transform.GetChild(1).GetComponent<Text>();
         message.text = purchaseStateMessage.message;
-        GameManager.instance.purchaseCheckUI.SetActive(false);
+        GameManager.instance.characterPurchaseCheckUI.SetActive(false);
+        GameManager.instance.equipmentPurchaseCheckUI.SetActive(false);
         GameManager.instance.purchaseMessageUI.SetActive(true);
     }
 
