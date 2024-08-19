@@ -58,9 +58,17 @@ public class ButtonController : MonoBehaviour
     {
         string sessionId = GameManager.instance.sessionId;
 
-        NetworkManager.instance.SendMatchPacket(sessionId);
-        //GameManager.instance.storeBtn.GetComponent<Button>().interactable = false;
+        NetworkManager.instance.SendMatchPacket(sessionId, (uint)Handlers.HandlerIds.MATCHMAKING);
         GameManager.instance.matchStartUI.transform.GetChild(0).GetComponent<Button>().interactable = false;
+    }
+
+    // 매칭/대결 취소 버튼
+    public void OnMatchCancelButtonClicked()
+    {
+        string sessionId = GameManager.instance.sessionId;
+
+        NetworkManager.instance.SendMatchPacket(sessionId, (uint)Handlers.HandlerIds.MATCHINGCANCEL);
+        GameManager.instance.matchCancelUI.transform.GetChild(0).GetComponent<Button>().interactable = false;
     }
 
     // 로비 복귀 버튼

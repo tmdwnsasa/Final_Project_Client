@@ -43,6 +43,7 @@ public class GameManager : MonoBehaviour
     public GameObject characterSelectUI;
     public GameObject gameEndUI;
     public GameObject matchStartUI;
+    public GameObject matchCancelUI;
     public GameObject exitBtn;
     public GameObject storeBtn;
     public GameObject storeUI;
@@ -74,6 +75,7 @@ public class GameManager : MonoBehaviour
         characterSelectUI.SetActive(false);
         chattingUI.SetActive(true);
         matchStartUI.SetActive(true);
+        matchCancelUI.SetActive(false);
         exitBtn.SetActive(true);
         storeBtn.SetActive(true);
         storeUI.SetActive(false);

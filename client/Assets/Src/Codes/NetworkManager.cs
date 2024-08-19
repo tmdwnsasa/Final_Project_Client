@@ -318,14 +318,14 @@ public class NetworkManager : MonoBehaviour
         SendPacket(ChattingPayload, (uint)Handlers.HandlerIds.CHATTING);
     }
 
-    public void SendMatchPacket(string sessionId)
+    public void SendMatchPacket(string sessionId, uint handlerId)
     {
         MatchingPayload MatchingPayload = new MatchingPayload
         {
             sessionId = sessionId
         };
         Debug.Log($"User's Session Id : {sessionId}");
-        SendPacket(MatchingPayload, (uint)Handlers.HandlerIds.MATCHMAKING);
+        SendPacket(MatchingPayload, handlerId);
     }
 
     public void SendReturnLobbyPacket()
@@ -519,6 +519,13 @@ public class NetworkManager : MonoBehaviour
                     break;
                 case (uint)Handlers.HandlerIds.MATCHMAKING:
                     GameManager.instance.matchStartUI.transform.GetChild(0).GetComponent<Button>().interactable = true;
+                    GameManager.instance.matchStartUI.SetActive(false);
+                    GameManager.instance.matchCancelUI.SetActive(true);
+                    break;
+                case (uint)Handlers.HandlerIds.MATCHINGCANCEL:
+                    GameManager.instance.matchCancelUI.transform.GetChild(0).GetComponent<Button>().interactable = true;
+                    GameManager.instance.matchStartUI.SetActive(true);
+                    GameManager.instance.matchCancelUI.SetActive(false);
                     break;
                 case (uint)Handlers.HandlerIds.RETURN_LOBBY:
                     Handlers.instance.ReturnLobbySetting(response.data);
