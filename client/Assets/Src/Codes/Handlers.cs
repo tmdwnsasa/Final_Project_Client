@@ -23,6 +23,7 @@ public class Handlers : MonoBehaviour
         GIVE_CHARACTER = 9,
         CHATTING = 10,
         MATCHMAKING = 11,
+        MATCHINGCANCEL = 12,
         GAME_END = 15,
         RETURN_LOBBY = 16,
         EXIT = 20,
