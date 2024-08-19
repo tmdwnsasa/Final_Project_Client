@@ -59,7 +59,7 @@ public class ButtonController : MonoBehaviour
         string sessionId = GameManager.instance.sessionId;
 
         NetworkManager.instance.SendMatchPacket(sessionId);
-        GameManager.instance.storeBtn.GetComponent<Button>().interactable = false;
+        //GameManager.instance.storeBtn.GetComponent<Button>().interactable = false;
         GameManager.instance.matchStartUI.transform.GetChild(0).GetComponent<Button>().interactable = false;
     }
 
@@ -203,6 +203,7 @@ public class ButtonController : MonoBehaviour
         GameManager.instance.guild = 1;
         AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
     }
+
     public void OnFarmerButtonClicked()
     {
         GameManager.instance.guild = 2;
@@ -219,19 +220,16 @@ public class ButtonController : MonoBehaviour
         GameManager.instance.storeBtn.SetActive(false);
         GameManager.instance.mapBtn.SetActive(false);
         GameManager.instance.mapUI.SetActive(true);
-        //GameManager.instance.mapBtn.GetComponent<Button>().interactable = false;
     }
 
     // 맵 나가기 버튼
     public void OnExitMapButtonClicked()
     {
-
         GameManager.instance.chattingUI.SetActive(true);
         GameManager.instance.exitBtn.SetActive(true);
         GameManager.instance.matchStartUI.SetActive(true);
         GameManager.instance.storeBtn.SetActive(true);
         GameManager.instance.mapBtn.SetActive(true);
         GameManager.instance.mapUI.SetActive(false);
-        //GameManager.instance.mapBtn.GetComponent<Button>().interactable = true;
     }
 }

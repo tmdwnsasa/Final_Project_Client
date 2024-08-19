@@ -647,6 +647,18 @@ public class NetworkManager : MonoBehaviour
         announcementMap.text = $"대전 지역 이름: {response.mapName}";
         Debug.Log(response.mapName);
 
+        if(GameManager.instance.storeUI.activeSelf) {
+            GameManager.instance.storeUI.SetActive(false);
+            GameManager.instance.storeUI.transform.GetChild(0).gameObject.SetActive(true);
+            GameManager.instance.storeUI.transform.GetChild(1).gameObject.SetActive(false);
+            GameManager.instance.storeUI.transform.GetChild(2).GetComponent<Button>().interactable = true;
+            GameManager.instance.storeUI.transform.GetChild(3).GetComponent<Button>().interactable = true;
+        }
+
+        if(GameManager.instance.mapUI.activeSelf) {
+            GameManager.instance.mapUI.SetActive(false);
+        }
+
         isLobby = false;
         GameManager.instance.matchStartUI.SetActive(false);
         GameManager.instance.exitBtn.SetActive(false);
