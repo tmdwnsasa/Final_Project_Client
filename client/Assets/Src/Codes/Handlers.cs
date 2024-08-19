@@ -193,8 +193,8 @@ public class Handlers : MonoBehaviour
         GameManager.instance.storeUI.SetActive(true);
         GameManager.instance.purchaseMessageUI.SetActive(false);
         GameManager.instance.characterPurchaseCheckUI.transform.GetChild(0).GetComponent<Button>().interactable = true;
+        GameManager.instance.equipmentPurchaseCheckUI.transform.GetChild(0).GetComponent<Button>().interactable = true;
         GameManager.instance.mapBtn.SetActive(false);
-        GameManager.instance.purchaseCheckUI.transform.GetChild(0).GetComponent<Button>().interactable = true;
     }
 
     public void PurchaseMessage(byte[] data)
@@ -204,6 +204,7 @@ public class Handlers : MonoBehaviour
         Text message = GameManager.instance.purchaseMessageUI.transform.GetChild(1).GetComponent<Text>();
         message.text = purchaseStateMessage.message;
         GameManager.instance.characterPurchaseCheckUI.SetActive(false);
+        GameManager.instance.equipmentPurchaseCheckUI.SetActive(false);
         GameManager.instance.purchaseMessageUI.SetActive(true);
     }
 

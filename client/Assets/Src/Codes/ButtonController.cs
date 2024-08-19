@@ -83,7 +83,7 @@ public class ButtonController : MonoBehaviour
     {
         NetworkManager.instance.SendStoreOpenPacket();
         GameManager.instance.storeBtn.GetComponent<Button>().interactable = false;
-        GameManager.instance.storeUI.transform.GetChild(2).GetComponent<Button>().interactable = false;
+        // GameManager.instance.storeUI.transform.GetChild(2).GetComponent<Button>().interactable = false;
     }
 
     //상점 캐릭터 목록 버튼
@@ -170,7 +170,7 @@ public class ButtonController : MonoBehaviour
     {
         Text name = GameManager.instance.equipmentPurchaseCheckUI.transform.GetChild(3).GetComponent<Text>();
         Text price = GameManager.instance.equipmentPurchaseCheckUI.transform.GetChild(4).GetComponent<Text>();
-        NetworkManager.instance.SendPurchaseCharacterPacket(name.text, price.text);
+        NetworkManager.instance.SendPurchaseEquipmentPacket(name.text, price.text);
         GameManager.instance.equipmentPurchaseCheckUI.transform.GetChild(0).GetComponent<Button>().interactable = false;
     }
 
@@ -192,6 +192,10 @@ public class ButtonController : MonoBehaviour
         GameManager.instance.storeUI.SetActive(false);
         GameManager.instance.mapBtn.SetActive(true);
         GameManager.instance.storeBtn.GetComponent<Button>().interactable = true;
+        GameManager.instance.storeUI.transform.GetChild(0).gameObject.SetActive(true);
+        GameManager.instance.storeUI.transform.GetChild(1).gameObject.SetActive(false);
+        GameManager.instance.storeUI.transform.GetChild(2).GetComponent<Button>().interactable = true;
+        GameManager.instance.storeUI.transform.GetChild(3).GetComponent<Button>().interactable = true;
     }
 
     public void OnPoliceButtonClicked()
