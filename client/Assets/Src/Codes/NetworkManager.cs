@@ -354,6 +354,16 @@ public class NetworkManager : MonoBehaviour
         SendPacket(purchaseCharacterRequestPayload, (uint)Handlers.HandlerIds.PURCHASE_CHARACTER);
     }
 
+    public void SendPurchaseEquipmentPacket(string name, string price)
+    {
+        PurchaseEquipmentRequestPayload purchaseEquipmentRequestPayload = new PurchaseEquipmentRequestPayload
+        {
+            name = name,
+            price = price
+        };
+        SendPacket(purchaseEquipmentRequestPayload, (uint)Handlers.HandlerIds.PURCHASE_EQUIPMENT);
+    }
+
     void StartReceiving()
     {
         _ = ReceivePacketsAsync();

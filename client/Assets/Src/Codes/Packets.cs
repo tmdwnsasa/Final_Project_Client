@@ -380,3 +380,14 @@ public class PurchaseCharacterRequestPayload
     [ProtoMember(2, IsRequired = true)]
     public string price { get; set; }
 }
+
+[ProtoContract]
+public class PurchaseEquipmentRequestPayload
+{
+    [ProtoMember(1, IsRequired = true)]
+    public string name { get; set; }
+
+    [ProtoMember(2, IsRequired = true)]
+    public string price { get; set; }
+}
+
