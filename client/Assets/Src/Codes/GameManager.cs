@@ -201,7 +201,7 @@ public class GameManager : MonoBehaviour
         {
             return;
         }
-        gameTime += Time.deltaTime;
+        //gameTime += Time.deltaTime;
     }
     private Image victory;
     private Image defeat;
@@ -222,22 +222,6 @@ public class GameManager : MonoBehaviour
             userDeath.text = users[i].death.ToString();
             userDamage.text = users[i].damage.ToString();
         }
-        // Text user1Name = GameEndUI.transform.GetChild(2).GetChild(4).GetComponent<Text>();
-        // Text user1Kill = GameEndUI.transform.GetChild(2).GetChild(5).GetComponent<Text>();
-        // Text user1Death = GameEndUI.transform.GetChild(2).GetChild(6).GetComponent<Text>();
-        // Text user1Damage = GameEndUI.transform.GetChild(2).GetChild(7).GetComponent<Text>();
-        // Text user2Name = GameEndUI.transform.GetChild(2).GetChild(8).GetComponent<Text>();
-        // Text user2kill = GameEndUI.transform.GetChild(2).GetChild(9).GetComponent<Text>();
-        // Text user2Damage = GameEndUI.transform.GetChild(2).GetChild(10).GetComponent<Text>();
-        // Text user2Death = GameEndUI.transform.GetChild(2).GetChild(11).GetComponent<Text>();
-        // Text user3Name = GameEndUI.transform.GetChild(2).GetChild(12).GetComponent<Text>();
-        // Text user3Kill = GameEndUI.transform.GetChild(2).GetChild(13).GetComponent<Text>();
-        // Text user3Death = GameEndUI.transform.GetChild(2).GetChild(14).GetComponent<Text>();
-        // Text user3Damage = GameEndUI.transform.GetChild(2).GetChild(15).GetComponent<Text>();
-        // Text user4Name = GameEndUI.transform.GetChild(2).GetChild(16).GetComponent<Text>();
-        // Text user4Kill = GameEndUI.transform.GetChild(2).GetChild(17).GetComponent<Text>();
-        // Text user4Death = GameEndUI.transform.GetChild(2).GetChild(18).GetComponent<Text>();
-        // Text user4Damage = GameEndUI.transform.GetChild(2).GetChild(19).GetComponent<Text>();
 
         GameManager.instance.AnnouncementMap.SetActive(false);
         gameEndUI.SetActive(true);
@@ -251,22 +235,6 @@ public class GameManager : MonoBehaviour
             victory.gameObject.SetActive(false);
             defeat.gameObject.SetActive(true);
         }
-        // user1Name.text = users[0].name;
-        // user1Kill.text = users[0].kill.ToString();
-        // user1Death.text = users[0].death.ToString();
-        // user1Damage.text = users[0].damage.ToString();
-        // user2Name.text = users[1].name;
-        // user2kill.text = users[1].kill.ToString(); 
-        // user2Death.text = users[1].death.ToString(); 
-        // user2Damage.text = users[1].damage.ToString(); 
-        // user3Name.text = users[2].name;
-        // user3Kill.text = users[2].kill.ToString(); 
-        // user3Death.text = users[2].death.ToString(); 
-        // user3Damage.text = users[2].damage.ToString(); 
-        // user4Name.text = users[3].name;
-        // user4Kill.text = users[3].kill.ToString(); 
-        // user4Death.text = users[3].death.ToString(); 
-        // user4Damage.text = users[3].damage.ToString(); 
     }
 
     public void ReturnLobby()
