@@ -83,7 +83,7 @@ public class ButtonController : MonoBehaviour
     {
         NetworkManager.instance.SendStoreOpenPacket();
         GameManager.instance.storeBtn.GetComponent<Button>().interactable = false;
-        GameManager.instance.storeUI.transform.GetChild(2).GetComponent<Button>().interactable = false;
+        // GameManager.instance.storeUI.transform.GetChild(2).GetComponent<Button>().interactable = false;
     }
 
     //상점 캐릭터 목록 버튼
@@ -124,7 +124,7 @@ public class ButtonController : MonoBehaviour
             {
                 characterId = index;
                 GameManager.instance.storeUI.SetActive(false);
-                GameManager.instance.purchaseCheckUI.SetActive(true);
+                GameManager.instance.characterPurchaseCheckUI.SetActive(true);
                 GameManager.instance.PurchaseCharacter(characterId);
             });
         }
@@ -132,27 +132,53 @@ public class ButtonController : MonoBehaviour
 
     //상점 장비 선택 버튼
     public void OnSelectEquipmentButtonClicked()
-    { }
+    { 
+         uint equipmentIndex = 0;
+        Transform group = GameManager.instance.storeUI.transform.GetChild(1).GetChild(0).GetChild(0).GetChild(0);
+        int count = group.childCount;
+
+        for (int i = 0; i < count; i++)
+        {
+            Transform btn = group.GetChild(i);
+            uint index = (uint)i; // 로컬 변수로 캡처
+
+            Button buttonComponent = btn.GetComponent<Button>();
+
+            buttonComponent.onClick.RemoveAllListeners();
+
+            buttonComponent.onClick.AddListener(() =>
+            {
+                equipmentIndex = index;
+                GameManager.instance.storeUI.SetActive(false);
+                GameManager.instance.equipmentPurchaseCheckUI.SetActive(true);
+                GameManager.instance.PurchaseEquipment(equipmentIndex);
+            });
+        }
+    }
 
     //상점 캐릭터 구입 버튼
     public void OnPurchaseCharacterButtonClicked()
     {
-        Text name = GameManager.instance.purchaseCheckUI.transform.GetChild(3).GetComponent<Text>();
-        Text price = GameManager.instance.purchaseCheckUI.transform.GetChild(4).GetComponent<Text>();
+        Text name = GameManager.instance.characterPurchaseCheckUI.transform.GetChild(3).GetComponent<Text>();
+        Text price = GameManager.instance.characterPurchaseCheckUI.transform.GetChild(4).GetComponent<Text>();
         NetworkManager.instance.SendPurchaseCharacterPacket(name.text, price.text);
-        GameManager.instance.purchaseCheckUI.transform.GetChild(0).GetComponent<Button>().interactable = false;
+        GameManager.instance.characterPurchaseCheckUI.transform.GetChild(0).GetComponent<Button>().interactable = false;
     }
 
     //상점 장비 구입 버튼
     public void OnPurchaseEquipmentButtonClicked()
     {
-        // GameManager.instance.characterSelectUI.transform.GetChild(1).GetComponent<Button>().interactable = false;
+        Text name = GameManager.instance.equipmentPurchaseCheckUI.transform.GetChild(3).GetComponent<Text>();
+        Text price = GameManager.instance.equipmentPurchaseCheckUI.transform.GetChild(4).GetComponent<Text>();
+        NetworkManager.instance.SendPurchaseEquipmentPacket(name.text, price.text);
+        GameManager.instance.equipmentPurchaseCheckUI.transform.GetChild(0).GetComponent<Button>().interactable = false;
     }
 
     //상점 구매 취소 버튼
     public void OnPurchaseCancelClicked()
     {
-        GameManager.instance.purchaseCheckUI.SetActive(false);
+        GameManager.instance.characterPurchaseCheckUI.SetActive(false);
+        GameManager.instance.equipmentPurchaseCheckUI.SetActive(false);
         GameManager.instance.storeUI.SetActive(true);
     }
 
@@ -166,6 +192,10 @@ public class ButtonController : MonoBehaviour
         GameManager.instance.storeUI.SetActive(false);
         GameManager.instance.mapBtn.SetActive(true);
         GameManager.instance.storeBtn.GetComponent<Button>().interactable = true;
+        GameManager.instance.storeUI.transform.GetChild(0).gameObject.SetActive(true);
+        GameManager.instance.storeUI.transform.GetChild(1).gameObject.SetActive(false);
+        GameManager.instance.storeUI.transform.GetChild(2).GetComponent<Button>().interactable = true;
+        GameManager.instance.storeUI.transform.GetChild(3).GetComponent<Button>().interactable = true;
     }
 
     public void OnPoliceButtonClicked()

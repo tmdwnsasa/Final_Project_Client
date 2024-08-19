@@ -367,6 +367,16 @@ public class NetworkManager : MonoBehaviour
         SendPacket(purchaseCharacterRequestPayload, (uint)Handlers.HandlerIds.PURCHASE_CHARACTER);
     }
 
+    public void SendPurchaseEquipmentPacket(string name, string price)
+    {
+        PurchaseEquipmentRequestPayload purchaseEquipmentRequestPayload = new PurchaseEquipmentRequestPayload
+        {
+            name = name,
+            price = price
+        };
+        SendPacket(purchaseEquipmentRequestPayload, (uint)Handlers.HandlerIds.PURCHASE_EQUIPMENT);
+    }
+
     public void SendOpenMapPacket()
     {
         OpenMapPayload openMapPayload = new OpenMapPayload
@@ -522,6 +532,9 @@ public class NetworkManager : MonoBehaviour
                     Handlers.instance.StoreOpen(response.data);
                     break;
                 case (uint)Handlers.HandlerIds.PURCHASE_CHARACTER:
+                    Handlers.instance.PurchaseMessage(response.data);
+                    break;
+                    case (uint)Handlers.HandlerIds.PURCHASE_EQUIPMENT:
                     Handlers.instance.PurchaseMessage(response.data);
                     break;
                 case (uint)Handlers.HandlerIds.REMOVESKILL:
