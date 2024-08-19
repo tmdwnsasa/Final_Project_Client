@@ -6,10 +6,12 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.SocialPlatforms;
 using UnityEngine.UI;
+using static Handlers;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
+   
 
     [Header("# Images")]
     public List<Sprite> farmers;
@@ -31,6 +33,9 @@ public class GameManager : MonoBehaviour
     public string name;
     public List<uint> possession;
 
+    [Header("# Item")]
+    public List<ItemStats> items;
+   
     [Header("# Game Object")]
     public PoolManager pool;
     public Player player;

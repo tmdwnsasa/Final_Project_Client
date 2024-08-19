@@ -10,8 +10,8 @@ public class Handlers : MonoBehaviour
 {
     public static Handlers instance;
 
-    public InventoryData inventoryData;
-    public event Action OnInventoryDataUpdated;
+    //public InventoryData inventoryData;
+    //public event Action OnInventoryDataUpdated;
 
 
     public GameObject Player;
@@ -49,6 +49,11 @@ public class Handlers : MonoBehaviour
         public string name;
         public int guild;
         public string sessionId;
+        public List<PlayerItem> allInventoryItems;
+        public List<PlayerItem> allEquippedItems;
+        public List<ItemStats> itemStats;
+        public int userMoney;
+
     }
 
     [Serializable]
@@ -59,6 +64,37 @@ public class Handlers : MonoBehaviour
         public int guild;
         public string sessionId;
         public List<uint> possession;
+        public List<PlayerItem> allInventoryItems;
+        public List<PlayerItem> allEquippedItems;
+        public List<ItemStats> itemStats;
+        public int userMoney;
+
+    }
+
+    [Serializable]
+    public struct PlayerItem
+    {
+        public int inventoryId;
+        public string playerId;
+        public int itemId;
+        public string itemSpriteName;
+        public int equippedItems;
+        public string equipSlot;
+
+        public bool IsEquipped => equippedItems == 1;
+    }
+
+
+    [Serializable]
+    public struct ItemStats
+    {
+        public int itemId;
+        public string itemName;
+        public string itemEquipSlot;
+        public float itemHp;
+        public float itemSpeed;
+        public float itemAttack;
+        public int itemPrice;
     }
 
     [Serializable]
@@ -123,8 +159,8 @@ public class Handlers : MonoBehaviour
     public class InventoryData 
     {
         public UserMoney userMoney;
-        public List<Item> allItems;
-        public List<Item> equippedItems;
+        public List<ItemStats> allItems;
+        public List<ItemStats> equippedItems;
         public CombinedStats combinedStats;
     }
 
@@ -138,42 +174,15 @@ public class Handlers : MonoBehaviour
         public float critical;
     }
 
-    [Serializable]
-    public struct Item
-    {
-        public int inventoryId;
-        public string playerId;
-        public int itemId;
-        public int equippedItems;
-        public string equipSlot;
-        public string itemSpriteName;
-
-        public bool IsEquipped => equippedItems == 1;
-    }
 
     [Serializable]
     public class UpdatedInventoryData
     {
         public string message;
         public CombinedStats combinedStats;
-        public List<Item> equippedItems;
-        public List<Item> allItems;
+        public List<ItemStats> equippedItems;
+        public List<ItemStats> allItems;
 
-    }
-
-
-    void Awake()
-    {
-        if (instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-            Debug.Log("Handlers instance initialized in Awake.");
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
     }
 
 
@@ -195,17 +204,24 @@ public class Handlers : MonoBehaviour
         string jsonString = Encoding.UTF8.GetString(data);
         CharacterChoice characterChoice = JsonUtility.FromJson<CharacterChoice>(jsonString);
 
+
         GameManager.instance.playerId = characterChoice.playerId;
         GameManager.instance.name = characterChoice.name;
         GameManager.instance.player.guild = characterChoice.guild;
         GameManager.instance.sessionId = characterChoice.sessionId;
+        GameManager.instance.items = characterChoice.itemStats;
+        InventoryManager.instance.inventory = characterChoice.allInventoryItems;
+        InventoryManager.instance.equipment = characterChoice.allEquippedItems;
+
 
         GameManager.instance.GoCharacterChoice();
+        InventoryManager.instance.InitializeItemSpriteMapping();
     }
 
     public void GetCharacterSelect(byte[] data)
     {
         string jsonString = Encoding.UTF8.GetString(data);
+
         CharacterSelect characterSelect = JsonUtility.FromJson<CharacterSelect>(jsonString);
 
         GameManager.instance.playerId = characterSelect.playerId;
@@ -213,8 +229,24 @@ public class Handlers : MonoBehaviour
         GameManager.instance.player.guild = characterSelect.guild;
         GameManager.instance.sessionId = characterSelect.sessionId;
         GameManager.instance.possession = characterSelect.possession;
+        InventoryManager.instance.inventory = characterSelect.allInventoryItems;
+        InventoryManager.instance.equipment = characterSelect.allEquippedItems;
+        GameManager.instance.items = characterSelect.itemStats;
+
+
+        //for(int i = 0;  i< GameManager.instance.Items.Count; i++)
+        //{
+        //    GameManager.instance.Items[i]=characterSelect.itemStats[i];
+
+        //}
+        Debug.Log(GameManager.instance.items[0].itemName);
+
+        Debug.Log($"Received {characterSelect.allEquippedItems.Count} equipped items// {InventoryManager.instance.equipment.Count}");
 
         GameManager.instance.GoCharacterSelect();
+        InventoryManager.instance.InitializeItemSpriteMapping();
+
+
     }
 
     public void SetCharacterStats(byte[] data)
@@ -361,74 +393,74 @@ public class Handlers : MonoBehaviour
         userCoin.text = inventoryData.userMoney.money.ToString();
     }
 
-    public void SetInventoryItemData(byte[] data)
-    {
-        string jsonString = Encoding.UTF8.GetString(data);
+    //public void SetInventoryItemData(byte[] data)
+    //{
+    //    string jsonString = Encoding.UTF8.GetString(data);
 
-        Handlers.instance.inventoryData = JsonUtility.FromJson<InventoryData>(jsonString);
-        Debug.Log($"Received InventoryData with {inventoryData.allItems.Count} items and {inventoryData.equippedItems.Count} equipped items.");
+    //    Handlers.instance.inventoryData = JsonUtility.FromJson<InventoryData>(jsonString);
+    //    Debug.Log($"Received InventoryData with {inventoryData.allItems.Count} items and {inventoryData.equippedItems.Count} equipped items.");
 
 
 
-        if (Handlers.instance.inventoryData.allItems == null)
-            {
-            Handlers.instance.inventoryData.allItems = new List<Item>();
-            }
+    //    if (Handlers.instance.inventoryData.allItems == null)
+    //        {
+    //        Handlers.instance.inventoryData.allItems = new List<Item>();
+    //        }
 
-            if (Handlers.instance.inventoryData.equippedItems == null)
-            {
-            Handlers.instance.inventoryData.equippedItems = new List<Item>();
-            }
+    //        if (Handlers.instance.inventoryData.equippedItems == null)
+    //        {
+    //        Handlers.instance.inventoryData.equippedItems = new List<Item>();
+    //        }
 
-        Debug.Log("Invoking OnInventoryDataUpdated event.");
+    //    Debug.Log("Invoking OnInventoryDataUpdated event.");
 
-        OnInventoryDataUpdated?.Invoke();
+    //    OnInventoryDataUpdated?.Invoke();
+    //}
+
+
+    //public void UpdateEquipItem(byte[] data)
+    //{
+    //    UpdateInventoryAndStats(data);
+    //}
+
+    //public void UpdateUnequipItem(byte[] data)
+    //{
+    //    UpdateInventoryAndStats(data);
+    //}
+
+    //private void UpdateInventoryAndStats(byte[] data)
+    //{
+    //    // Deserialize the response data into UpdatedStats
+    //    string jsonString = Encoding.UTF8.GetString(data);
+    //    UpdatedInventoryData updatedInventoryData = JsonUtility.FromJson<UpdatedInventoryData>(jsonString);
+
+    //    // Update the inventory data with the new items and stats
+    //    inventoryData.combinedStats = updatedInventoryData.combinedStats;
+    //    inventoryData.allItems = updatedInventoryData.allItems;
+    //    inventoryData.equippedItems = updatedInventoryData.equippedItems;
+
+    //    UpdateStatsUI(inventoryData.combinedStats);
+
+
+    //    OnInventoryDataUpdated?.Invoke();
     }
+//    public void UpdateStatsUI(CombinedStats combinedStats)
+//    {
+//        Transform inventoryTransform = GameManager.instance.inventoryUI.transform.GetChild(3);
 
+//        Text userHp = inventoryTransform.GetChild(1).GetComponent<Text>();
+//        userHp.text = combinedStats.hp.ToString();
 
-    public void UpdateEquipItem(byte[] data)
-    {
-        UpdateInventoryAndStats(data);
-    }
+//        Text userSpeed = inventoryTransform.GetChild(3).GetComponent<Text>();
+//        userSpeed.text = combinedStats.speed.ToString();
 
-    public void UpdateUnequipItem(byte[] data)
-    {
-        UpdateInventoryAndStats(data);
-    }
+//        Text userPower = inventoryTransform.GetChild(5).GetComponent<Text>();
+//        userPower.text = combinedStats.power.ToString();
 
-    private void UpdateInventoryAndStats(byte[] data)
-    {
-        // Deserialize the response data into UpdatedStats
-        string jsonString = Encoding.UTF8.GetString(data);
-        UpdatedInventoryData updatedInventoryData = JsonUtility.FromJson<UpdatedInventoryData>(jsonString);
+//        Text userDefense = inventoryTransform.GetChild(7).GetComponent<Text>();
+//        userDefense.text = combinedStats.defense.ToString();
 
-        // Update the inventory data with the new items and stats
-        inventoryData.combinedStats = updatedInventoryData.combinedStats;
-        inventoryData.allItems = updatedInventoryData.allItems;
-        inventoryData.equippedItems = updatedInventoryData.equippedItems;
-
-        UpdateStatsUI(inventoryData.combinedStats);
-
-
-        OnInventoryDataUpdated?.Invoke();
-    }
-    public void UpdateStatsUI(CombinedStats combinedStats)
-    {
-        Transform inventoryTransform = GameManager.instance.inventoryUI.transform.GetChild(3);
-
-        Text userHp = inventoryTransform.GetChild(1).GetComponent<Text>();
-        userHp.text = combinedStats.hp.ToString();
-
-        Text userSpeed = inventoryTransform.GetChild(3).GetComponent<Text>();
-        userSpeed.text = combinedStats.speed.ToString();
-
-        Text userPower = inventoryTransform.GetChild(5).GetComponent<Text>();
-        userPower.text = combinedStats.power.ToString();
-
-        Text userDefense = inventoryTransform.GetChild(7).GetComponent<Text>();
-        userDefense.text = combinedStats.defense.ToString();
-
-        Text userCritical = inventoryTransform.GetChild(9).GetComponent<Text>();
-        userCritical.text = combinedStats.critical.ToString();
-    }
-}
+//        Text userCritical = inventoryTransform.GetChild(9).GetComponent<Text>();
+//        userCritical.text = combinedStats.critical.ToString();
+//    }
+//}

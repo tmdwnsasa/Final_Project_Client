@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class ButtonController : MonoBehaviour
 {
@@ -85,28 +86,51 @@ public class ButtonController : MonoBehaviour
     {
         string sessionId = GameManager.instance.sessionId;
 
-        NetworkManager.instance.SendInventoryPacket(sessionId);
-        GameManager.instance.inventoryButton.transform.GetChild(0).GetComponent<Button>().interactable = false;
+        //GameManager.instance.inventoryButton.transform.GetChild(0).GetComponent<Button>().interactable = false;
         GameManager.instance.inventoryUI.SetActive(!GameManager.instance.inventoryUI.activeSelf);
+        InventoryManager.instance.ShowInventoryItems();
+        InventoryManager.instance.ShowEquippedItems();
 
     }
 
-    //public void OnSlotButtonClicked(int slotID, int itemId, SlotPrefabs.SlotType slotType)
-    //{
+    public void OnInventoryItemSlotButtonClicked()
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            Debug.Log(GameManager.instance.inventoryUI.transform.GetChild(5).GetChild(i).GetComponent<InventorySlot>().item.itemEquipSlot);
+            if (GameManager.instance.inventoryUI.transform.GetChild(5).GetChild(i).GetComponent<InventorySlot>().item.itemEquipSlot ==
+                EventSystem.current.currentSelectedGameObject.transform.GetComponent<InventorySlot>().item.itemEquipSlot) {
+                Debug.Log($"Equip Error");
+                return;
+            }
+          
+        }
+        for (int i = 0; i < 3; i++)
+        {
+            if (GameManager.instance.inventoryUI.transform.GetChild(5).GetChild(i).GetComponent<InventorySlot>().item.itemName == "")
+            {
+                Debug.Log("ddddddddd");
+                Handlers.PlayerItem item = InventoryManager.instance.inventory.Find(item => item.itemId == EventSystem.current.currentSelectedGameObject.transform.GetComponent<InventorySlot>().item.itemId);
+                int num = InventoryManager.instance.inventory.RemoveAll(item => item.itemId == EventSystem.current.currentSelectedGameObject.transform.GetComponent<InventorySlot>().item.itemId);
 
-    //    if (slotType == SlotPrefabs.SlotType.Inventory)
-    //    {
-    //        Debug.Log($"Inventory Slot {slotID} with ItemID {itemId} clicked.");
-    //        selectedItemId = itemId; // Store the selected item ID
-    //        GameManager.instance.equipItemMessageUI.SetActive(true);
-    //    }
-    //    else if (slotType == SlotPrefabs.SlotType.Equipped)
-    //    {
-    //        Debug.Log($"Equipped Slot {slotID} with ItemID {itemId} clicked.");
-    //        selectedItemId = itemId; // Store the selected item ID
-    //        GameManager.instance.unequipItemMessageUI.SetActive(true);
-    //    }
-    //}
+                GameManager.instance.inventoryUI.transform.GetChild(5).GetChild(i).GetComponent<InventorySlot>().item = EventSystem.current.currentSelectedGameObject.transform.GetComponent<InventorySlot>().item;
+                EventSystem.current.currentSelectedGameObject.transform.GetComponent<InventorySlot>().item = new Handlers.ItemStats();
+
+                Debug.Log(num);
+
+                InventoryManager.instance.equipment.Add(item);
+
+                InventoryManager.instance.ShowEquippedItems();
+                InventoryManager.instance.ShowInventoryItems();
+            }
+        }
+    }
+
+    public void OnEquipmentItemSlotButtonClicked()
+    {
+
+    }
+
 
     //public int selectedItemId;
 

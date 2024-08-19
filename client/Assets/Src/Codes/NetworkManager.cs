@@ -348,16 +348,6 @@ public class NetworkManager : MonoBehaviour
 
     }
 
-    public void SendInventoryPacket(string sessionId)
-    {
-        InventoryPayload InventoryPayload = new InventoryPayload
-        {
-            sessionId = sessionId
-        };
-        //Debug.Log($"User's Session Id : {sessionId}");
-        SendPacket(InventoryPayload, (uint)Handlers.HandlerIds.INVENTORY);
-    }
-
     public void SendEquipItemPacket(int itemId)
     {
         EquipItemPayload equipPayload = new EquipItemPayload
@@ -556,15 +546,12 @@ public class NetworkManager : MonoBehaviour
                 case (uint)Handlers.HandlerIds.SKILL:
                     break;
                 case (uint)Handlers.HandlerIds.INVENTORY:
-                    Handlers.instance.SetCharactersCombinedStats(response.data);
-                    Handlers.instance.SetUserMoney(response.data);
-                    Handlers.instance.SetInventoryItemData(response.data);
                     break;
                 case (uint)Handlers.HandlerIds.EQUIP_ITEM:
-                    Handlers.instance.UpdateEquipItem(response.data);
+                    //Handlers.instance.UpdateEquipItem(response.data);
                     break;
                 case (uint)Handlers.HandlerIds.UNEQUIP_ITEM:
-                    Handlers.instance.UpdateUnequipItem(response.data);
+                    //Handlers.instance.UpdateUnequipItem(response.data);
                     break;
                 case (uint)Handlers.HandlerIds.EXIT:
                     Application.Quit();

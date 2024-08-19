@@ -2,57 +2,46 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
 using static Handlers;
+using UnityEngine.UI;
+using System;
 
 public class InventoryManager : MonoBehaviour
 {
+    public static InventoryManager instance;
+
     public SlotPrefabs slotPrefab; // Reference to prefab
     public Transform slotsParent; // Parent transform for slots
-    public Sprite[] weaponSprites; // Array of weapon sprites
+    public Sprite[] itemSprites; // Array of weapon sprites
+    public List<PlayerItem> inventory;
+    public List<PlayerItem> equipment;
+
+
 
     private Dictionary<int, Sprite> itemSpriteMapping; // Dictionary to map item ID to sprites
 
     void Start()
     {
-        // Initialize itemSpriteMapping dictionary
-        InitializeItemSpriteMapping();
-
-        // Start the coroutine to wait for Handlers initialization
-        StartCoroutine(WaitForHandlersInitialization());
+        instance = this;
     }
 
-    private void InitializeItemSpriteMapping()
+
+    public void InitializeItemSpriteMapping()
     {
         if (itemSpriteMapping == null)
         {
             itemSpriteMapping = new Dictionary<int, Sprite>();
 
             // Map item IDs to their corresponding sprites
-            for (int i = 0; i < weaponSprites.Length; i++)
+            for (int i = 0; i < itemSprites.Length; i++)
             {
-                itemSpriteMapping.Add(i + 1, weaponSprites[i]);
+                itemSpriteMapping.Add(i + 1, itemSprites[i]);
             }
 
             Debug.Log($"itemSpriteMapping initialized with {itemSpriteMapping.Count} entries.");
         }
-    }
 
-    private IEnumerator WaitForHandlersInitialization()
-    {
-        if (Handlers.instance == null)
-        {
-            Debug.Log("Handlers.instance is null, initializing Handlers.");
-            GameObject handlersObject = new GameObject("Handlers");
-            handlersObject.AddComponent<Handlers>();
-        }
 
-        // Wait until Handlers.instance is initialized
-        while (Handlers.instance == null)
-        {
-            Debug.Log("Waiting for Handlers.instance to be initialized in InventoryManager.");
-            yield return null; // Wait for the next frame
-        }
 
-        Handlers.instance.OnInventoryDataUpdated += HandleInventoryDataUpdated;
     }
 
     public Dictionary<int, Sprite> GetItemSpriteMapping()
@@ -64,58 +53,45 @@ public class InventoryManager : MonoBehaviour
         return itemSpriteMapping;
     }
 
-    private void HandleInventoryDataUpdated()
+    public void ShowInventoryItems()
     {
-        // Access InventoryData from Handlers
-        InventoryData inventoryData = Handlers.instance.inventoryData;
-
-        // Ensure inventoryData has initialized lists
-        if (inventoryData.allItems == null)
+        int index = 0;
+        for(int i = 0; i <10; i++)
         {
-            Debug.LogWarning("allItems was null, initializing an empty list.");
-            inventoryData.allItems = new List<Item>();
-        }
+            GameManager.instance.inventoryUI.transform.GetChild(1).GetChild(0).GetChild(0).GetChild(i).GetChild(2).GetComponent<Image>().sprite = null;
+            GameManager.instance.inventoryUI.transform.GetChild(1).GetChild(0).GetChild(0).GetChild(i).GetChild(0).GetComponent<Text>().text = "";
+            GameManager.instance.inventoryUI.transform.GetChild(1).GetChild(0).GetChild(0).GetChild(i).GetComponent<InventorySlot>().item = new ItemStats();
 
-        DisplayInventoryItems(inventoryData);
+        }
+        foreach (PlayerItem playerItem in inventory)
+        {
+            Debug.Log($"inventory item at index {index} with itemId {playerItem.itemId}");
+            GameManager.instance.inventoryUI.transform.GetChild(1).GetChild(0).GetChild(0).GetChild(index).GetChild(2).GetComponent<Image>().sprite = itemSpriteMapping[playerItem.itemId];
+            GameManager.instance.inventoryUI.transform.GetChild(1).GetChild(0).GetChild(0).GetChild(index).GetChild(0).GetComponent<Text>().text = playerItem.equipSlot;
+            GameManager.instance.inventoryUI.transform.GetChild(1).GetChild(0).GetChild(0).GetChild(index).GetComponent<InventorySlot>().item = GameManager.instance.items.Find(item => item.itemId == playerItem.itemId);
+
+            index++;
+
+        }
     }
 
-    void DisplayInventoryItems(InventoryData inventoryData)
+    public void ShowEquippedItems()
     {
-        if (inventoryData.allItems.Count > 0)
-        {
-            int slotIndex = 0;
 
-            foreach (Item item in inventoryData.allItems)
-            {
-                if (slotIndex < slotsParent.childCount) // Check if there are available slots
-                {
-                    SlotPrefabs existingSlot = slotsParent.GetChild(slotIndex).GetComponent<SlotPrefabs>();
-                    if (existingSlot != null)
-                    {
-                        if (itemSpriteMapping.TryGetValue(item.itemId, out Sprite itemSprite))
-                        {
-                            existingSlot.SetSlotImage(itemSprite); // Set image on the existing slot
-                        }
-                        else
-                        {
-                            Debug.LogError($"No sprite found for item ID: {item.itemId}");
-                        }
-                    }
-                    else
-                    {
-                        Debug.LogError("SlotPrefabs component is missing on the slot.");
-                    }
-                    slotIndex++;
-                }
-                else
-                {
-                    Debug.LogError("No more slots available in the slotsParent.");
-                }
-            }
-        }
-        else
+        Debug.Log($"Equipment count{equipment.Count}");
+        int index = 0;
+
+        foreach (PlayerItem playerItem in equipment)
         {
-            Debug.LogError("No items in inventoryData.");
+            Debug.Log(playerItem.itemId);
+            GameManager.instance.inventoryUI.transform.GetChild(5).GetChild(index).GetChild(2).GetComponent<Image>().sprite = itemSpriteMapping[playerItem.itemId];
+            GameManager.instance.inventoryUI.transform.GetChild(5).GetChild(index).GetChild(0).GetComponent<Text>().text = playerItem.equipSlot;
+            GameManager.instance.inventoryUI.transform.GetChild(5).GetChild(index).GetComponent<InventorySlot>().item = GameManager.instance.items.Find(item => (item.itemId == playerItem.itemId));
+
+            
+            index++;
         }
     }
+
+
 }
