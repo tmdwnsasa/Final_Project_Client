@@ -268,7 +268,6 @@ public class Player : MonoBehaviour
                 projectile.gameObject.tag = gameObject.tag;
                 projScript.bulletNum = prefabNum;
                 projScript.skillType = skillType;
-
                 if (x > 0)
                 {
                     StartCoroutine(SetActiveGunSprite());

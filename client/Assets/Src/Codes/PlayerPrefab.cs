@@ -127,8 +127,7 @@ public class PlayerPrefab : MonoBehaviour
                 StartCoroutine(AttackRangeCheck());
                 break;
             case 2:
-                StartCoroutine(SetActiveGunSprite());
-                GameObject projectile = Instantiate(projectilePrefab, transform.position + new Vector3(x, y), Quaternion.identity, bulletManager.transform);
+                GameObject projectile = Instantiate(projectilePrefab, transform.position + new Vector3(x, y), Quaternion.identity);
                 BulletPrefab projScript = projectile.GetComponent<BulletPrefab>();
                 projectile.gameObject.tag = gameObject.tag;
                 projScript.bulletNum = prefabNum;
