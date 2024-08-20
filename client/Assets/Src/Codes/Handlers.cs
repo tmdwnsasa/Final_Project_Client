@@ -5,6 +5,8 @@ using UnityEngine;
 using static Handlers;
 using static UnityEngine.UIElements.UxmlAttributeDescription;
 using UnityEngine.UI;
+using static UnityEditor.Progress;
+using Unity.VisualScripting;
 
 public class Handlers : MonoBehaviour
 {
@@ -13,8 +15,6 @@ public class Handlers : MonoBehaviour
     //public InventoryData inventoryData;
     //public event Action OnInventoryDataUpdated;
 
-
-    public GameObject player;
     public enum HandlerIds
     {
         LOGIN = 0,
@@ -51,7 +51,7 @@ public class Handlers : MonoBehaviour
         public string sessionId;
         public List<PlayerItem> allInventoryItems;
         public List<PlayerItem> allEquippedItems;
-        public List<ItemStats> itemStats;
+        public List<ItemStats> allItems;
         public int userMoney;
 
     }
@@ -66,7 +66,7 @@ public class Handlers : MonoBehaviour
         public List<uint> possession;
         public List<PlayerItem> allInventoryItems;
         public List<PlayerItem> allEquippedItems;
-        public List<ItemStats> itemStats;
+        public List<ItemStats> allItems;
         public int userMoney;
 
     }
@@ -121,6 +121,7 @@ public class Handlers : MonoBehaviour
 
         public characterSkill xSkill;
         public List<UserData> userDatas;
+        public CombinedStats updatedStats;
     }
 
     [Serializable]
@@ -168,14 +169,15 @@ public class Handlers : MonoBehaviour
 
 
     [Serializable]
-    public class UpdatedInventoryData
+    public struct UpdatedInventoryData
     {
+        public CombinedStats updatedStats;
+        public List<PlayerItem> allInventoryItems;
+        public List<PlayerItem> allEquippedItems;
         public string message;
-        public CombinedStats combinedStats;
-        public List<PlayerItem> equippedItems;
-        public List<PlayerItem> inventoryItems;
     }
-
+    
+    [Serializable]
     public struct MapData
     {
         public string mapName;
@@ -199,12 +201,13 @@ public class Handlers : MonoBehaviour
         GameManager.instance.name = characterChoice.name;
         GameManager.instance.player.guild = characterChoice.guild;
         GameManager.instance.sessionId = characterChoice.sessionId;
-        GameManager.instance.items = characterChoice.itemStats;
+        GameManager.instance.items = characterChoice.allItems;
         InventoryManager.instance.inventory = characterChoice.allInventoryItems;
         InventoryManager.instance.equipment = characterChoice.allEquippedItems;
 
-
-        GameManager.instance.equipmentStore = characterChoice.itemStats; Debug.Log(GameManager.instance.equipmentStore.Count);
+        GameManager.instance.equipmentStore = characterChoice.allItems;
+        
+        Debug.Log(GameManager.instance.equipmentStore.Count);
 
         for (int i = 0; i < GameManager.instance.equipmentStore.Count; i++)
         {
@@ -216,6 +219,8 @@ public class Handlers : MonoBehaviour
 
         }
 
+        InventoryManager.instance.ShowInventoryItems();
+        InventoryManager.instance.ShowEquippedItems();
         GameManager.instance.GoCharacterChoice();
         GameManager.instance.InitializeItemSpriteMapping();
     }
@@ -223,7 +228,6 @@ public class Handlers : MonoBehaviour
     public void GetCharacterSelect(byte[] data)
     {
         string jsonString = Encoding.UTF8.GetString(data);
-
         CharacterSelect characterSelect = JsonUtility.FromJson<CharacterSelect>(jsonString);
 
         GameManager.instance.playerId = characterSelect.playerId;
@@ -233,11 +237,10 @@ public class Handlers : MonoBehaviour
         GameManager.instance.possession = characterSelect.possession;
         InventoryManager.instance.inventory = characterSelect.allInventoryItems;
         InventoryManager.instance.equipment = characterSelect.allEquippedItems;
-        GameManager.instance.items = characterSelect.itemStats;
+        GameManager.instance.items = characterSelect.allItems;
+        Debug.Log(GameManager.instance.items.Count);
 
-        GameManager.instance.equipmentStore = characterSelect.itemStats;
-
-
+        GameManager.instance.equipmentStore = characterSelect.allItems;
 
         for (int i = 0; i < GameManager.instance.equipmentStore.Count; i++)
         {
@@ -267,11 +270,11 @@ public class Handlers : MonoBehaviour
 
         GameManager.instance.player.characterId = characterStats.characterId;
         GameManager.instance.player.characterName = characterStats.characterName;
-        GameManager.instance.player.hp = characterStats.hp;
-        GameManager.instance.player.speed = characterStats.speed;
-        GameManager.instance.player.power = characterStats.power;
-        GameManager.instance.player.defense = characterStats.defense;
-        GameManager.instance.player.critical = characterStats.critical;
+        GameManager.instance.player.hp = characterStats.updatedStats.hp;
+        GameManager.instance.player.speed = characterStats.updatedStats.speed;
+        GameManager.instance.player.power = characterStats.updatedStats.power;
+        GameManager.instance.player.defense = characterStats.updatedStats.defense;
+        GameManager.instance.player.critical = characterStats.updatedStats.critical;
 
         GameManager.instance.player.zSkill = characterStats.zSkill.skill_name;
         GameManager.instance.player.xSkill = characterStats.xSkill.skill_name;
@@ -279,6 +282,8 @@ public class Handlers : MonoBehaviour
         GameManager.instance.player.xSkill_id = characterStats.xSkill.skill_id;
         GameManager.instance.player.zSkill_CoolTime = characterStats.zSkill.cool_time;
         GameManager.instance.player.xSkill_CoolTime = characterStats.xSkill.cool_time;
+
+        InventoryManager.instance.UpdateInventoryCombinedStats();
 
         foreach (var user in characterStats.userDatas)
         {
@@ -360,26 +365,7 @@ public class Handlers : MonoBehaviour
         GameManager.instance.gameEndUI.transform.GetChild(3).GetComponent<Button>().interactable = true;
     }
 
-    public void UpdateInventoryCombinedStats(CombinedStats combinedStats)
-    {
-
-        Transform inventoryTransform = GameManager.instance.inventoryUI.transform.GetChild(3);
-
-        Text userHp = inventoryTransform.GetChild(1).GetComponent<Text>();
-        userHp.text = combinedStats.hp.ToString();
-
-        Text userSpeed = inventoryTransform.GetChild(3).GetComponent<Text>();
-        userSpeed.text = combinedStats.speed.ToString();
-
-        Text userPower = inventoryTransform.GetChild(5).GetComponent<Text>();
-        userPower.text = combinedStats.power.ToString();
-
-        Text userDefense = inventoryTransform.GetChild(7).GetComponent<Text>();
-        userDefense.text = combinedStats.defense.ToString();
-
-        Text userCritical = inventoryTransform.GetChild(9).GetComponent<Text>();
-        userCritical.text = combinedStats.critical.ToString();
-    }
+ 
 
 
     public void UpdateInventoryAndStats(byte[] data)
@@ -388,11 +374,18 @@ public class Handlers : MonoBehaviour
         string jsonString = Encoding.UTF8.GetString(data);
         UpdatedInventoryData updatedInventoryData = JsonUtility.FromJson<UpdatedInventoryData>(jsonString);
 
+        if(updatedInventoryData.updatedStats.hp == 0)
+        {
+            return;
+        }
         // Update the inventory data with the new items and stats
-        player.GetComponent<Player>().SetStats(updatedInventoryData.combinedStats);
-        this.UpdateInventoryCombinedStats(updatedInventoryData.combinedStats);
+        GameManager.instance.player.GetComponent<Player>().SetStats(updatedInventoryData.updatedStats);
+        InventoryManager.instance.UpdateInventoryCombinedStats();
 
-        InventoryManager.instance.inventory = updatedInventoryData.inventoryItems;
-        InventoryManager.instance.equipment = updatedInventoryData.equippedItems;
+        InventoryManager.instance.inventory = updatedInventoryData.allInventoryItems;
+        InventoryManager.instance.equipment = updatedInventoryData.allEquippedItems;
+
+        InventoryManager.instance.ShowEquippedItems();
+        InventoryManager.instance.ShowInventoryItems();
     }
 }

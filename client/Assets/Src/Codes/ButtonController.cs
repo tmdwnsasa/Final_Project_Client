@@ -6,8 +6,6 @@ using UnityEngine.EventSystems;
 
 public class ButtonController : MonoBehaviour
 {
-
-
     //로그인 버튼
     public void OnLoginButtonClicked()
     {
@@ -30,7 +28,8 @@ public class ButtonController : MonoBehaviour
         string name = GameManager.instance.registerUI.transform.GetChild(2).GetChild(2).GetComponent<InputField>().text;
         int guild = GameManager.instance.guild;
 
-        if (id != "" && password != "" && name != "") {
+        if (id != "" && password != "" && name != "")
+        {
             NetworkManager.instance.SendRegisterPacket(id, password, name, guild);
             GameManager.instance.registerUI.transform.GetChild(3).GetComponent<Button>().interactable = false;
         }
@@ -95,20 +94,21 @@ public class ButtonController : MonoBehaviour
 
     public void OnInventoryItemSlotButtonClicked()
     {
-        if(EventSystem.current.currentSelectedGameObject.transform.GetComponent<InventorySlot>().item.itemName == null)
-           {
+        if (EventSystem.current.currentSelectedGameObject.transform.GetComponent<InventorySlot>().item.itemName == null)
+        {
             Debug.Log($"Empty Inventory Slot");
-                return;
-           }
+            return;
+        }
 
-          string itemId = EventSystem.current.currentSelectedGameObject.transform.GetComponent<InventorySlot>().item.itemId.ToString();
-          NetworkManager.instance.SendEquipItemPacket(itemId);
+        string itemId = EventSystem.current.currentSelectedGameObject.transform.GetComponent<InventorySlot>().item.itemId.ToString();
+        NetworkManager.instance.SendEquipItemPacket(itemId);
 
         for (int i = 0; i < 3; i++)
         {
             //Debug.Log(GameManager.instance.inventoryUI.transform.GetChild(5).GetChild(i).GetComponent<InventorySlot>().item.itemEquipSlot);
             if (GameManager.instance.inventoryUI.transform.GetChild(5).GetChild(i).GetComponent<InventorySlot>().item.itemEquipSlot ==
-                EventSystem.current.currentSelectedGameObject.transform.GetComponent<InventorySlot>().item.itemEquipSlot) {
+                EventSystem.current.currentSelectedGameObject.transform.GetComponent<InventorySlot>().item.itemEquipSlot)
+            {
                 Debug.Log($"Equip Error");
                 return;
             }
@@ -124,10 +124,6 @@ public class ButtonController : MonoBehaviour
                 GameManager.instance.inventoryUI.transform.GetChild(5).GetChild(i).GetComponent<InventorySlot>().item = EventSystem.current.currentSelectedGameObject.transform.GetComponent<InventorySlot>().item;
                 EventSystem.current.currentSelectedGameObject.transform.GetComponent<InventorySlot>().item = new Handlers.ItemStats();
 
-                Debug.Log($"ching id : {EventSystem.current.currentSelectedGameObject.transform.GetComponent<InventorySlot>().item.itemId}");
-
-
-                InventoryManager.instance.equipment.Add(item);
                 InventoryManager.instance.ShowEquippedItems();
                 InventoryManager.instance.ShowInventoryItems();
 
@@ -153,14 +149,11 @@ public class ButtonController : MonoBehaviour
                 Handlers.PlayerItem item = InventoryManager.instance.equipment.Find(item => item.itemId == EventSystem.current.currentSelectedGameObject.transform.GetComponent<InventorySlot>().item.itemId);
                 int unequip = InventoryManager.instance.equipment.RemoveAll(item => item.itemId == EventSystem.current.currentSelectedGameObject.transform.GetComponent<InventorySlot>().item.itemId);
 
-                GameManager.instance.inventoryUI.transform.GetChild(1).GetChild(0).GetChild(0).GetChild(i).GetComponent<InventorySlot>().item = EventSystem.current.currentSelectedGameObject.transform.GetComponent<InventorySlot>().item;
-                EventSystem.current.currentSelectedGameObject.transform.GetComponent<InventorySlot>().item = new Handlers.ItemStats();
-
                 string itemId = EventSystem.current.currentSelectedGameObject.transform.GetComponent<InventorySlot>().item.itemId.ToString();
                 NetworkManager.instance.SendUnequipItemPacket(itemId);
 
-                InventoryManager.instance.inventory.Add(item);
-
+                GameManager.instance.inventoryUI.transform.GetChild(1).GetChild(0).GetChild(0).GetChild(i).GetComponent<InventorySlot>().item = EventSystem.current.currentSelectedGameObject.transform.GetComponent<InventorySlot>().item;
+                EventSystem.current.currentSelectedGameObject.transform.GetComponent<InventorySlot>().item = new Handlers.ItemStats();
 
                 InventoryManager.instance.ShowEquippedItems();
                 InventoryManager.instance.ShowInventoryItems();
@@ -232,7 +225,7 @@ public class ButtonController : MonoBehaviour
 
     //상점 장비 선택 버튼
     public void OnSelectEquipmentButtonClicked()
-    { 
+    {
         uint equipmentIndex = 0;
         Transform group = GameManager.instance.storeUI.transform.GetChild(1).GetChild(0).GetChild(0).GetChild(0);
         int count = group.childCount;
