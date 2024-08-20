@@ -348,4 +348,13 @@ public class Player : MonoBehaviour
         anim.SetBool("Dead", false);
         gameObject.GetComponent<CapsuleCollider2D>().enabled = true;
     }
+
+    public void SetStats(Handlers.CombinedStats combinedStats)
+    {
+        this.hp = combinedStats.hp;
+        this.speed = combinedStats.speed;
+        this.power = combinedStats.power;
+        this.defense = combinedStats.defense;
+        this.critical = combinedStats.critical;
+    }
 }

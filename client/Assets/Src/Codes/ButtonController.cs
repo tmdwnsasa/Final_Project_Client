@@ -95,56 +95,82 @@ public class ButtonController : MonoBehaviour
 
     public void OnInventoryItemSlotButtonClicked()
     {
+        if(EventSystem.current.currentSelectedGameObject.transform.GetComponent<InventorySlot>().item.itemName == null)
+           {
+            Debug.Log($"Empty Inventory Slot");
+                return;
+           }
+
+          string itemId = EventSystem.current.currentSelectedGameObject.transform.GetComponent<InventorySlot>().item.itemId.ToString();
+          NetworkManager.instance.SendEquipItemPacket(itemId);
+
         for (int i = 0; i < 3; i++)
         {
-            Debug.Log(GameManager.instance.inventoryUI.transform.GetChild(5).GetChild(i).GetComponent<InventorySlot>().item.itemEquipSlot);
+            //Debug.Log(GameManager.instance.inventoryUI.transform.GetChild(5).GetChild(i).GetComponent<InventorySlot>().item.itemEquipSlot);
             if (GameManager.instance.inventoryUI.transform.GetChild(5).GetChild(i).GetComponent<InventorySlot>().item.itemEquipSlot ==
                 EventSystem.current.currentSelectedGameObject.transform.GetComponent<InventorySlot>().item.itemEquipSlot) {
                 Debug.Log($"Equip Error");
                 return;
             }
-          
         }
+
         for (int i = 0; i < 3; i++)
         {
-            if (GameManager.instance.inventoryUI.transform.GetChild(5).GetChild(i).GetComponent<InventorySlot>().item.itemName == "")
+            if (GameManager.instance.inventoryUI.transform.GetChild(5).GetChild(i).GetComponent<InventorySlot>().item.itemName == null)
             {
-                Debug.Log("ddddddddd");
                 Handlers.PlayerItem item = InventoryManager.instance.inventory.Find(item => item.itemId == EventSystem.current.currentSelectedGameObject.transform.GetComponent<InventorySlot>().item.itemId);
                 int num = InventoryManager.instance.inventory.RemoveAll(item => item.itemId == EventSystem.current.currentSelectedGameObject.transform.GetComponent<InventorySlot>().item.itemId);
 
                 GameManager.instance.inventoryUI.transform.GetChild(5).GetChild(i).GetComponent<InventorySlot>().item = EventSystem.current.currentSelectedGameObject.transform.GetComponent<InventorySlot>().item;
                 EventSystem.current.currentSelectedGameObject.transform.GetComponent<InventorySlot>().item = new Handlers.ItemStats();
 
-                Debug.Log(num);
+                Debug.Log($"ching id : {EventSystem.current.currentSelectedGameObject.transform.GetComponent<InventorySlot>().item.itemId}");
+
 
                 InventoryManager.instance.equipment.Add(item);
-
                 InventoryManager.instance.ShowEquippedItems();
                 InventoryManager.instance.ShowInventoryItems();
+
+                break;
             }
         }
     }
 
+
     public void OnEquipmentItemSlotButtonClicked()
     {
+        if (EventSystem.current.currentSelectedGameObject.transform.GetComponent<InventorySlot>().item.itemName == null)
+        {
+            Debug.Log($"Empty Equipment Slot");
+            return;
+        }
+
+        for (int i = 0; i < 10; i++)
+        {
+            if (GameManager.instance.inventoryUI.transform.GetChild(1).GetChild(0).GetChild(0).GetChild(i).GetComponent<InventorySlot>().item.itemName == null)
+            {
+
+                Handlers.PlayerItem item = InventoryManager.instance.equipment.Find(item => item.itemId == EventSystem.current.currentSelectedGameObject.transform.GetComponent<InventorySlot>().item.itemId);
+                int unequip = InventoryManager.instance.equipment.RemoveAll(item => item.itemId == EventSystem.current.currentSelectedGameObject.transform.GetComponent<InventorySlot>().item.itemId);
+
+                GameManager.instance.inventoryUI.transform.GetChild(1).GetChild(0).GetChild(0).GetChild(i).GetComponent<InventorySlot>().item = EventSystem.current.currentSelectedGameObject.transform.GetComponent<InventorySlot>().item;
+                EventSystem.current.currentSelectedGameObject.transform.GetComponent<InventorySlot>().item = new Handlers.ItemStats();
+
+                string itemId = EventSystem.current.currentSelectedGameObject.transform.GetComponent<InventorySlot>().item.itemId.ToString();
+                NetworkManager.instance.SendUnequipItemPacket(itemId);
+
+                InventoryManager.instance.inventory.Add(item);
+
+
+                InventoryManager.instance.ShowEquippedItems();
+                InventoryManager.instance.ShowInventoryItems();
+
+                break;
+            }
+        }
 
     }
 
-
-    //public int selectedItemId;
-
-    //public void OnEquipItemClicked()
-    //{
-    //    NetworkManager.instance.SendEquipItemPacket(selectedItemId);
-    //    GameManager.instance.equipItemMessageUI.SetActive(false);
-    //}
-
-    //public void OnUnequipItemClicked()
-    //{
-    //    NetworkManager.instance.SendUnequipItemPacket(selectedItemId);
-    //    GameManager.instance.unequipItemMessageUI.SetActive(false);
-    //}
 
     //인벤토리 닫기 버튼
     public void OnInventoryCloseButtonClicked()
@@ -207,7 +233,7 @@ public class ButtonController : MonoBehaviour
     //상점 장비 선택 버튼
     public void OnSelectEquipmentButtonClicked()
     { 
-         uint equipmentIndex = 0;
+        uint equipmentIndex = 0;
         Transform group = GameManager.instance.storeUI.transform.GetChild(1).GetChild(0).GetChild(0).GetChild(0);
         int count = group.childCount;
 
@@ -235,6 +261,7 @@ public class ButtonController : MonoBehaviour
     {
         Text name = GameManager.instance.characterPurchaseCheckUI.transform.GetChild(3).GetComponent<Text>();
         Text price = GameManager.instance.characterPurchaseCheckUI.transform.GetChild(4).GetComponent<Text>();
+
         NetworkManager.instance.SendPurchaseCharacterPacket(name.text, price.text);
         GameManager.instance.characterPurchaseCheckUI.transform.GetChild(0).GetComponent<Button>().interactable = false;
     }
@@ -244,6 +271,8 @@ public class ButtonController : MonoBehaviour
     {
         Text name = GameManager.instance.equipmentPurchaseCheckUI.transform.GetChild(3).GetComponent<Text>();
         Text price = GameManager.instance.equipmentPurchaseCheckUI.transform.GetChild(4).GetComponent<Text>();
+        Debug.Log($"Purchasing equipment {name.text} & {price.text}");
+
         NetworkManager.instance.SendPurchaseEquipmentPacket(name.text, price.text);
         GameManager.instance.equipmentPurchaseCheckUI.transform.GetChild(0).GetComponent<Button>().interactable = false;
     }

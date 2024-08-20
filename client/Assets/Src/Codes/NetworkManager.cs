@@ -348,7 +348,7 @@ public class NetworkManager : MonoBehaviour
 
     }
 
-    public void SendEquipItemPacket(int itemId)
+    public void SendEquipItemPacket(string itemId)
     {
         EquipItemPayload equipPayload = new EquipItemPayload
         {
@@ -358,7 +358,7 @@ public class NetworkManager : MonoBehaviour
         SendPacket(equipPayload, (uint)Handlers.HandlerIds.EQUIP_ITEM);
     }
 
-    public void SendUnequipItemPacket(int itemId)
+    public void SendUnequipItemPacket(string itemId)
     {
         UnequipItemPayload unequipPayload = new UnequipItemPayload
         {
@@ -548,10 +548,10 @@ public class NetworkManager : MonoBehaviour
                 case (uint)Handlers.HandlerIds.INVENTORY:
                     break;
                 case (uint)Handlers.HandlerIds.EQUIP_ITEM:
-                    //Handlers.instance.UpdateEquipItem(response.data);
+                    Handlers.instance.UpdateInventoryAndStats(response.data);
                     break;
                 case (uint)Handlers.HandlerIds.UNEQUIP_ITEM:
-                    //Handlers.instance.UpdateUnequipItem(response.data);
+                    Handlers.instance.UpdateInventoryAndStats(response.data);
                     break;
                 case (uint)Handlers.HandlerIds.EXIT:
                     Application.Quit();

@@ -11,7 +11,8 @@ using static Handlers;
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
-   
+    public Sprite[] itemSprites; 
+    public Dictionary<int, Sprite> itemSpriteMapping; 
 
     [Header("# Images")]
     public List<Sprite> farmers;
@@ -100,6 +101,34 @@ public class GameManager : MonoBehaviour
         AudioManager.instance.PlayBgm(true);
         AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
     }
+
+
+    public void InitializeItemSpriteMapping()
+    {
+        if (itemSpriteMapping == null)
+        {
+            itemSpriteMapping = new Dictionary<int, Sprite>();
+
+            // Map item IDs to their corresponding sprites
+            for (int i = 0; i < itemSprites.Length; i++)
+            {
+                itemSpriteMapping.Add(i + 1, itemSprites[i]);
+            }
+
+            Debug.Log($"itemSpriteMapping initialized with {itemSpriteMapping.Count} entries.");
+        }
+    }
+
+
+    public Dictionary<int, Sprite> GetItemSpriteMapping()
+    {
+        if (itemSpriteMapping == null)
+        {
+            InitializeItemSpriteMapping();
+        }
+        return itemSpriteMapping;
+    }
+
 
     public void GoRegister()
     {
@@ -300,5 +329,12 @@ public class GameManager : MonoBehaviour
         Text purchaseName = equipmentPurchaseCheckUI.transform.GetChild(3).GetComponent<Text>();
         purchaseName.text = equipmentName.text;
     }
+
+
+    public List<ItemStats> equipmentStore;
+
+    
+
+
 }
 

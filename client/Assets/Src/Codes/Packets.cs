@@ -427,7 +427,7 @@ public class InventoryPayload
 public class EquipItemPayload
 {
     [ProtoMember(1, IsRequired = true)]
-    public int itemId { get; set; }
+    public string itemId { get; set; }
 
 }
 
@@ -435,7 +435,7 @@ public class EquipItemPayload
 public class UnequipItemPayload
 {
     [ProtoMember(1, IsRequired = true)]
-    public int itemId { get; set; }
+    public string itemId { get; set; }
 
 }
 

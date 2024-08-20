@@ -14,7 +14,7 @@ public class Handlers : MonoBehaviour
     //public event Action OnInventoryDataUpdated;
 
 
-    public GameObject Player;
+    public GameObject player;
     public enum HandlerIds
     {
         LOGIN = 0,
@@ -31,8 +31,8 @@ public class Handlers : MonoBehaviour
         GAME_END = 15,
         RETURN_LOBBY = 16,
         INVENTORY = 17,
-        EQUIP_ITEM=18,
-        UNEQUIP_ITEM=19,
+        EQUIP_ITEM = 18,
+        UNEQUIP_ITEM = 19,
         EXIT = 20,
         OPEN_STORE = 29,
         PURCHASE_CHARACTER = 30,
@@ -155,14 +155,6 @@ public class Handlers : MonoBehaviour
         public string message;
     }
 
-    [Serializable]
-    public class InventoryData 
-    {
-        public UserMoney userMoney;
-        public List<ItemStats> allItems;
-        public List<ItemStats> equippedItems;
-        public CombinedStats combinedStats;
-    }
 
     [Serializable]
     public struct CombinedStats
@@ -180,11 +172,9 @@ public class Handlers : MonoBehaviour
     {
         public string message;
         public CombinedStats combinedStats;
-        public List<ItemStats> equippedItems;
-        public List<ItemStats> allItems;
-
+        public List<PlayerItem> equippedItems;
+        public List<PlayerItem> inventoryItems;
     }
-
 
     public struct MapData
     {
@@ -214,8 +204,20 @@ public class Handlers : MonoBehaviour
         InventoryManager.instance.equipment = characterChoice.allEquippedItems;
 
 
+        GameManager.instance.equipmentStore = characterChoice.itemStats; Debug.Log(GameManager.instance.equipmentStore.Count);
+
+        for (int i = 0; i < GameManager.instance.equipmentStore.Count; i++)
+        {
+            Debug.Log(GameManager.instance.equipmentStore.Count);
+
+            //GameManager.instance.storeUI.transform.GetChild(1).GetChild(0).GetChild(0).GetChild(0).GetChild(i).GetChild(1).GetComponent<Text>().text = GameManager.instance.equipmentStore[i].item;
+            GameManager.instance.storeUI.transform.GetChild(1).GetChild(0).GetChild(0).GetChild(0).GetChild(i).GetChild(2).GetComponent<Text>().text = GameManager.instance.equipmentStore[i].itemName;
+            GameManager.instance.storeUI.transform.GetChild(1).GetChild(0).GetChild(0).GetChild(0).GetChild(i).GetChild(3).GetComponent<Text>().text = GameManager.instance.equipmentStore[i].itemPrice.ToString();
+
+        }
+
         GameManager.instance.GoCharacterChoice();
-        InventoryManager.instance.InitializeItemSpriteMapping();
+        GameManager.instance.InitializeItemSpriteMapping();
     }
 
     public void GetCharacterSelect(byte[] data)
@@ -233,18 +235,25 @@ public class Handlers : MonoBehaviour
         InventoryManager.instance.equipment = characterSelect.allEquippedItems;
         GameManager.instance.items = characterSelect.itemStats;
 
+        GameManager.instance.equipmentStore = characterSelect.itemStats;
 
-        //for(int i = 0;  i< GameManager.instance.Items.Count; i++)
-        //{
-        //    GameManager.instance.Items[i]=characterSelect.itemStats[i];
 
-        //}
-        Debug.Log(GameManager.instance.items[0].itemName);
+
+        for (int i = 0; i < GameManager.instance.equipmentStore.Count; i++)
+        {
+
+            //GameManager.instance.storeUI.transform.GetChild(1).GetChild(0).GetChild(0).GetChild(0).GetChild(i).GetChild(1).GetComponent<Text>().text = GameManager.instance.equipmentStore[i].item;
+            GameManager.instance.storeUI.transform.GetChild(1).GetChild(0).GetChild(0).GetChild(0).GetChild(i).GetChild(2).GetComponent<Text>().text = GameManager.instance.equipmentStore[i].itemName;
+            GameManager.instance.storeUI.transform.GetChild(1).GetChild(0).GetChild(0).GetChild(0).GetChild(i).GetChild(3).GetComponent<Text>().text = GameManager.instance.equipmentStore[i].itemPrice.ToString();
+
+        }
+
+        Debug.Log($"Checking if item stats are in EQ Store : {GameManager.instance.equipmentStore.Count}");
 
         Debug.Log($"Received {characterSelect.allEquippedItems.Count} equipped items// {InventoryManager.instance.equipment.Count}");
 
         GameManager.instance.GoCharacterSelect();
-        InventoryManager.instance.InitializeItemSpriteMapping();
+        GameManager.instance.InitializeItemSpriteMapping();
 
 
     }
@@ -270,7 +279,7 @@ public class Handlers : MonoBehaviour
         GameManager.instance.player.xSkill_id = characterStats.xSkill.skill_id;
         GameManager.instance.player.zSkill_CoolTime = characterStats.zSkill.cool_time;
         GameManager.instance.player.xSkill_CoolTime = characterStats.xSkill.cool_time;
-        //�ٸ� �÷��̾� ���� ����
+
         foreach (var user in characterStats.userDatas)
         {
             CharacterManager.instance.CreateOtherPlayers(user.playerId, user.characterId, user.guild);
@@ -351,116 +360,39 @@ public class Handlers : MonoBehaviour
         GameManager.instance.gameEndUI.transform.GetChild(3).GetComponent<Button>().interactable = true;
     }
 
-    public void SetCharactersCombinedStats(byte[] data)
+    public void UpdateInventoryCombinedStats(CombinedStats combinedStats)
     {
-        string jsonString = Encoding.UTF8.GetString(data);
-
-        InventoryData inventoryData = JsonUtility.FromJson<InventoryData>(jsonString);
-        CombinedStats combinedStats = JsonUtility.FromJson<CombinedStats>(jsonString);
-
-        Debug.Log($"Parsed CombinedStats: HP={inventoryData.combinedStats.hp}, Speed={inventoryData.combinedStats.speed}, Power={inventoryData.combinedStats.power}, Defense={inventoryData.combinedStats.defense}, Critical={inventoryData.combinedStats.critical}");
 
         Transform inventoryTransform = GameManager.instance.inventoryUI.transform.GetChild(3);
 
         Text userHp = inventoryTransform.GetChild(1).GetComponent<Text>();
-        userHp.text = inventoryData.combinedStats.hp.ToString();
+        userHp.text = combinedStats.hp.ToString();
 
         Text userSpeed = inventoryTransform.GetChild(3).GetComponent<Text>();
-        userSpeed.text = inventoryData.combinedStats.speed.ToString();
+        userSpeed.text = combinedStats.speed.ToString();
 
         Text userPower = inventoryTransform.GetChild(5).GetComponent<Text>();
-        userPower.text = inventoryData.combinedStats.power.ToString();
+        userPower.text = combinedStats.power.ToString();
 
         Text userDefense = inventoryTransform.GetChild(7).GetComponent<Text>();
-        userDefense.text = inventoryData.combinedStats.defense.ToString();
+        userDefense.text = combinedStats.defense.ToString();
 
         Text userCritical = inventoryTransform.GetChild(9).GetComponent<Text>();
-        userCritical.text = inventoryData.combinedStats.critical.ToString();
+        userCritical.text = combinedStats.critical.ToString();
     }
 
 
-    public void SetUserMoney(byte[] data)
+    public void UpdateInventoryAndStats(byte[] data)
     {
+        // Deserialize the response data into UpdatedStats
         string jsonString = Encoding.UTF8.GetString(data);
+        UpdatedInventoryData updatedInventoryData = JsonUtility.FromJson<UpdatedInventoryData>(jsonString);
 
-        InventoryData inventoryData = JsonUtility.FromJson<InventoryData>(jsonString);
-        UserMoney userMoney = JsonUtility.FromJson<UserMoney>(jsonString);
+        // Update the inventory data with the new items and stats
+        player.GetComponent<Player>().SetStats(updatedInventoryData.combinedStats);
+        this.UpdateInventoryCombinedStats(updatedInventoryData.combinedStats);
 
-        Debug.Log($"Parsed money: {inventoryData.userMoney.money}");
-
-
-        Text userCoin = GameManager.instance.inventoryUI.transform.GetChild(2).GetChild(1).GetComponent<Text>();
-        userCoin.text = inventoryData.userMoney.money.ToString();
+        InventoryManager.instance.inventory = updatedInventoryData.inventoryItems;
+        InventoryManager.instance.equipment = updatedInventoryData.equippedItems;
     }
-
-    //public void SetInventoryItemData(byte[] data)
-    //{
-    //    string jsonString = Encoding.UTF8.GetString(data);
-
-    //    Handlers.instance.inventoryData = JsonUtility.FromJson<InventoryData>(jsonString);
-    //    Debug.Log($"Received InventoryData with {inventoryData.allItems.Count} items and {inventoryData.equippedItems.Count} equipped items.");
-
-
-
-    //    if (Handlers.instance.inventoryData.allItems == null)
-    //        {
-    //        Handlers.instance.inventoryData.allItems = new List<Item>();
-    //        }
-
-    //        if (Handlers.instance.inventoryData.equippedItems == null)
-    //        {
-    //        Handlers.instance.inventoryData.equippedItems = new List<Item>();
-    //        }
-
-    //    Debug.Log("Invoking OnInventoryDataUpdated event.");
-
-    //    OnInventoryDataUpdated?.Invoke();
-    //}
-
-
-    //public void UpdateEquipItem(byte[] data)
-    //{
-    //    UpdateInventoryAndStats(data);
-    //}
-
-    //public void UpdateUnequipItem(byte[] data)
-    //{
-    //    UpdateInventoryAndStats(data);
-    //}
-
-    //private void UpdateInventoryAndStats(byte[] data)
-    //{
-    //    // Deserialize the response data into UpdatedStats
-    //    string jsonString = Encoding.UTF8.GetString(data);
-    //    UpdatedInventoryData updatedInventoryData = JsonUtility.FromJson<UpdatedInventoryData>(jsonString);
-
-    //    // Update the inventory data with the new items and stats
-    //    inventoryData.combinedStats = updatedInventoryData.combinedStats;
-    //    inventoryData.allItems = updatedInventoryData.allItems;
-    //    inventoryData.equippedItems = updatedInventoryData.equippedItems;
-
-    //    UpdateStatsUI(inventoryData.combinedStats);
-
-
-    //    OnInventoryDataUpdated?.Invoke();
-    }
-//    public void UpdateStatsUI(CombinedStats combinedStats)
-//    {
-//        Transform inventoryTransform = GameManager.instance.inventoryUI.transform.GetChild(3);
-
-//        Text userHp = inventoryTransform.GetChild(1).GetComponent<Text>();
-//        userHp.text = combinedStats.hp.ToString();
-
-//        Text userSpeed = inventoryTransform.GetChild(3).GetComponent<Text>();
-//        userSpeed.text = combinedStats.speed.ToString();
-
-//        Text userPower = inventoryTransform.GetChild(5).GetComponent<Text>();
-//        userPower.text = combinedStats.power.ToString();
-
-//        Text userDefense = inventoryTransform.GetChild(7).GetComponent<Text>();
-//        userDefense.text = combinedStats.defense.ToString();
-
-//        Text userCritical = inventoryTransform.GetChild(9).GetComponent<Text>();
-//        userCritical.text = combinedStats.critical.ToString();
-//    }
-//}
+}
