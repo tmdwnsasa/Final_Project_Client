@@ -258,8 +258,24 @@ public class Player : MonoBehaviour
             case 1:
                 transform.GetChild(4).gameObject.SetActive(true);
                 transform.GetChild(4).localPosition = new Vector2(x, y);
-                transform.GetChild(4).localScale = new Vector3(rangeX, rangeY, 1);
-
+                SpriteRenderer nearSkillRender = transform.GetChild(4).gameObject.GetComponent<SpriteRenderer>();
+                nearSkillRender.flipX = spriter.flipX;
+                if (x > 0)
+                {
+                    transform.GetChild(4).rotation = Quaternion.Euler(0, 0, 0);
+                }
+                else if (y > 0)
+                {
+                    transform.GetChild(4).rotation = Quaternion.Euler(0, 0, nearSkillRender.flipX ? 90 * -1 : 90);
+                }
+                else if (y < 0)
+                {
+                    transform.GetChild(4).rotation = Quaternion.Euler(0, 0, nearSkillRender.flipX ? 90 : 90 * -1);
+                }
+                else if (x < 0)
+                {
+                    transform.GetChild(4).rotation = Quaternion.Euler(0, 0, 0);
+                }
                 StartCoroutine(AttackRangeCheck());
                 break;
             case 2:
@@ -306,7 +322,7 @@ public class Player : MonoBehaviour
 
     IEnumerator AttackRangeCheck()
     {
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(0.5f);
         transform.GetChild(4).gameObject.SetActive(false);
     }
 
