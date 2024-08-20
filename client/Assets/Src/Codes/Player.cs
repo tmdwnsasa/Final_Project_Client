@@ -58,6 +58,8 @@ public class Player : MonoBehaviour
     private bool isZSkill;
     private bool isXSkill;
 
+    public SpriteRenderer gunSprite;
+
     public float x = 1, y = 1;
     public Vector2 BoxArea = new Vector2(0.5f, 0);
     void Awake()
@@ -277,8 +279,24 @@ public class Player : MonoBehaviour
             case 1:
                 transform.GetChild(4).gameObject.SetActive(true);
                 transform.GetChild(4).localPosition = new Vector2(x, y);
-                transform.GetChild(4).localScale = new Vector3(rangeX, rangeY, 1);
-
+                SpriteRenderer nearSkillRender = transform.GetChild(4).gameObject.GetComponent<SpriteRenderer>();
+                nearSkillRender.flipX = spriter.flipX;
+                if (x > 0)
+                {
+                    transform.GetChild(4).rotation = Quaternion.Euler(0, 0, 0);
+                }
+                else if (y > 0)
+                {
+                    transform.GetChild(4).rotation = Quaternion.Euler(0, 0, nearSkillRender.flipX ? 90 * -1 : 90);
+                }
+                else if (y < 0)
+                {
+                    transform.GetChild(4).rotation = Quaternion.Euler(0, 0, nearSkillRender.flipX ? 90 : 90 * -1);
+                }
+                else if (x < 0)
+                {
+                    transform.GetChild(4).rotation = Quaternion.Euler(0, 0, 0);
+                }
                 StartCoroutine(AttackRangeCheck());
                 break;
             case 2:
@@ -287,23 +305,24 @@ public class Player : MonoBehaviour
                 projectile.gameObject.tag = gameObject.tag;
                 projScript.bulletNum = prefabNum;
                 projScript.skillType = skillType;
-
                 if (x > 0)
                 {
+                    StartCoroutine(SetActiveGunSprite());
                     projScript.direction = Vector2.right;
                 }
-
                 else if (y > 0)
                 {
+                    StartCoroutine(SetActiveGunSprite(90f));
                     projScript.direction = Vector2.up;
                 }
-
                 else if (y < 0)
                 {
+                    StartCoroutine(SetActiveGunSprite(-90f));
                     projScript.direction = Vector2.down;
                 }
                 else if (x < 0)
                 {
+                    StartCoroutine(SetActiveGunSprite());
                     projScript.direction = Vector2.left;
                 }
                 break;
@@ -319,9 +338,19 @@ public class Player : MonoBehaviour
         }
     }
 
+    IEnumerator SetActiveGunSprite(float z = 0)
+    {
+        gunSprite.gameObject.SetActive(true);
+        gunSprite.flipX = spriter.flipX;
+        z = gunSprite.flipX ? z * -1 : z;
+        gunSprite.transform.rotation = Quaternion.Euler(0, 0, z);
+        yield return new WaitForSeconds(0.5f);
+        gunSprite.gameObject.SetActive(false);
+    }
+
     IEnumerator AttackRangeCheck()
     {
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(0.5f);
         transform.GetChild(4).gameObject.SetActive(false);
     }
 
@@ -349,14 +378,19 @@ public class Player : MonoBehaviour
 
     public void SetHp(float hp)
     {
-        Coroutine currentCoroutine = StartCoroutine(AttackedCharacter());
+        StartCoroutine(AttackedCharacter());
         nowHp = hp;
         hpSlider.value = nowHp / this.hp;
         //hp 설정
         if (hp <= 0)
         {
-            StopCoroutine(currentCoroutine);
+            StopAllCoroutines();
+
+            if(gunSprite.gameObject.activeSelf) {
+                gunSprite.gameObject.SetActive(false);
+            } 
             GetComponent<SpriteRenderer>().color = Color.white;
+
             hpSlider.gameObject.SetActive(false);
             anim.SetBool("Dead", true);
             GameManager.instance.isLive = false;

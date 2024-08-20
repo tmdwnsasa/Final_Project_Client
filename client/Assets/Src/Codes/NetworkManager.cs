@@ -523,11 +523,13 @@ public class NetworkManager : MonoBehaviour
                     GameManager.instance.matchStartUI.transform.GetChild(0).GetComponent<Button>().interactable = true;
                     GameManager.instance.matchStartUI.SetActive(false);
                     GameManager.instance.matchCancelUI.SetActive(true);
+                    GameManager.instance.isMatchging = true;
                     break;
                 case (uint)Handlers.HandlerIds.MATCHINGCANCEL:
                     GameManager.instance.matchCancelUI.transform.GetChild(0).GetComponent<Button>().interactable = true;
                     GameManager.instance.matchStartUI.SetActive(true);
                     GameManager.instance.matchCancelUI.SetActive(false);
+                    GameManager.instance.isMatchging = false;
                     break;
                 case (uint)Handlers.HandlerIds.RETURN_LOBBY:
                     Handlers.instance.ReturnLobbySetting(response.data);
