@@ -668,6 +668,7 @@ public class NetworkManager : MonoBehaviour
 
         isLobby = false;
         GameManager.instance.matchStartUI.SetActive(false);
+        GameManager.instance.matchCancelUI.SetActive(false);
         GameManager.instance.exitBtn.SetActive(false);
         GameManager.instance.storeBtn.SetActive(false);
         GameManager.instance.mapBtn.SetActive(false);
