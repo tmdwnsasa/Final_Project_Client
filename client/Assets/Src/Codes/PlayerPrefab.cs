@@ -23,6 +23,8 @@ public class PlayerPrefab : MonoBehaviour
 
     public float direction;
 
+    public SpriteRenderer gunSprite;
+
     //총알 관련 텍스트
     public GameObject projectilePrefab;
     public Transform firePoint;
@@ -125,6 +127,7 @@ public class PlayerPrefab : MonoBehaviour
                 StartCoroutine(AttackRangeCheck());
                 break;
             case 2:
+                StartCoroutine(SetActiveGunSprite());
                 GameObject projectile = Instantiate(projectilePrefab, transform.position + new Vector3(x, y), Quaternion.identity, bulletManager.transform);
                 BulletPrefab projScript = projectile.GetComponent<BulletPrefab>();
                 projectile.gameObject.tag = gameObject.tag;
@@ -132,20 +135,22 @@ public class PlayerPrefab : MonoBehaviour
                 projScript.skillType = skill_type;
                 if (x > 0)
                 {
+                    StartCoroutine(SetActiveGunSprite());
                     projScript.direction = Vector2.right;
                 }
-
                 else if (y > 0)
                 {
+                    StartCoroutine(SetActiveGunSprite(90f));
                     projScript.direction = Vector2.up;
                 }
-
                 else if (y < 0)
                 {
+                    StartCoroutine(SetActiveGunSprite(-90f));
                     projScript.direction = Vector2.down;
                 }
                 else if (x < 0)
                 {
+                    StartCoroutine(SetActiveGunSprite());
                     projScript.direction = Vector2.left;
                 }
                 break;
@@ -153,6 +158,17 @@ public class PlayerPrefab : MonoBehaviour
                 break;
         }
     }
+
+    IEnumerator SetActiveGunSprite(float z = 0)
+    {
+        gunSprite.gameObject.SetActive(true);
+        gunSprite.flipX = spriter.flipX;
+        z = gunSprite.flipX ? z * -1 : z;
+        gunSprite.transform.rotation = Quaternion.Euler(0, 0, z);
+        yield return new WaitForSeconds(0.5f);
+        gunSprite.gameObject.SetActive(false);
+    }
+
 
     void OnCollisionStay2D(Collision2D collision)
     {
@@ -169,14 +185,19 @@ public class PlayerPrefab : MonoBehaviour
 
     public void SetHp(float hp)
     {
-        Coroutine currentCoroutine = StartCoroutine(AttackedCharacter());
+        StartCoroutine(AttackedCharacter());
         nowHp = hp;
         hpSlider.value = nowHp / this.hp;
         //hp 설정
         if (hp <= 0)
         {
-            StopCoroutine(currentCoroutine);
+            StopAllCoroutines();
+
+            if(gunSprite.gameObject.activeSelf) {
+                gunSprite.gameObject.SetActive(false);
+            }
             GetComponent<SpriteRenderer>().color = Color.white;
+
             hpSlider.gameObject.SetActive(false);
             anim.SetBool("Dead", true);
             gameObject.GetComponent<CapsuleCollider2D>().enabled = false;

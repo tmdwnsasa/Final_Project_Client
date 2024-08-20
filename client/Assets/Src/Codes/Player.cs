@@ -57,6 +57,8 @@ public class Player : MonoBehaviour
 
     private bool isSkill;
 
+    public SpriteRenderer gunSprite;
+
     public float x = 1, y = 1;
     public Vector2 BoxArea = new Vector2(0.5f, 0);
     void Awake()
@@ -269,26 +271,38 @@ public class Player : MonoBehaviour
 
                 if (x > 0)
                 {
+                    StartCoroutine(SetActiveGunSprite());
                     projScript.direction = Vector2.right;
                 }
-
                 else if (y > 0)
                 {
+                    StartCoroutine(SetActiveGunSprite(90f));
                     projScript.direction = Vector2.up;
                 }
-
                 else if (y < 0)
                 {
+                    StartCoroutine(SetActiveGunSprite(-90f));
                     projScript.direction = Vector2.down;
                 }
                 else if (x < 0)
                 {
+                    StartCoroutine(SetActiveGunSprite());
                     projScript.direction = Vector2.left;
                 }
                 break;
             default:
                 break;
         }
+    }
+
+    IEnumerator SetActiveGunSprite(float z = 0)
+    {
+        gunSprite.gameObject.SetActive(true);
+        gunSprite.flipX = spriter.flipX;
+        z = gunSprite.flipX ? z * -1 : z;
+        gunSprite.transform.rotation = Quaternion.Euler(0, 0, z);
+        yield return new WaitForSeconds(0.5f);
+        gunSprite.gameObject.SetActive(false);
     }
 
     IEnumerator AttackRangeCheck()
@@ -315,14 +329,19 @@ public class Player : MonoBehaviour
 
     public void SetHp(float hp)
     {
-        Coroutine currentCoroutine = StartCoroutine(AttackedCharacter());
+        StartCoroutine(AttackedCharacter());
         nowHp = hp;
         hpSlider.value = nowHp / this.hp;
         //hp 설정
         if (hp <= 0)
         {
-            StopCoroutine(currentCoroutine);
+            StopAllCoroutines();
+
+            if(gunSprite.gameObject.activeSelf) {
+                gunSprite.gameObject.SetActive(false);
+            } 
             GetComponent<SpriteRenderer>().color = Color.white;
+
             hpSlider.gameObject.SetActive(false);
             anim.SetBool("Dead", true);
             GameManager.instance.isLive = false;
