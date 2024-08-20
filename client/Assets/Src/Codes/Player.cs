@@ -315,16 +315,27 @@ public class Player : MonoBehaviour
 
     public void SetHp(float hp)
     {
+        Coroutine currentCoroutine = StartCoroutine(AttackedCharacter());
         nowHp = hp;
         hpSlider.value = nowHp / this.hp;
         //hp 설정
         if (hp <= 0)
         {
+            StopCoroutine(currentCoroutine);
+            GetComponent<SpriteRenderer>().color = Color.white;
             hpSlider.gameObject.SetActive(false);
             anim.SetBool("Dead", true);
             GameManager.instance.isLive = false;
             gameObject.GetComponent<CapsuleCollider2D>().enabled = false;
         }
+    }
+
+    IEnumerator AttackedCharacter()
+    {
+        SpriteRenderer sprite = GetComponent<SpriteRenderer>();
+        sprite.color = Color.red;
+        yield return new WaitForSeconds(0.3f);
+        sprite.color = Color.white;
     }
 
     public void SetSkill(string isSkill)
