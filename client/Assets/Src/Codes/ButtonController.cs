@@ -195,7 +195,11 @@ public class ButtonController : MonoBehaviour
     {
         GameManager.instance.chattingUI.SetActive(true);
         GameManager.instance.exitBtn.SetActive(true);
-        GameManager.instance.matchStartUI.SetActive(true);
+        if(GameManager.instance.isMatchging) {
+            GameManager.instance.matchCancelUI.SetActive(true);
+        } else {
+            GameManager.instance.matchStartUI.SetActive(true);
+        }
         GameManager.instance.storeBtn.SetActive(true);
         GameManager.instance.storeUI.SetActive(false);
         GameManager.instance.mapBtn.SetActive(true);
@@ -225,6 +229,7 @@ public class ButtonController : MonoBehaviour
         GameManager.instance.chattingUI.SetActive(false);
         GameManager.instance.exitBtn.SetActive(false);
         GameManager.instance.matchStartUI.SetActive(false);
+        GameManager.instance.matchCancelUI.SetActive(false);
         GameManager.instance.storeBtn.SetActive(false);
         GameManager.instance.mapBtn.SetActive(false);
         GameManager.instance.mapUI.SetActive(true);
@@ -235,7 +240,11 @@ public class ButtonController : MonoBehaviour
     {
         GameManager.instance.chattingUI.SetActive(true);
         GameManager.instance.exitBtn.SetActive(true);
-        GameManager.instance.matchStartUI.SetActive(true);
+        if(GameManager.instance.isMatchging) {
+            GameManager.instance.matchCancelUI.SetActive(true);
+        } else {
+            GameManager.instance.matchStartUI.SetActive(true);
+        }
         GameManager.instance.storeBtn.SetActive(true);
         GameManager.instance.mapBtn.SetActive(true);
         GameManager.instance.mapUI.SetActive(false);

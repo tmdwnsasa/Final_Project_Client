@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
     public float gameTime;
     public int targetFrameRate;
     public string version = "1.0.0";
+    public bool isMatchging;
 
     [Header("# Register")]
     public int guild = 0;
@@ -87,6 +88,7 @@ public class GameManager : MonoBehaviour
         AnnouncementMap.SetActive(false);
 
         isLive = true;
+        isMatchging = false;
 
         AudioManager.instance.PlayBgm(true);
         AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);

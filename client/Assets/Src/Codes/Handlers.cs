@@ -190,6 +190,7 @@ public class Handlers : MonoBehaviour
         GameManager.instance.chattingUI.SetActive(false);
         GameManager.instance.exitBtn.SetActive(false);
         GameManager.instance.matchStartUI.SetActive(false);
+        GameManager.instance.matchCancelUI.SetActive(false);
         GameManager.instance.storeBtn.SetActive(false);
         GameManager.instance.storeUI.SetActive(true);
         GameManager.instance.purchaseMessageUI.SetActive(false);
