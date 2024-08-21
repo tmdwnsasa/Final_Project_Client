@@ -9,9 +9,6 @@ using Unity.VisualScripting;
 public class InventoryManager : MonoBehaviour
 {
     public static InventoryManager instance;
-
-    public SlotPrefabs slotPrefab; // Reference to prefab
-    public Transform slotsParent; // Parent transform for slots
     public List<PlayerItem> inventory;
     public List<PlayerItem> equipment;
     public int money;
@@ -40,7 +37,6 @@ public class InventoryManager : MonoBehaviour
             GameManager.instance.inventoryUI.transform.GetChild(1).GetChild(0).GetChild(0).GetChild(index).GetChild(2).GetComponent<Image>().sprite = GameManager.instance.itemSpriteMapping[playerItem.itemId];
             GameManager.instance.inventoryUI.transform.GetChild(1).GetChild(0).GetChild(0).GetChild(index).GetChild(0).GetComponent<Text>().text = playerItem.equipSlot;
             GameManager.instance.inventoryUI.transform.GetChild(1).GetChild(0).GetChild(0).GetChild(index).GetComponent<InventorySlot>().item = GameManager.instance.items.Find(item => item.itemId == playerItem.itemId);
-            Debug.Log($"inventory item at index {index} with itemId {playerItem.itemId}");
 
             index++;
 

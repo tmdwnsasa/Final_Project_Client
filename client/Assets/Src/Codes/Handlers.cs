@@ -215,7 +215,6 @@ public class Handlers : MonoBehaviour
 
         for (int i = 0; i < GameManager.instance.equipmentStore.Count; i++)
         {
-            Debug.Log(GameManager.instance.equipmentStore.Count);
 
             //GameManager.instance.storeUI.transform.GetChild(1).GetChild(0).GetChild(0).GetChild(0).GetChild(i).GetChild(1).GetComponent<Text>().text = GameManager.instance.equipmentStore[i].item;
             GameManager.instance.storeUI.transform.GetChild(1).GetChild(0).GetChild(0).GetChild(0).GetChild(i).GetChild(2).GetComponent<Text>().text = GameManager.instance.equipmentStore[i].itemName;
@@ -255,21 +254,10 @@ public class Handlers : MonoBehaviour
 
         }
 
-        Debug.Log($"Checking if item stats are in EQ Store : {GameManager.instance.equipmentStore.Count}");
-
-        Debug.Log($"Received {characterSelect.allEquippedItems.Count} equipped items// {InventoryManager.instance.equipment.Count}");
-
-        Debug.Log("select complete");
         InventoryManager.instance.ShowInventoryItems();
-        Debug.Log("select complete");
         InventoryManager.instance.ShowEquippedItems();
-        Debug.Log("select complete");
         InventoryManager.instance.UpdateInventoryCombinedStats();
-        Debug.Log("select complete");
         GameManager.instance.GoCharacterSelect();
-        Debug.Log("select complete");
-
-        Debug.Log("select complete");
     }
 
     public void SetCharacterStats(byte[] data)

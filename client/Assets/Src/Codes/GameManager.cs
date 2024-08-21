@@ -13,6 +13,8 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
     public Sprite[] itemSprites; 
     public Dictionary<int, Sprite> itemSpriteMapping; 
+    public List<ItemStats> equipmentStore;
+
 
     [Header("# Images")]
     public List<Sprite> farmers;
@@ -330,12 +332,6 @@ public class GameManager : MonoBehaviour
         Text purchaseName = equipmentPurchaseCheckUI.transform.GetChild(3).GetComponent<Text>();
         purchaseName.text = equipmentName.text;
     }
-
-
-    public List<ItemStats> equipmentStore;
-
-    
-
 
 }
 
