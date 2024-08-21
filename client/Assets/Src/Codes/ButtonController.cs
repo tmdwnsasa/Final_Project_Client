@@ -88,7 +88,8 @@ public class ButtonController : MonoBehaviour
     //상점 버튼
     public void OnStoreButtonClicked()
     {
-        NetworkManager.instance.SendStoreOpenPacket();
+        string sessionId = GameManager.instance.sessionId;
+        NetworkManager.instance.SendStoreOpenPacket(sessionId);
         GameManager.instance.storeBtn.GetComponent<Button>().interactable = false;
         // GameManager.instance.storeUI.transform.GetChild(2).GetComponent<Button>().interactable = false;
     }
@@ -166,18 +167,20 @@ public class ButtonController : MonoBehaviour
     //상점 캐릭터 구입 버튼
     public void OnPurchaseCharacterButtonClicked()
     {
+        string sessionId = GameManager.instance.sessionId;
         Text name = GameManager.instance.characterPurchaseCheckUI.transform.GetChild(3).GetComponent<Text>();
         Text price = GameManager.instance.characterPurchaseCheckUI.transform.GetChild(4).GetComponent<Text>();
-        NetworkManager.instance.SendPurchaseCharacterPacket(name.text, price.text);
+        NetworkManager.instance.SendPurchaseCharacterPacket(name.text, price.text, sessionId);
         GameManager.instance.characterPurchaseCheckUI.transform.GetChild(0).GetComponent<Button>().interactable = false;
     }
 
     //상점 장비 구입 버튼
     public void OnPurchaseEquipmentButtonClicked()
     {
+        string sessionId = GameManager.instance.sessionId;
         Text name = GameManager.instance.equipmentPurchaseCheckUI.transform.GetChild(3).GetComponent<Text>();
         Text price = GameManager.instance.equipmentPurchaseCheckUI.transform.GetChild(4).GetComponent<Text>();
-        NetworkManager.instance.SendPurchaseEquipmentPacket(name.text, price.text);
+        NetworkManager.instance.SendPurchaseEquipmentPacket(name.text, price.text, sessionId);
         GameManager.instance.equipmentPurchaseCheckUI.transform.GetChild(0).GetComponent<Button>().interactable = false;
     }
 
