@@ -154,6 +154,12 @@ public class PlayerPrefab : MonoBehaviour
                     projScript.direction = Vector2.left;
                 }
                 break;
+            case 4:
+                if (characterId == 0)
+                {
+                    StartCoroutine(ChangeColorByBuff("green", 5));
+                }
+                break;
             default:
                 break;
         }
@@ -209,6 +215,16 @@ public class PlayerPrefab : MonoBehaviour
         SpriteRenderer sprite = GetComponent<SpriteRenderer>();
         sprite.color = Color.red;
         yield return new WaitForSeconds(0.3f);
+        sprite.color = Color.white;
+    }
+
+    IEnumerator ChangeColorByBuff(string color, float duration)
+    {
+        SpriteRenderer sprite = GetComponent<SpriteRenderer>();
+        Color newColor;
+        ColorUtility.TryParseHtmlString(color, out newColor);
+        sprite.color = newColor;
+        yield return new WaitForSeconds(duration);
         sprite.color = Color.white;
     }
 

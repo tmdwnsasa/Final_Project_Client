@@ -55,7 +55,8 @@ public class Player : MonoBehaviour
 
     public bool directionX;
 
-    private bool isSkill;
+    private bool isZSkill;
+    private bool isXSkill;
 
     public SpriteRenderer gunSprite;
 
@@ -75,7 +76,8 @@ public class Player : MonoBehaviour
         isMinusX = false;
         isPlusY = false;
         isMinusY = false;
-        isSkill = true;
+        isZSkill = true;
+        isXSkill = true;
         directionX = true;
         BoxArea.x = 0.5f;
         BoxArea.y = 0f;
@@ -165,7 +167,7 @@ public class Player : MonoBehaviour
         if (!(inputVec.x != 0 && inputVec.y != 0))
         {
             //공격
-            if (Input.GetKeyDown(KeyCode.Z) && !NetworkManager.instance.isLobby && isSkill)
+            if (Input.GetKeyDown(KeyCode.Z) && !NetworkManager.instance.isLobby && isZSkill)
             {
                 if (x != 0)
                 {
@@ -178,9 +180,27 @@ public class Player : MonoBehaviour
                     directionX = false;
                     NetworkManager.instance.SendSkillUpdatePacket(BoxArea.x, BoxArea.y, directionX, zSkill_id);
                 }
-                isSkill = false;
+                isZSkill = false;
 
                 StartCoroutine(CoolTimeCheck("zSkill"));
+
+            }
+            if (Input.GetKeyDown(KeyCode.X) && !NetworkManager.instance.isLobby && isXSkill)
+            {
+                if (x != 0)
+                {
+                    directionX = true;
+                    //send 스킬 패킷을 보내고
+                    NetworkManager.instance.SendSkillUpdatePacket(BoxArea.x, BoxArea.y, directionX, xSkill_id);
+                }
+                else
+                {
+                    directionX = false;
+                    NetworkManager.instance.SendSkillUpdatePacket(BoxArea.x, BoxArea.y, directionX, xSkill_id);
+                }
+                isXSkill = false;
+
+                StartCoroutine(CoolTimeCheck("xSkill"));
 
             }
         }
@@ -290,6 +310,12 @@ public class Player : MonoBehaviour
                     projScript.direction = Vector2.left;
                 }
                 break;
+            case 4:
+                if (xSkill_id == 2)
+                {
+                    StartCoroutine(ChangeColorByBuff("green", 5));
+                }
+                break;
             default:
                 break;
         }
@@ -316,13 +342,13 @@ public class Player : MonoBehaviour
         if ("zSkill" == Skill)
         {
             yield return new WaitForSeconds(zSkill_CoolTime);
-            isSkill = true;
+            isZSkill = true;
         }
 
         else
         {
             yield return new WaitForSeconds(xSkill_CoolTime);
-            isSkill = true;
+            isXSkill = true;
         }
     }
 
@@ -357,11 +383,25 @@ public class Player : MonoBehaviour
         sprite.color = Color.white;
     }
 
+    IEnumerator ChangeColorByBuff(string color, float duration)
+    {
+        SpriteRenderer sprite = GetComponent<SpriteRenderer>();
+        Color newColor;
+        ColorUtility.TryParseHtmlString(color, out newColor);
+        sprite.color = newColor;
+        yield return new WaitForSeconds(duration);
+        sprite.color = Color.white;
+    }
+
     public void SetSkill(string isSkill)
     {
         if ("isSkillZ" == isSkill)
         {
-            this.isSkill = true;
+            this.isZSkill = true;
+        }
+        else
+        {
+            this.isXSkill = true;
         }
     }
 
