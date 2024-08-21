@@ -327,9 +327,9 @@ public class Player : MonoBehaviour
                 }
                 break;
             case 5:
-                transform.GetChild(4).gameObject.SetActive(true);
-                transform.GetChild(4).localPosition = new Vector2(x, y);
-                transform.GetChild(4).localScale = new Vector3(rangeX, rangeY, 1);
+                transform.GetChild(5).gameObject.SetActive(true);
+                transform.GetChild(5).localPosition = new Vector2(0, 0);
+                transform.GetChild(5).localScale = new Vector3(rangeX, rangeY, 1);
 
                 StartCoroutine(AreaOfEffectRangeCheck());
                 break;
@@ -356,8 +356,8 @@ public class Player : MonoBehaviour
 
     IEnumerator AreaOfEffectRangeCheck()
     {
-        yield return new WaitForSeconds(10.0f);
-        transform.GetChild(4).gameObject.SetActive(false);
+        yield return new WaitForSeconds(3.0f);
+        transform.GetChild(5).gameObject.SetActive(false);
     }
 
     IEnumerator CoolTimeCheck(string Skill)
