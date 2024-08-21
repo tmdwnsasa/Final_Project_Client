@@ -98,6 +98,11 @@ public class ButtonController : MonoBehaviour
         InventoryManager.instance.ShowInventoryItems();
         InventoryManager.instance.ShowEquippedItems();
 
+        GameManager.instance.storeBtn.SetActive(false);
+        GameManager.instance.mapBtn.SetActive(false);
+        GameManager.instance.matchStartUI.SetActive(false);
+        GameManager.instance.exitBtn.SetActive(false);
+        GameManager.instance.inventoryButton.SetActive(false);
     }
 
     public void OnInventoryItemSlotButtonClicked()
@@ -177,6 +182,11 @@ public class ButtonController : MonoBehaviour
     public void OnInventoryCloseButtonClicked()
     {
         GameManager.instance.inventoryUI.SetActive(false);
+        GameManager.instance.storeBtn.SetActive(true);
+        GameManager.instance.mapBtn.SetActive(true);
+        GameManager.instance.matchStartUI.SetActive(true);
+        GameManager.instance.exitBtn.SetActive(true);
+        GameManager.instance.inventoryButton.SetActive(true);
     }
 
     //상점 버튼
@@ -184,6 +194,7 @@ public class ButtonController : MonoBehaviour
     {
         NetworkManager.instance.SendStoreOpenPacket();
         GameManager.instance.storeBtn.GetComponent<Button>().interactable = false;
+        GameManager.instance.inventoryButton.SetActive(false);
         // GameManager.instance.storeUI.transform.GetChild(2).GetComponent<Button>().interactable = false;
     }
 
@@ -329,6 +340,7 @@ public class ButtonController : MonoBehaviour
         GameManager.instance.storeBtn.SetActive(false);
         GameManager.instance.mapBtn.SetActive(false);
         GameManager.instance.mapUI.SetActive(true);
+        GameManager.instance.inventoryButton.SetActive(false);
     }
 
     // 맵 나가기 버튼
@@ -344,5 +356,7 @@ public class ButtonController : MonoBehaviour
         GameManager.instance.storeBtn.SetActive(true);
         GameManager.instance.mapBtn.SetActive(true);
         GameManager.instance.mapUI.SetActive(false);
+        GameManager.instance.inventoryButton.SetActive(true);
+
     }
 }
