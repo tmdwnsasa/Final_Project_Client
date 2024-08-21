@@ -206,7 +206,8 @@ MonoBehaviour:
   shovelRange: {fileID: 3781622399167005313}
   gunSprite: {fileID: 840288054714433805}
   projectilePrefab: {fileID: 8957033140562300088, guid: 8dcc3a645595a1b4bbb6216fb1fe7ad0, type: 3}
-  firePoint: {fileID: 0}
+  blueHealPrefab: {fileID: 8957033140562300088, guid: 04afb5d0a04c9cb449f56fe479cf480a, type: 3}
+  greenHealPrefab: {fileID: 8957033140562300088, guid: 9e509b68f38247442baf16587793960b, type: 3}
 --- !u!1 &663373628936276144
 GameObject:
   m_ObjectHideFlags: 0
