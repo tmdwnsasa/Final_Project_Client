@@ -10,7 +10,7 @@ public class PlayerPrefab : MonoBehaviour
     private Animator anim;
     private SpriteRenderer spriter;
     public Vector2 newPosition;
-    public int guild;
+    public uint guild;
 
     private Vector3 lastPosition;
     private Vector3 currentPosition;
@@ -30,7 +30,9 @@ public class PlayerPrefab : MonoBehaviour
 
     //총알 관련 텍스트
     public GameObject projectilePrefab;
-    public Transform firePoint;
+
+    public GameObject blueHealPrefab;
+    public GameObject greenHealPrefab;
 
     void Awake()
     {
@@ -73,6 +75,7 @@ public class PlayerPrefab : MonoBehaviour
         {
             myText.text = playerId;
         }
+        this.guild = guild;
         if (guild == 1)
             myText.color = Color.blue;
         else if (guild == 2)
@@ -210,6 +213,20 @@ public class PlayerPrefab : MonoBehaviour
                     StartCoroutine(ChangeColorByBuff("green", duration));
                 }
                 break;
+            case 5:
+                if(guild == 1) {
+                    GameObject blueHeal = Instantiate(blueHealPrefab, transform.position + new Vector3(x, y), Quaternion.identity);
+                    Debug.Log(blueHeal);
+                    HealPrefab blueHealScript = blueHeal.GetComponent<HealPrefab>();
+                    blueHealScript.duration = duration;
+                }
+                else if(guild == 2) {
+                    GameObject greenHeal = Instantiate(greenHealPrefab, transform.position + new Vector3(x, y), Quaternion.identity);
+                    Debug.Log(greenHeal);
+                    HealPrefab greenHealScript = greenHeal.GetComponent<HealPrefab>();
+                    greenHealScript.duration = duration;
+                }                
+                break;
             default:
                 break;
         }
@@ -239,9 +256,14 @@ public class PlayerPrefab : MonoBehaviour
         obj.SetActive(false);
     }
 
-    public void SetHp(float hp)
+    public void SetHp(float hp, bool isHeal)
     {
-        StartCoroutine(AttackedCharacter());
+        if(isHeal) {
+            StartCoroutine(AttackedCharacter(Color.green));
+        } else {
+            StartCoroutine(AttackedCharacter(Color.red));
+        }
+
         nowHp = hp;
         hpSlider.value = nowHp / this.hp;
         //hp 설정
@@ -260,10 +282,10 @@ public class PlayerPrefab : MonoBehaviour
         }
     }
 
-    IEnumerator AttackedCharacter()
+    IEnumerator AttackedCharacter(Color color)
     {
         SpriteRenderer sprite = GetComponent<SpriteRenderer>();
-        sprite.color = Color.red;
+        sprite.color = color;
         yield return new WaitForSeconds(0.3f);
         sprite.color = Color.white;
     }

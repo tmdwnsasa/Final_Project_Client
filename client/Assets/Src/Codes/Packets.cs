@@ -245,6 +245,9 @@ public class AttackedSuccess
 
     [ProtoMember(2)]
     public float hp { get; set; }
+
+    [ProtoMember(3)]
+    public bool isHeal { get; set; }
 }
 
 [ProtoContract]

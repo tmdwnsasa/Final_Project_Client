@@ -69,13 +69,13 @@ public class CharacterManager : MonoBehaviour
     {
         if (data.playerId == GameManager.instance.player.name)
         {
-            GameManager.instance.player.SetHp(data.hp);
+            GameManager.instance.player.SetHp(data.hp, data.isHeal);
         }
         else
         {
             GameObject player = GameManager.instance.pool.GetId(data.playerId);
             PlayerPrefab playerScript = player.GetComponent<PlayerPrefab>();
-            playerScript.SetHp(data.hp);
+            playerScript.SetHp(data.hp, data.isHeal);
         }
     }
 
