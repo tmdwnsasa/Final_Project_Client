@@ -118,10 +118,11 @@ public class PlayerPrefab : MonoBehaviour
         }
     }
 
-    public void SetSkill(float x, float y, float rangeX, float rangeY, uint skill_type, string prefabNum)
+    public void SetSkill(float x, float y, float rangeX, float rangeY, uint skill_type, string prefabNum, float speed, float duration)
     {
         switch (skill_type)
         {
+            case 7:
             case 1:
                 if(characterId == 0) {
                     sickleRange.SetActive(true);
@@ -181,6 +182,7 @@ public class PlayerPrefab : MonoBehaviour
                 projectile.gameObject.tag = gameObject.tag;
                 projScript.bulletNum = prefabNum;
                 projScript.skillType = skill_type;
+                projScript.speed = speed;
                 if (x > 0)
                 {
                     StartCoroutine(SetActiveGunSprite());
@@ -205,7 +207,7 @@ public class PlayerPrefab : MonoBehaviour
             case 4:
                 if (characterId == 0)
                 {
-                    StartCoroutine(ChangeColorByBuff("green", 5));
+                    StartCoroutine(ChangeColorByBuff("green", duration));
                 }
                 break;
             default:

@@ -55,13 +55,13 @@ public class CharacterManager : MonoBehaviour
     {
         if (data.playerId == GameManager.instance.player.name)
         {
-            GameManager.instance.player.SetSkill(data.x, data.y, data.rangeX, data.rangeY, data.skillType, data.prefabNum);
+            GameManager.instance.player.SetSkill(data.x, data.y, data.rangeX, data.rangeY, data.skillType, data.prefabNum, data.speed, data.duration);
         }
         else
         {
             GameObject player = GameManager.instance.pool.GetId(data.playerId);
             PlayerPrefab playerScript = player.GetComponent<PlayerPrefab>();
-            playerScript.SetSkill(data.x, data.y, data.rangeX, data.rangeY, data.skillType, data.prefabNum);
+            playerScript.SetSkill(data.x, data.y, data.rangeX, data.rangeY, data.skillType, data.prefabNum, data.speed, data.duration);
         }
     }
 
