@@ -153,6 +153,9 @@ public class Handlers : MonoBehaviour
     [Serializable]
     public struct PurchaseStateMessage
     {
+        public List<PlayerItem> allInventoryItems;
+        public List<PlayerItem> allEquippedItems;
+        public int remainMoney;
         public string message;
     }
 
@@ -204,6 +207,7 @@ public class Handlers : MonoBehaviour
         GameManager.instance.items = characterChoice.allItems;
         InventoryManager.instance.inventory = characterChoice.allInventoryItems;
         InventoryManager.instance.equipment = characterChoice.allEquippedItems;
+        InventoryManager.instance.money = characterChoice.userMoney;
 
         GameManager.instance.equipmentStore = characterChoice.allItems;
         
@@ -221,8 +225,8 @@ public class Handlers : MonoBehaviour
 
         InventoryManager.instance.ShowInventoryItems();
         InventoryManager.instance.ShowEquippedItems();
+        InventoryManager.instance.UpdateInventoryCombinedStats();
         GameManager.instance.GoCharacterChoice();
-        GameManager.instance.InitializeItemSpriteMapping();
     }
 
     public void GetCharacterSelect(byte[] data)
@@ -238,7 +242,7 @@ public class Handlers : MonoBehaviour
         InventoryManager.instance.inventory = characterSelect.allInventoryItems;
         InventoryManager.instance.equipment = characterSelect.allEquippedItems;
         GameManager.instance.items = characterSelect.allItems;
-        Debug.Log(GameManager.instance.items.Count);
+        InventoryManager.instance.money = characterSelect.userMoney;
 
         GameManager.instance.equipmentStore = characterSelect.allItems;
 
@@ -255,10 +259,17 @@ public class Handlers : MonoBehaviour
 
         Debug.Log($"Received {characterSelect.allEquippedItems.Count} equipped items// {InventoryManager.instance.equipment.Count}");
 
+        Debug.Log("select complete");
+        InventoryManager.instance.ShowInventoryItems();
+        Debug.Log("select complete");
+        InventoryManager.instance.ShowEquippedItems();
+        Debug.Log("select complete");
+        InventoryManager.instance.UpdateInventoryCombinedStats();
+        Debug.Log("select complete");
         GameManager.instance.GoCharacterSelect();
-        GameManager.instance.InitializeItemSpriteMapping();
+        Debug.Log("select complete");
 
-
+        Debug.Log("select complete");
     }
 
     public void SetCharacterStats(byte[] data)
@@ -317,6 +328,13 @@ public class Handlers : MonoBehaviour
         GameManager.instance.characterPurchaseCheckUI.SetActive(false);
         GameManager.instance.equipmentPurchaseCheckUI.SetActive(false);
         GameManager.instance.purchaseMessageUI.SetActive(true);
+
+        InventoryManager.instance.inventory = purchaseStateMessage.allInventoryItems;
+        InventoryManager.instance.equipment = purchaseStateMessage.allEquippedItems;
+        InventoryManager.instance.money = purchaseStateMessage.remainMoney;
+
+        InventoryManager.instance.ShowEquippedItems();
+        InventoryManager.instance.ShowInventoryItems();
     }
 
     public void OpenMap(byte[] data)
@@ -378,6 +396,7 @@ public class Handlers : MonoBehaviour
         {
             return;
         }
+
         // Update the inventory data with the new items and stats
         GameManager.instance.player.GetComponent<Player>().SetStats(updatedInventoryData.updatedStats);
         InventoryManager.instance.UpdateInventoryCombinedStats();

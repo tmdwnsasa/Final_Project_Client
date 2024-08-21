@@ -68,6 +68,7 @@ public class GameManager : MonoBehaviour
         instance = this;
         Application.targetFrameRate = targetFrameRate;
         SetBtn();
+        GetItemSpriteMapping();
     }
 
     public void GameStart()
