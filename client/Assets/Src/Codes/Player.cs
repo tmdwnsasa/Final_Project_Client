@@ -105,7 +105,6 @@ public class Player : MonoBehaviour
             myText.text = name;
         }
         myText.GetComponent<MeshRenderer>().sortingOrder = 6;
-        Debug.Log(GameManager.instance.characterId);
         anim.runtimeAnimatorController = animCon[GameManager.instance.characterId];
     }
 
