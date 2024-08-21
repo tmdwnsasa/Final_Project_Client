@@ -6,7 +6,7 @@ AnimationClip:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Melee_Attack
+  m_Name: Sickle_Attack
   serializedVersion: 7
   m_Legacy: 0
   m_Compressed: 0
@@ -24,7 +24,7 @@ AnimationClip:
       value: {fileID: 21300000, guid: 193e50166762e9b44a7e6acaf966427f, type: 3}
     - time: 0.13333334
       value: {fileID: 21300000, guid: de509e401b8d75b439a720d501aa3ebe, type: 3}
-    - time: 0.26666668
+    - time: 0.25
       value: {fileID: 21300000, guid: 80353d849a962a141afbe8cf1e7b8333, type: 3}
     - time: 0.36666667
       value: {fileID: 21300000, guid: 9dd4f0a829badb746927bdfb44e53c8d, type: 3}

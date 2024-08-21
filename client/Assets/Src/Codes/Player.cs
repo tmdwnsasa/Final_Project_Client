@@ -37,8 +37,7 @@ public class Player : MonoBehaviour
 
     //총알 관련 텍스트
     public GameObject projectilePrefab;
-    public Transform firePoint;
-    public GameObject bulletManager;
+    public GameObject prefabManager;
 
     private Vector2 oldInputVec;
     private bool isPlusX;
@@ -55,9 +54,16 @@ public class Player : MonoBehaviour
 
     public bool directionX;
 
-    private bool isSkill;
+    private bool isZSkill;
+    private bool isXSkill;
+
+    public GameObject sickleRange;
+    public GameObject shovelRange;
 
     public SpriteRenderer gunSprite;
+
+    public GameObject blueHealPrefab;
+    public GameObject greenHealPrefab;
 
     public float x = 1, y = 1;
     public Vector2 BoxArea = new Vector2(0.5f, 0);
@@ -75,7 +81,8 @@ public class Player : MonoBehaviour
         isMinusX = false;
         isPlusY = false;
         isMinusY = false;
-        isSkill = true;
+        isZSkill = true;
+        isXSkill = true;
         directionX = true;
         BoxArea.x = 0.5f;
         BoxArea.y = 0f;
@@ -102,7 +109,6 @@ public class Player : MonoBehaviour
             myText.text = name;
         }
         myText.GetComponent<MeshRenderer>().sortingOrder = 6;
-        Debug.Log(GameManager.instance.characterId);
         anim.runtimeAnimatorController = animCon[GameManager.instance.characterId];
     }
 
@@ -165,7 +171,7 @@ public class Player : MonoBehaviour
         if (!(inputVec.x != 0 && inputVec.y != 0))
         {
             //공격
-            if (Input.GetKeyDown(KeyCode.Z) && !NetworkManager.instance.isLobby && isSkill)
+            if (Input.GetKeyDown(KeyCode.Z) && !NetworkManager.instance.isLobby && isZSkill)
             {
                 if (x != 0)
                 {
@@ -178,9 +184,27 @@ public class Player : MonoBehaviour
                     directionX = false;
                     NetworkManager.instance.SendSkillUpdatePacket(BoxArea.x, BoxArea.y, directionX, zSkill_id);
                 }
-                isSkill = false;
+                isZSkill = false;
 
                 StartCoroutine(CoolTimeCheck("zSkill"));
+
+            }
+            if (Input.GetKeyDown(KeyCode.X) && !NetworkManager.instance.isLobby && isXSkill)
+            {
+                if (x != 0)
+                {
+                    directionX = true;
+                    //send 스킬 패킷을 보내고
+                    NetworkManager.instance.SendSkillUpdatePacket(BoxArea.x, BoxArea.y, directionX, xSkill_id);
+                }
+                else
+                {
+                    directionX = false;
+                    NetworkManager.instance.SendSkillUpdatePacket(BoxArea.x, BoxArea.y, directionX, xSkill_id);
+                }
+                isXSkill = false;
+
+                StartCoroutine(CoolTimeCheck("xSkill"));
 
             }
         }
@@ -251,39 +275,71 @@ public class Player : MonoBehaviour
         transform.position = Vector2.Lerp(transform.position, newPosition, 0.2f);
     }
 
-    public void SetSkill(float x, float y, float rangeX, float rangeY, uint skillType, string prefabNum)
+    public void SetSkill(float x, float y, float rangeX, float rangeY, uint skillType, string prefabNum, float speed, float duration)
     {
         switch (skillType)
         {
+            case 7:
             case 1:
-                transform.GetChild(4).gameObject.SetActive(true);
-                transform.GetChild(4).localPosition = new Vector2(x, y);
-                SpriteRenderer nearSkillRender = transform.GetChild(4).gameObject.GetComponent<SpriteRenderer>();
-                nearSkillRender.flipX = spriter.flipX;
-                if (x > 0)
-                {
-                    transform.GetChild(4).rotation = Quaternion.Euler(0, 0, 0);
+                if(GameManager.instance.characterId == 0) {
+                    sickleRange.SetActive(true);
+                    sickleRange.transform.localPosition = new Vector2(x, y);
+                    SpriteRenderer nearSkillRender = sickleRange.GetComponent<SpriteRenderer>();
+                    nearSkillRender.flipX = spriter.flipX;
+                    if (x > 0)
+                    {
+                        sickleRange.transform.rotation = Quaternion.Euler(0, 0, 0);
+                    }
+                    else if (y > 0)
+                    {
+                        sickleRange.transform.rotation = Quaternion.Euler(0, 0, nearSkillRender.flipX ? 90 * -1 : 90);
+                    }
+                    else if (y < 0)
+                    {
+                        sickleRange.transform.rotation = Quaternion.Euler(0, 0, nearSkillRender.flipX ? 90 : 90 * -1);
+                    }
+                    else if (x < 0)
+                    {
+                        sickleRange.transform.rotation = Quaternion.Euler(0, 0, 0);
+                    }
+                    StartCoroutine(AttackRangeCheck(sickleRange));
                 }
-                else if (y > 0)
-                {
-                    transform.GetChild(4).rotation = Quaternion.Euler(0, 0, nearSkillRender.flipX ? 90 * -1 : 90);
+                else if(GameManager.instance.characterId == 2) {
+                    shovelRange.SetActive(true);
+                    shovelRange.transform.localPosition = new Vector2(x, y);
+                    SpriteRenderer nearSkillRender = shovelRange.GetComponent<SpriteRenderer>();
+                    nearSkillRender.flipX = spriter.flipX;
+                    if (x > 0)
+                    {
+                        shovelRange.transform.rotation = Quaternion.Euler(0, 0, 0);
+                    }
+                    else if (y > 0)
+                    {
+                        shovelRange.transform.rotation = Quaternion.Euler(0, 0, nearSkillRender.flipX ? 90 * -1 : 90);
+                    }
+                    else if (y < 0)
+                    {
+                        shovelRange.transform.rotation = Quaternion.Euler(0, 0, nearSkillRender.flipX ? 90 : 90 * -1);
+                    }
+                    else if (x < 0)
+                    {
+                        shovelRange.transform.rotation = Quaternion.Euler(0, 0, 0);
+                    }
+                    StartCoroutine(AttackRangeCheck(shovelRange));
                 }
-                else if (y < 0)
-                {
-                    transform.GetChild(4).rotation = Quaternion.Euler(0, 0, nearSkillRender.flipX ? 90 : 90 * -1);
-                }
-                else if (x < 0)
-                {
-                    transform.GetChild(4).rotation = Quaternion.Euler(0, 0, 0);
-                }
-                StartCoroutine(AttackRangeCheck());
                 break;
             case 2:
-                GameObject projectile = Instantiate(projectilePrefab, transform.position + new Vector3(x, y), Quaternion.identity, bulletManager.transform);
+                GameObject projectile = Instantiate(projectilePrefab, transform.position + new Vector3(x, y), Quaternion.identity, prefabManager.transform);
+                if(GameManager.instance.characterId == 1) {
+                    projectile.GetComponent<SpriteRenderer>().color = Color.white;
+                } else if (GameManager.instance.characterId == 3) {
+                    projectile.GetComponent<SpriteRenderer>().color = Color.green;
+                }
                 BulletPrefab projScript = projectile.GetComponent<BulletPrefab>();
                 projectile.gameObject.tag = gameObject.tag;
                 projScript.bulletNum = prefabNum;
                 projScript.skillType = skillType;
+                projScript.speed = speed;
                 if (x > 0)
                 {
                     StartCoroutine(SetActiveGunSprite());
@@ -305,6 +361,24 @@ public class Player : MonoBehaviour
                     projScript.direction = Vector2.left;
                 }
                 break;
+            case 4:
+                if (GameManager.instance.characterId == 0)
+                {
+                    StartCoroutine(ChangeColorByBuff("green", duration));
+                }
+                break;
+            case 5:
+                if(guild == 1) {
+                    GameObject blueHeal = Instantiate(blueHealPrefab, transform.position + new Vector3(x, y), Quaternion.identity, prefabManager.transform);
+                    HealPrefab blueHealScript = blueHeal.GetComponent<HealPrefab>();
+                    blueHealScript.duration = duration;
+                }
+                else if(guild == 2) {
+                    GameObject greenHeal = Instantiate(greenHealPrefab, transform.position + new Vector3(x, y), Quaternion.identity, prefabManager.transform);
+                    HealPrefab greenHealScript = greenHeal.GetComponent<HealPrefab>();
+                    greenHealScript.duration = duration;
+                }                
+                break;
             default:
                 break;
         }
@@ -320,10 +394,10 @@ public class Player : MonoBehaviour
         gunSprite.gameObject.SetActive(false);
     }
 
-    IEnumerator AttackRangeCheck()
+    IEnumerator AttackRangeCheck(GameObject obj)
     {
         yield return new WaitForSeconds(0.5f);
-        transform.GetChild(4).gameObject.SetActive(false);
+        obj.SetActive(false);
     }
 
     IEnumerator CoolTimeCheck(string Skill)
@@ -331,20 +405,25 @@ public class Player : MonoBehaviour
         if ("zSkill" == Skill)
         {
             yield return new WaitForSeconds(zSkill_CoolTime);
-            isSkill = true;
+            isZSkill = true;
         }
 
         else
         {
             yield return new WaitForSeconds(xSkill_CoolTime);
-            isSkill = true;
+            isXSkill = true;
         }
     }
 
 
-    public void SetHp(float hp)
+    public void SetHp(float hp, bool isHeal)
     {
-        StartCoroutine(AttackedCharacter());
+        if(isHeal) {
+            StartCoroutine(AttackedCharacter(Color.green));
+        } else {
+            StartCoroutine(AttackedCharacter(Color.red));
+        }
+
         nowHp = hp;
         hpSlider.value = nowHp / this.hp;
         //hp 설정
@@ -364,11 +443,21 @@ public class Player : MonoBehaviour
         }
     }
 
-    IEnumerator AttackedCharacter()
+    IEnumerator AttackedCharacter(Color color)
     {
         SpriteRenderer sprite = GetComponent<SpriteRenderer>();
-        sprite.color = Color.red;
+        sprite.color = color;
         yield return new WaitForSeconds(0.3f);
+        sprite.color = Color.white;
+    }
+
+    IEnumerator ChangeColorByBuff(string color, float duration)
+    {
+        SpriteRenderer sprite = GetComponent<SpriteRenderer>();
+        Color newColor;
+        ColorUtility.TryParseHtmlString(color, out newColor);
+        sprite.color = newColor;
+        yield return new WaitForSeconds(duration);
         sprite.color = Color.white;
     }
 
@@ -376,7 +465,11 @@ public class Player : MonoBehaviour
     {
         if ("isSkillZ" == isSkill)
         {
-            this.isSkill = true;
+            this.isZSkill = true;
+        }
+        else
+        {
+            this.isXSkill = true;
         }
     }
 

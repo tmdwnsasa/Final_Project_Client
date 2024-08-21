@@ -266,8 +266,6 @@ public class Handlers : MonoBehaviour
         string jsonString = Encoding.UTF8.GetString(data);
         CharacterStats characterStats = JsonUtility.FromJson<CharacterStats>(jsonString);
 
-        Debug.Log("characterZSkill : " + characterStats.zSkill.skill_name);
-
         GameManager.instance.player.characterId = characterStats.characterId;
         GameManager.instance.player.characterName = characterStats.characterName;
         GameManager.instance.player.hp = characterStats.updatedStats.hp;

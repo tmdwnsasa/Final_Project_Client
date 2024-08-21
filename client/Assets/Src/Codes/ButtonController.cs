@@ -39,7 +39,6 @@ public class ButtonController : MonoBehaviour
     public void OnCharacterChoiceButtonClicked()
     {
         uint characterId = GameManager.instance.characterId;
-        Debug.Log(characterId);
 
         NetworkManager.instance.SendCharacterEarnPacket(characterId);
         NetworkManager.instance.SendJoinLobbyPacket(characterId);
