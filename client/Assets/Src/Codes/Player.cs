@@ -40,6 +40,9 @@ public class Player : MonoBehaviour
     public Transform firePoint;
     public GameObject bulletManager;
 
+    //불장판 관련 텍스트
+    public GameObject AoePrefab;
+
     private Vector2 oldInputVec;
     private bool isPlusX;
     private bool isMinusX;
@@ -55,7 +58,11 @@ public class Player : MonoBehaviour
 
     public bool directionX;
 
-    private bool isSkill;
+    private bool isZSkill;
+    private bool isXSkill;
+
+    public GameObject sickleRange;
+    public GameObject shovelRange;
 
     public SpriteRenderer gunSprite;
 
@@ -181,6 +188,24 @@ public class Player : MonoBehaviour
                 isZSkill = false;
 
                 StartCoroutine(CoolTimeCheck("zSkill"));
+
+            }
+            if (Input.GetKeyDown(KeyCode.X) && !NetworkManager.instance.isLobby && isXSkill)
+            {
+                if (x != 0)
+                {
+                    directionX = true;
+                    //send 스킬 패킷을 보내고
+                    NetworkManager.instance.SendSkillUpdatePacket(BoxArea.x, BoxArea.y, directionX, xSkill_id);
+                }
+                else
+                {
+                    directionX = false;
+                    NetworkManager.instance.SendSkillUpdatePacket(BoxArea.x, BoxArea.y, directionX, xSkill_id);
+                }
+                isXSkill = false;
+
+                StartCoroutine(CoolTimeCheck("xSkill"));
 
             }
         }
@@ -337,6 +362,23 @@ public class Player : MonoBehaviour
                     projScript.direction = Vector2.left;
                 }
                 break;
+            case 4:
+                if (GameManager.instance.characterId == 0)
+                {
+                    StartCoroutine(ChangeColorByBuff("green", duration));
+                }
+                break;
+            case 8:
+            if(GameManager.instance.characterId == 1)
+            {
+                GameObject fireAoe = Instantiate(AoePrefab, new Vector2(0,0), Quaternion.identity);
+                fireAoe.transform.localScale = new Vector3(rangeX, rangeY, 1);
+                
+                GameObject blueHeal = Instantiate(blueHealPrefab, transform.position + new Vector3(x, y), Quaternion.identity, prefabManager.transform);
+                HealPrefab blueHealScript = blueHeal.GetComponent<HealPrefab>();
+                blueHealScript.duration = duration;
+            }
+                break;
             default:
                 break;
         }
@@ -420,16 +462,15 @@ public class Player : MonoBehaviour
         sprite.color = Color.white;
     }
 
-    public void SetSkill(string isZSkill, string isXSkill)
+    public void SetSkill(string isSkill)
     {
-        if ("isSkillZ" == isZSkill)
+        if ("isSkillZ" == isSkill)
         {
             this.isZSkill = true;
         }
-
-        if ("isSkillX" == isXSkill)
+        else
         {
-            this.isSkill = true;
+            this.isXSkill = true;
         }
     }
 
