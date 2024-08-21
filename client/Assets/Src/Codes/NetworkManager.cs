@@ -318,14 +318,13 @@ public class NetworkManager : MonoBehaviour
         SendPacket(ChattingPayload, (uint)Handlers.HandlerIds.CHATTING);
     }
 
-    public void SendMatchPacket(string sessionId)
+    public void SendMatchPacket(string sessionId, uint handlerId)
     {
         MatchingPayload MatchingPayload = new MatchingPayload
         {
             sessionId = sessionId
         };
-        //Debug.Log($"User's Session Id : {sessionId}");
-        SendPacket(MatchingPayload, (uint)Handlers.HandlerIds.MATCHMAKING);
+        SendPacket(MatchingPayload, handlerId);
     }
 
     public void SendReturnLobbyPacket()
@@ -539,6 +538,15 @@ public class NetworkManager : MonoBehaviour
                     break;
                 case (uint)Handlers.HandlerIds.MATCHMAKING:
                     GameManager.instance.matchStartUI.transform.GetChild(0).GetComponent<Button>().interactable = true;
+                    GameManager.instance.matchStartUI.SetActive(false);
+                    GameManager.instance.matchCancelUI.SetActive(true);
+                    GameManager.instance.isMatchging = true;
+                    break;
+                case (uint)Handlers.HandlerIds.MATCHINGCANCEL:
+                    GameManager.instance.matchCancelUI.transform.GetChild(0).GetComponent<Button>().interactable = true;
+                    GameManager.instance.matchStartUI.SetActive(true);
+                    GameManager.instance.matchCancelUI.SetActive(false);
+                    GameManager.instance.isMatchging = false;
                     break;
                 case (uint)Handlers.HandlerIds.RETURN_LOBBY:
                     Handlers.instance.ReturnLobbySetting(response.data);
@@ -675,8 +683,21 @@ public class NetworkManager : MonoBehaviour
         announcementMap.text = $"대전 지역 이름: {response.mapName}";
         Debug.Log(response.mapName);
 
+        if(GameManager.instance.storeUI.activeSelf) {
+            GameManager.instance.storeUI.SetActive(false);
+            GameManager.instance.storeUI.transform.GetChild(0).gameObject.SetActive(true);
+            GameManager.instance.storeUI.transform.GetChild(1).gameObject.SetActive(false);
+            GameManager.instance.storeUI.transform.GetChild(2).GetComponent<Button>().interactable = true;
+            GameManager.instance.storeUI.transform.GetChild(3).GetComponent<Button>().interactable = true;
+        }
+
+        if(GameManager.instance.mapUI.activeSelf) {
+            GameManager.instance.mapUI.SetActive(false);
+        }
+
         isLobby = false;
         GameManager.instance.matchStartUI.SetActive(false);
+        GameManager.instance.matchCancelUI.SetActive(false);
         GameManager.instance.exitBtn.SetActive(false);
         GameManager.instance.storeBtn.SetActive(false);
         GameManager.instance.mapBtn.SetActive(false);

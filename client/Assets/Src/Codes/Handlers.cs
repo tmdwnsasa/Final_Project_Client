@@ -28,6 +28,7 @@ public class Handlers : MonoBehaviour
         GIVE_CHARACTER = 9,
         CHATTING = 10,
         MATCHMAKING = 11,
+        MATCHINGCANCEL = 12,
         GAME_END = 15,
         RETURN_LOBBY = 16,
         INVENTORY = 17,
@@ -299,6 +300,7 @@ public class Handlers : MonoBehaviour
         GameManager.instance.chattingUI.SetActive(false);
         GameManager.instance.exitBtn.SetActive(false);
         GameManager.instance.matchStartUI.SetActive(false);
+        GameManager.instance.matchCancelUI.SetActive(false);
         GameManager.instance.storeBtn.SetActive(false);
         GameManager.instance.storeUI.SetActive(true);
         GameManager.instance.purchaseMessageUI.SetActive(false);
@@ -337,12 +339,12 @@ public class Handlers : MonoBehaviour
             {
                 mapImage.color = new Color(255 / 255f, 78 / 255f, 64 / 255f);
             }
-            if (map.ownedBy == "red")
+            if (map.ownedBy == "blue")
             {
                 mapImage.color = new Color(64 / 255f, 141 / 255f, 255 / 255f);
 
             }
-            if (map.ownedBy == "blue")
+            if (map.ownedBy == "green")
             {
                 mapImage.color = new Color(79 / 255f, 233 / 255f, 72 / 255f);
 
