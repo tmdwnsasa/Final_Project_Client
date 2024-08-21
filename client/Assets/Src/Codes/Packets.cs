@@ -218,6 +218,12 @@ public class SkillUpdate
 
     [ProtoMember(7)]
     public string prefabNum { get; set; }
+
+    [ProtoMember(8)]
+    public float speed { get; set; }
+
+    [ProtoMember(9)]
+    public float duration { get; set; }
 }
 
 [ProtoContract]
