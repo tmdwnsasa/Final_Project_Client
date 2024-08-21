@@ -256,7 +256,7 @@ public class GameManager : MonoBehaviour
     }
 
     public void PurchaseEquipment(uint equipmentIndex){
-        Debug.Log(equipmentIndex);
+        // Debug.Log(equipmentIndex);
         Text equipmentName = storeUI.transform.GetChild(1).GetChild(0).GetChild(0).GetChild(0).GetChild((int)equipmentIndex).GetChild(2).GetComponent<Text>();
         Text purchaseName = equipmentPurchaseCheckUI.transform.GetChild(3).GetComponent<Text>();
         purchaseName.text = equipmentName.text;

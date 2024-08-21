@@ -55,8 +55,7 @@ public class Player : MonoBehaviour
 
     public bool directionX;
 
-    private bool isZSkill;
-    private bool isXSkill;
+    private bool isSkill;
 
     public SpriteRenderer gunSprite;
 
@@ -104,7 +103,6 @@ public class Player : MonoBehaviour
             myText.text = name;
         }
         myText.GetComponent<MeshRenderer>().sortingOrder = 6;
-        Debug.Log(GameManager.instance.characterId);
         anim.runtimeAnimatorController = animCon[GameManager.instance.characterId];
     }
 
@@ -185,25 +183,6 @@ public class Player : MonoBehaviour
                 StartCoroutine(CoolTimeCheck("zSkill"));
 
             }
-
-            if (Input.GetKeyDown(KeyCode.X) && !NetworkManager.instance.isLobby && isXSkill)
-            {
-                if (x != 0)
-                {
-                    directionX = true;
-                    //send 스킬 패킷을 보내고
-                    NetworkManager.instance.SendSkillUpdatePacket(BoxArea.x, BoxArea.y, directionX, xSkill_id);
-                }
-                else
-                {
-                    directionX = false;
-                    NetworkManager.instance.SendSkillUpdatePacket(BoxArea.x, BoxArea.y, directionX, xSkill_id);
-                }
-                isXSkill = false;
-
-                StartCoroutine(CoolTimeCheck("xSkill"));
-
-            }
         }
 
     }
@@ -272,39 +251,71 @@ public class Player : MonoBehaviour
         transform.position = Vector2.Lerp(transform.position, newPosition, 0.2f);
     }
 
-    public void SetSkill(float x, float y, float rangeX, float rangeY, uint skillType, string prefabNum)
+    public void SetSkill(float x, float y, float rangeX, float rangeY, uint skillType, string prefabNum, float speed, float duration)
     {
         switch (skillType)
         {
+            case 7:
             case 1:
-                transform.GetChild(4).gameObject.SetActive(true);
-                transform.GetChild(4).localPosition = new Vector2(x, y);
-                SpriteRenderer nearSkillRender = transform.GetChild(4).gameObject.GetComponent<SpriteRenderer>();
-                nearSkillRender.flipX = spriter.flipX;
-                if (x > 0)
-                {
-                    transform.GetChild(4).rotation = Quaternion.Euler(0, 0, 0);
+                if(GameManager.instance.characterId == 0) {
+                    sickleRange.SetActive(true);
+                    sickleRange.transform.localPosition = new Vector2(x, y);
+                    SpriteRenderer nearSkillRender = sickleRange.GetComponent<SpriteRenderer>();
+                    nearSkillRender.flipX = spriter.flipX;
+                    if (x > 0)
+                    {
+                        sickleRange.transform.rotation = Quaternion.Euler(0, 0, 0);
+                    }
+                    else if (y > 0)
+                    {
+                        sickleRange.transform.rotation = Quaternion.Euler(0, 0, nearSkillRender.flipX ? 90 * -1 : 90);
+                    }
+                    else if (y < 0)
+                    {
+                        sickleRange.transform.rotation = Quaternion.Euler(0, 0, nearSkillRender.flipX ? 90 : 90 * -1);
+                    }
+                    else if (x < 0)
+                    {
+                        sickleRange.transform.rotation = Quaternion.Euler(0, 0, 0);
+                    }
+                    StartCoroutine(AttackRangeCheck(sickleRange));
                 }
-                else if (y > 0)
-                {
-                    transform.GetChild(4).rotation = Quaternion.Euler(0, 0, nearSkillRender.flipX ? 90 * -1 : 90);
+                else if(GameManager.instance.characterId == 2) {
+                    shovelRange.SetActive(true);
+                    shovelRange.transform.localPosition = new Vector2(x, y);
+                    SpriteRenderer nearSkillRender = shovelRange.GetComponent<SpriteRenderer>();
+                    nearSkillRender.flipX = spriter.flipX;
+                    if (x > 0)
+                    {
+                        shovelRange.transform.rotation = Quaternion.Euler(0, 0, 0);
+                    }
+                    else if (y > 0)
+                    {
+                        shovelRange.transform.rotation = Quaternion.Euler(0, 0, nearSkillRender.flipX ? 90 * -1 : 90);
+                    }
+                    else if (y < 0)
+                    {
+                        shovelRange.transform.rotation = Quaternion.Euler(0, 0, nearSkillRender.flipX ? 90 : 90 * -1);
+                    }
+                    else if (x < 0)
+                    {
+                        shovelRange.transform.rotation = Quaternion.Euler(0, 0, 0);
+                    }
+                    StartCoroutine(AttackRangeCheck(shovelRange));
                 }
-                else if (y < 0)
-                {
-                    transform.GetChild(4).rotation = Quaternion.Euler(0, 0, nearSkillRender.flipX ? 90 : 90 * -1);
-                }
-                else if (x < 0)
-                {
-                    transform.GetChild(4).rotation = Quaternion.Euler(0, 0, 0);
-                }
-                StartCoroutine(AttackRangeCheck());
                 break;
             case 2:
                 GameObject projectile = Instantiate(projectilePrefab, transform.position + new Vector3(x, y), Quaternion.identity, bulletManager.transform);
+                if(GameManager.instance.characterId == 1) {
+                    projectile.GetComponent<SpriteRenderer>().color = Color.white;
+                } else if (GameManager.instance.characterId == 3) {
+                    projectile.GetComponent<SpriteRenderer>().color = Color.green;
+                }
                 BulletPrefab projScript = projectile.GetComponent<BulletPrefab>();
                 projectile.gameObject.tag = gameObject.tag;
                 projScript.bulletNum = prefabNum;
                 projScript.skillType = skillType;
+                projScript.speed = speed;
                 if (x > 0)
                 {
                     StartCoroutine(SetActiveGunSprite());
@@ -326,13 +337,6 @@ public class Player : MonoBehaviour
                     projScript.direction = Vector2.left;
                 }
                 break;
-            case 5:
-                transform.GetChild(5).gameObject.SetActive(true);
-                transform.GetChild(5).localPosition = new Vector2(0, 0);
-                transform.GetChild(5).localScale = new Vector3(rangeX, rangeY, 1);
-
-                StartCoroutine(AreaOfEffectRangeCheck());
-                break;
             default:
                 break;
         }
@@ -348,10 +352,10 @@ public class Player : MonoBehaviour
         gunSprite.gameObject.SetActive(false);
     }
 
-    IEnumerator AttackRangeCheck()
+    IEnumerator AttackRangeCheck(GameObject obj)
     {
         yield return new WaitForSeconds(0.5f);
-        transform.GetChild(4).gameObject.SetActive(false);
+        obj.SetActive(false);
     }
 
     IEnumerator AreaOfEffectRangeCheck()
@@ -406,6 +410,16 @@ public class Player : MonoBehaviour
         sprite.color = Color.white;
     }
 
+    IEnumerator ChangeColorByBuff(string color, float duration)
+    {
+        SpriteRenderer sprite = GetComponent<SpriteRenderer>();
+        Color newColor;
+        ColorUtility.TryParseHtmlString(color, out newColor);
+        sprite.color = newColor;
+        yield return new WaitForSeconds(duration);
+        sprite.color = Color.white;
+    }
+
     public void SetSkill(string isZSkill, string isXSkill)
     {
         if ("isSkillZ" == isZSkill)
@@ -415,7 +429,7 @@ public class Player : MonoBehaviour
 
         if ("isSkillX" == isXSkill)
         {
-            this.isXSkill = true;
+            this.isSkill = true;
         }
     }
 
