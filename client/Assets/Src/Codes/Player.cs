@@ -57,6 +57,9 @@ public class Player : MonoBehaviour
 
     private bool isSkill;
 
+    public GameObject sickleRange;
+    public GameObject shovelRange;
+
     public SpriteRenderer gunSprite;
 
     public float x = 1, y = 1;
@@ -256,30 +259,60 @@ public class Player : MonoBehaviour
         switch (skillType)
         {
             case 1:
-                transform.GetChild(4).gameObject.SetActive(true);
-                transform.GetChild(4).localPosition = new Vector2(x, y);
-                SpriteRenderer nearSkillRender = transform.GetChild(4).gameObject.GetComponent<SpriteRenderer>();
-                nearSkillRender.flipX = spriter.flipX;
-                if (x > 0)
-                {
-                    transform.GetChild(4).rotation = Quaternion.Euler(0, 0, 0);
+                if(GameManager.instance.characterId == 0) {
+                    sickleRange.SetActive(true);
+                    sickleRange.transform.localPosition = new Vector2(x, y);
+                    SpriteRenderer nearSkillRender = sickleRange.GetComponent<SpriteRenderer>();
+                    nearSkillRender.flipX = spriter.flipX;
+                    if (x > 0)
+                    {
+                        sickleRange.transform.rotation = Quaternion.Euler(0, 0, 0);
+                    }
+                    else if (y > 0)
+                    {
+                        sickleRange.transform.rotation = Quaternion.Euler(0, 0, nearSkillRender.flipX ? 90 * -1 : 90);
+                    }
+                    else if (y < 0)
+                    {
+                        sickleRange.transform.rotation = Quaternion.Euler(0, 0, nearSkillRender.flipX ? 90 : 90 * -1);
+                    }
+                    else if (x < 0)
+                    {
+                        sickleRange.transform.rotation = Quaternion.Euler(0, 0, 0);
+                    }
+                    StartCoroutine(AttackRangeCheck(sickleRange));
                 }
-                else if (y > 0)
-                {
-                    transform.GetChild(4).rotation = Quaternion.Euler(0, 0, nearSkillRender.flipX ? 90 * -1 : 90);
+                else if(GameManager.instance.characterId == 2) {
+                    shovelRange.SetActive(true);
+                    shovelRange.transform.localPosition = new Vector2(x, y);
+                    SpriteRenderer nearSkillRender = shovelRange.GetComponent<SpriteRenderer>();
+                    nearSkillRender.flipX = spriter.flipX;
+                    if (x > 0)
+                    {
+                        shovelRange.transform.rotation = Quaternion.Euler(0, 0, 0);
+                    }
+                    else if (y > 0)
+                    {
+                        shovelRange.transform.rotation = Quaternion.Euler(0, 0, nearSkillRender.flipX ? 90 * -1 : 90);
+                    }
+                    else if (y < 0)
+                    {
+                        shovelRange.transform.rotation = Quaternion.Euler(0, 0, nearSkillRender.flipX ? 90 : 90 * -1);
+                    }
+                    else if (x < 0)
+                    {
+                        shovelRange.transform.rotation = Quaternion.Euler(0, 0, 0);
+                    }
+                    StartCoroutine(AttackRangeCheck(shovelRange));
                 }
-                else if (y < 0)
-                {
-                    transform.GetChild(4).rotation = Quaternion.Euler(0, 0, nearSkillRender.flipX ? 90 : 90 * -1);
-                }
-                else if (x < 0)
-                {
-                    transform.GetChild(4).rotation = Quaternion.Euler(0, 0, 0);
-                }
-                StartCoroutine(AttackRangeCheck());
                 break;
             case 2:
                 GameObject projectile = Instantiate(projectilePrefab, transform.position + new Vector3(x, y), Quaternion.identity, bulletManager.transform);
+                if(GameManager.instance.characterId == 1) {
+                    projectile.GetComponent<SpriteRenderer>().color = Color.white;
+                } else if (GameManager.instance.characterId == 3) {
+                    projectile.GetComponent<SpriteRenderer>().color = Color.green;
+                }
                 BulletPrefab projScript = projectile.GetComponent<BulletPrefab>();
                 projectile.gameObject.tag = gameObject.tag;
                 projScript.bulletNum = prefabNum;
@@ -320,10 +353,10 @@ public class Player : MonoBehaviour
         gunSprite.gameObject.SetActive(false);
     }
 
-    IEnumerator AttackRangeCheck()
+    IEnumerator AttackRangeCheck(GameObject obj)
     {
         yield return new WaitForSeconds(0.5f);
-        transform.GetChild(4).gameObject.SetActive(false);
+        obj.SetActive(false);
     }
 
     IEnumerator CoolTimeCheck(string Skill)

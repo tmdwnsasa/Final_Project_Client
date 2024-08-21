@@ -23,6 +23,9 @@ public class PlayerPrefab : MonoBehaviour
 
     public float direction;
 
+    public GameObject sickleRange;
+    public GameObject shovelRange;
+
     public SpriteRenderer gunSprite;
 
     //총알 관련 텍스트
@@ -120,30 +123,60 @@ public class PlayerPrefab : MonoBehaviour
         switch (skill_type)
         {
             case 1:
-                transform.GetChild(4).gameObject.SetActive(true);
-                transform.GetChild(4).localPosition = new Vector2(x, y);
-                SpriteRenderer nearSkillRender = transform.GetChild(4).gameObject.GetComponent<SpriteRenderer>();
-                nearSkillRender.flipX = spriter.flipX;
-                if (x > 0)
-                {
-                    transform.GetChild(4).rotation = Quaternion.Euler(0, 0, 0);
+                if(characterId == 0) {
+                    sickleRange.SetActive(true);
+                    sickleRange.transform.localPosition = new Vector2(x, y);
+                    SpriteRenderer nearSkillRender = sickleRange.GetComponent<SpriteRenderer>();
+                    nearSkillRender.flipX = spriter.flipX;
+                    if (x > 0)
+                    {
+                        sickleRange.transform.rotation = Quaternion.Euler(0, 0, 0);
+                    }
+                    else if (y > 0)
+                    {
+                        sickleRange.transform.rotation = Quaternion.Euler(0, 0, nearSkillRender.flipX ? 90 * -1 : 90);
+                    }
+                    else if (y < 0)
+                    {
+                        sickleRange.transform.rotation = Quaternion.Euler(0, 0, nearSkillRender.flipX ? 90 : 90 * -1);
+                    }
+                    else if (x < 0)
+                    {
+                        sickleRange.transform.rotation = Quaternion.Euler(0, 0, 0);
+                    }
+                    StartCoroutine(AttackRangeCheck(sickleRange));
                 }
-                else if (y > 0)
-                {
-                    transform.GetChild(4).rotation = Quaternion.Euler(0, 0, nearSkillRender.flipX ? 90 * -1 : 90);
+                else if(characterId == 2) {
+                    shovelRange.SetActive(true);
+                    shovelRange.transform.localPosition = new Vector2(x, y);
+                    SpriteRenderer nearSkillRender = shovelRange.GetComponent<SpriteRenderer>();
+                    nearSkillRender.flipX = spriter.flipX;
+                    if (x > 0)
+                    {
+                        shovelRange.transform.rotation = Quaternion.Euler(0, 0, 0);
+                    }
+                    else if (y > 0)
+                    {
+                        shovelRange.transform.rotation = Quaternion.Euler(0, 0, nearSkillRender.flipX ? 90 * -1 : 90);
+                    }
+                    else if (y < 0)
+                    {
+                        shovelRange.transform.rotation = Quaternion.Euler(0, 0, nearSkillRender.flipX ? 90 : 90 * -1);
+                    }
+                    else if (x < 0)
+                    {
+                        shovelRange.transform.rotation = Quaternion.Euler(0, 0, 0);
+                    }
+                    StartCoroutine(AttackRangeCheck(shovelRange));
                 }
-                else if (y < 0)
-                {
-                    transform.GetChild(4).rotation = Quaternion.Euler(0, 0, nearSkillRender.flipX ? 90 : 90 * -1);
-                }
-                else if (x < 0)
-                {
-                    transform.GetChild(4).rotation = Quaternion.Euler(0, 0, 0);
-                }
-                StartCoroutine(AttackRangeCheck());
                 break;
             case 2:
                 GameObject projectile = Instantiate(projectilePrefab, transform.position + new Vector3(x, y), Quaternion.identity);
+                if(characterId == 1) {
+                    projectile.GetComponent<SpriteRenderer>().color = Color.white;
+                } else if (characterId == 3) {
+                    projectile.GetComponent<SpriteRenderer>().color = Color.green;
+                }
                 BulletPrefab projScript = projectile.GetComponent<BulletPrefab>();
                 projectile.gameObject.tag = gameObject.tag;
                 projScript.bulletNum = prefabNum;
@@ -184,7 +217,6 @@ public class PlayerPrefab : MonoBehaviour
         gunSprite.gameObject.SetActive(false);
     }
 
-
     void OnCollisionStay2D(Collision2D collision)
     {
         if (!GameManager.instance.isLive)
@@ -192,10 +224,11 @@ public class PlayerPrefab : MonoBehaviour
             return;
         }
     }
-    IEnumerator AttackRangeCheck()
+
+    IEnumerator AttackRangeCheck(GameObject obj)
     {
         yield return new WaitForSeconds(0.5f);
-        transform.GetChild(4).gameObject.SetActive(false);
+        obj.SetActive(false);
     }
 
     public void SetHp(float hp)
