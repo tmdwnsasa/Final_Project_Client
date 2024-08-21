@@ -385,13 +385,12 @@ public class Player : MonoBehaviour
             case 8:
                 if(GameManager.instance.characterId == 1)
                 {
-                    GameObject fireAoe = Instantiate(AoePrefab, new Vector2(0,0), Quaternion.identity);
+                    GameObject fireAoe = Instantiate(AoePrefab, transform.position, Quaternion.identity, prefabManager.transform);
                     fireAoe.transform.localScale = new Vector3(rangeX, rangeY, 1);
-                    
-                    GameObject blueHeal = Instantiate(blueHealPrefab, transform.position + new Vector3(x, y), Quaternion.identity, prefabManager.transform);
-                    HealPrefab blueHealScript = blueHeal.GetComponent<HealPrefab>();
-                    blueHealScript.duration = duration;
+                    AoePrefab fireAoeScript = fireAoe.GetComponent<AoePrefab>();
+                    fireAoeScript.duration = duration;
                 }
+                break;
             default:
                 break;
         }
@@ -411,12 +410,6 @@ public class Player : MonoBehaviour
     {
         yield return new WaitForSeconds(0.5f);
         obj.SetActive(false);
-    }
-
-    IEnumerator AreaOfEffectRangeCheck()
-    {
-        yield return new WaitForSeconds(3.0f);
-        transform.GetChild(5).gameObject.SetActive(false);
     }
 
     IEnumerator CoolTimeCheck(string Skill)
