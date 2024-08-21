@@ -205,7 +205,6 @@ public class NetworkManager : MonoBehaviour
             name = name,
             guild = guild,
         };
-        Debug.Log(guild);
         // handlerId는 0으로 가정
         SendPacket(registerPayload, (uint)Handlers.HandlerIds.REGISTER);
     }
@@ -452,11 +451,9 @@ public class NetworkManager : MonoBehaviour
                     HandleMatchMakingPacket(packetData);
                     break;
                 case Packets.PacketType.CREATE_USER:
-                    Debug.Log("생성");
                     HandleCreateUserPacket(packetData);
                     break;
                 case Packets.PacketType.REMOVE_USER:
-                    Debug.Log("삭제");
                     HandleRemoveUserPacket(packetData);
                     break;
                 case Packets.PacketType.GAME_START:
