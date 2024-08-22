@@ -710,6 +710,12 @@ public class NetworkManager : MonoBehaviour
 
     void HandleErrorResponsePacket(Response response)
     {
+        if (response.responseCode == (uint)ErrorCodes.ErrorCode.CLIENT_VERSION_MISMATCH)
+        {
+            AudioManager.instance.PlaySfx(AudioManager.Sfx.LevelUp);
+            StartCoroutine(NoticeRoutine(5));
+        }
+
         if (response.responseCode == (uint)ErrorCodes.ErrorCode.INVALID_SEQUENCE)
         {
             Application.Quit();
