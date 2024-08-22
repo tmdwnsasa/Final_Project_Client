@@ -691,6 +691,10 @@ public class NetworkManager : MonoBehaviour
             GameManager.instance.mapUI.SetActive(false);
         }
 
+        if(GameManager.instance.inventoryUI.activeSelf) {
+            GameManager.instance.inventoryUI.SetActive(false);
+        }
+
         AudioManager.instance.PlayBgm(false);
         isLobby = false;
         GameManager.instance.matchStartUI.SetActive(false);
@@ -698,6 +702,7 @@ public class NetworkManager : MonoBehaviour
         GameManager.instance.exitBtn.SetActive(false);
         GameManager.instance.storeBtn.SetActive(false);
         GameManager.instance.mapBtn.SetActive(false);
+        GameManager.instance.inventoryButton.SetActive(false);
         GameManager.instance.AnnouncementMap.SetActive(true);
         CharacterManager.instance.SetCharacterHp(response);
         CharacterManager.instance.SetCharacterTag(response);
