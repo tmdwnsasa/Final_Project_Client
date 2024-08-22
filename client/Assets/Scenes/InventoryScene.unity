@@ -45484,10 +45484,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemSprites:
-  - {fileID: 143021600, guid: 0d5e657ee5a074e4baa53d5b248a01d2, type: 3}
-  - {fileID: -1972582131, guid: 0d5e657ee5a074e4baa53d5b248a01d2, type: 3}
   - {fileID: 1349035616, guid: 0d5e657ee5a074e4baa53d5b248a01d2, type: 3}
-  - {fileID: -353751291, guid: 0d5e657ee5a074e4baa53d5b248a01d2, type: 3}
+  - {fileID: -201829820, guid: d71a3dc7aa20fad4f9a99fc76a9254ba, type: 3}
+  - {fileID: -1972582131, guid: 0d5e657ee5a074e4baa53d5b248a01d2, type: 3}
+  - {fileID: -966295699, guid: d71a3dc7aa20fad4f9a99fc76a9254ba, type: 3}
   equipmentStore: []
   farmers:
   - {fileID: -628906190, guid: 99a24620d31e5ce4e823c32d11e17c2c, type: 3}
@@ -59456,8 +59456,8 @@ MonoBehaviour:
   - {fileID: 22100000, guid: 1aab438ac4cdc4d36b86fc36c80f39ad, type: 2}
   - {fileID: 22100000, guid: 19bee3ea924744a4b88dc35a07a6debf, type: 2}
   projectilePrefab: {fileID: 0}
-  firePoint: {fileID: 0}
-  bulletManager: {fileID: 0}
+  prefabManager: {fileID: 0}
+  AoePrefab: {fileID: 0}
   zSkill: 
   zSkill_CoolTime: 0
   zSkill_id: 0
@@ -59465,7 +59465,11 @@ MonoBehaviour:
   xSkill_CoolTime: 0
   xSkill_id: 0
   directionX: 0
+  sickleRange: {fileID: 0}
+  shovelRange: {fileID: 0}
   gunSprite: {fileID: 0}
+  blueHealPrefab: {fileID: 0}
+  greenHealPrefab: {fileID: 0}
   x: 1
   y: 1
   BoxArea: {x: 0.5, y: 0}
@@ -69983,7 +69987,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1955440500
 RectTransform:
   m_ObjectHideFlags: 0

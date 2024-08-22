@@ -309,6 +309,7 @@ public class ButtonController : MonoBehaviour
         GameManager.instance.storeBtn.SetActive(true);
         GameManager.instance.storeUI.SetActive(false);
         GameManager.instance.mapBtn.SetActive(true);
+        GameManager.instance.inventoryButton.SetActive(true);
         GameManager.instance.storeBtn.GetComponent<Button>().interactable = true;
         GameManager.instance.storeUI.transform.GetChild(0).gameObject.SetActive(true);
         GameManager.instance.storeUI.transform.GetChild(1).gameObject.SetActive(false);
