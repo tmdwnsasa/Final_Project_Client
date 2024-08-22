@@ -34,6 +34,9 @@ public class PlayerPrefab : MonoBehaviour
     public GameObject blueHealPrefab;
     public GameObject greenHealPrefab;
 
+    //불장판 관련 텍스트
+    public GameObject AoePrefab;
+
     void Awake()
     {
         anim = GetComponent<Animator>();
@@ -226,6 +229,15 @@ public class PlayerPrefab : MonoBehaviour
                     HealPrefab greenHealScript = greenHeal.GetComponent<HealPrefab>();
                     greenHealScript.duration = duration;
                 }                
+                break;
+            case 8:
+                if(GameManager.instance.characterId == 1)
+                {
+                    GameObject fireAoe = Instantiate(AoePrefab, transform.position, Quaternion.identity);
+                    fireAoe.transform.localScale = new Vector3(rangeX, rangeY, 1);
+                    AoePrefab fireAoeScript = fireAoe.GetComponent<AoePrefab>();
+                    fireAoeScript.duration = duration;
+                }
                 break;
             default:
                 break;

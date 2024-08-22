@@ -452,7 +452,7 @@ public class UnequipItemPayload
 public class StoreOpenRequestPayload
 {
     [ProtoMember(1, IsRequired = true)]
-    public string message { get; set; }
+    public string sessionId { get; set; }
 }
 
 [ProtoContract]
@@ -463,6 +463,9 @@ public class PurchaseCharacterRequestPayload
 
     [ProtoMember(2, IsRequired = true)]
     public string price { get; set; }
+
+    [ProtoMember(3, IsRequired = true)]
+    public string sessionId { get; set; }
 }
 
 [ProtoContract]
@@ -473,6 +476,9 @@ public class PurchaseEquipmentRequestPayload
 
     [ProtoMember(2, IsRequired = true)]
     public string price { get; set; }
+
+    [ProtoMember(3, IsRequired = true)]
+    public string sessionId { get; set; }
 }
 
 [ProtoContract]

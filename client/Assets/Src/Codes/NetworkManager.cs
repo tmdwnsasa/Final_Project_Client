@@ -366,31 +366,33 @@ public class NetworkManager : MonoBehaviour
         SendPacket(unequipPayload, (uint)Handlers.HandlerIds.UNEQUIP_ITEM);
     }
 
-    public void SendStoreOpenPacket()
+    public void SendStoreOpenPacket(string sessionId)
     {
         StoreOpenRequestPayload StoreOpenRequestPayload = new StoreOpenRequestPayload
         {
-            message = "storeOpen"
+            sessionId = sessionId
         };
         SendPacket(StoreOpenRequestPayload, (uint)Handlers.HandlerIds.OPEN_STORE);
     }
 
-    public void SendPurchaseCharacterPacket(string name, string price)
+    public void SendPurchaseCharacterPacket(string name, string price, string sessionId)
     {
         PurchaseCharacterRequestPayload purchaseCharacterRequestPayload = new PurchaseCharacterRequestPayload
         {
             name = name,
-            price = price
+            price = price,
+            sessionId = sessionId
         };
         SendPacket(purchaseCharacterRequestPayload, (uint)Handlers.HandlerIds.PURCHASE_CHARACTER);
     }
 
-    public void SendPurchaseEquipmentPacket(string name, string price)
+    public void SendPurchaseEquipmentPacket(string name, string price, string sessionId)
     {
         PurchaseEquipmentRequestPayload purchaseEquipmentRequestPayload = new PurchaseEquipmentRequestPayload
         {
             name = name,
-            price = price
+            price = price,
+            sessionId = sessionId
         };
         SendPacket(purchaseEquipmentRequestPayload, (uint)Handlers.HandlerIds.PURCHASE_EQUIPMENT);
     }

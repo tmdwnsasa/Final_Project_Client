@@ -39,6 +39,9 @@ public class Player : MonoBehaviour
     public GameObject projectilePrefab;
     public GameObject prefabManager;
 
+    //불장판 관련 텍스트
+    public GameObject AoePrefab;
+
     private Vector2 oldInputVec;
     private bool isPlusX;
     private bool isMinusX;
@@ -378,6 +381,15 @@ public class Player : MonoBehaviour
                     HealPrefab greenHealScript = greenHeal.GetComponent<HealPrefab>();
                     greenHealScript.duration = duration;
                 }                
+                break;
+            case 8:
+                if(GameManager.instance.characterId == 1)
+                {
+                    GameObject fireAoe = Instantiate(AoePrefab, transform.position, Quaternion.identity, prefabManager.transform);
+                    fireAoe.transform.localScale = new Vector3(rangeX, rangeY, 1);
+                    AoePrefab fireAoeScript = fireAoe.GetComponent<AoePrefab>();
+                    fireAoeScript.duration = duration;
+                }
                 break;
             default:
                 break;
