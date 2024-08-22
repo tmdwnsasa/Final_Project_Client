@@ -143,9 +143,6 @@ public class ButtonController : MonoBehaviour
                 Handlers.PlayerItem item = InventoryManager.instance.inventory.Find(item => item.itemId == EventSystem.current.currentSelectedGameObject.transform.GetComponent<InventorySlot>().item.itemId);
                 int num = InventoryManager.instance.inventory.RemoveAll(item => item.itemId == EventSystem.current.currentSelectedGameObject.transform.GetComponent<InventorySlot>().item.itemId);
 
-                GameManager.instance.inventoryUI.transform.GetChild(5).GetChild(i).GetComponent<InventorySlot>().item = EventSystem.current.currentSelectedGameObject.transform.GetComponent<InventorySlot>().item;
-                EventSystem.current.currentSelectedGameObject.transform.GetComponent<InventorySlot>().item = new Handlers.ItemStats();
-
                 InventoryManager.instance.ShowEquippedItems();
                 InventoryManager.instance.ShowInventoryItems();
 

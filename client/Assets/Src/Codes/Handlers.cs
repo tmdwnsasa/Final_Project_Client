@@ -313,6 +313,9 @@ public class Handlers : MonoBehaviour
         GameManager.instance.equipmentPurchaseCheckUI.SetActive(false);
         GameManager.instance.purchaseMessageUI.SetActive(true);
 
+        if (purchaseStateMessage.remainMoney == 0)
+            return;
+
         InventoryManager.instance.inventory = purchaseStateMessage.allInventoryItems;
         InventoryManager.instance.equipment = purchaseStateMessage.allEquippedItems;
         InventoryManager.instance.money = purchaseStateMessage.remainMoney;
