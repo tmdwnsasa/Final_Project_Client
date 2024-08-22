@@ -215,13 +215,13 @@ public class ButtonController : MonoBehaviour
     public void OnPoliceButtonClicked()
     {
         GameManager.instance.guild = 1;
-        AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
+        AudioManager.instance.PlaySfx(AudioManager.SFX.Select);
     }
 
     public void OnFarmerButtonClicked()
     {
         GameManager.instance.guild = 2;
-        AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
+        AudioManager.instance.PlaySfx(AudioManager.SFX.Select);
     }
 
     //진영별 점령 땅 확인 버튼

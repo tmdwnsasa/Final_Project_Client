@@ -49,14 +49,14 @@ public class NetworkManager : MonoBehaviour
             }
             else
             {
-                AudioManager.instance.PlaySfx(AudioManager.Sfx.LevelUp);
+                AudioManager.instance.PlaySfx(AudioManager.SFX.LevelUp);
                 StartCoroutine(NoticeRoutine(1));
             }
 
         }
         else
         {
-            AudioManager.instance.PlaySfx(AudioManager.Sfx.LevelUp);
+            AudioManager.instance.PlaySfx(AudioManager.SFX.LevelUp);
             StartCoroutine(NoticeRoutine(0));
         }
 
@@ -485,7 +485,7 @@ public class NetworkManager : MonoBehaviour
 
         if (response.responseCode != 0 && !uiNotice.activeSelf)
         {
-            AudioManager.instance.PlaySfx(AudioManager.Sfx.LevelUp);
+            AudioManager.instance.PlaySfx(AudioManager.SFX.LevelUp);
             StartCoroutine(NoticeRoutine(2));
             return;
         }
@@ -690,7 +690,7 @@ public class NetworkManager : MonoBehaviour
         response.responseCode == (uint)ErrorCodes.ErrorCode.ALREADY_EXIST_NAME)
         {
             GameManager.instance.registerUI.transform.GetChild(3).GetComponent<Button>().interactable = true;
-            AudioManager.instance.PlaySfx(AudioManager.Sfx.LevelUp);
+            AudioManager.instance.PlaySfx(AudioManager.SFX.LevelUp);
             StartCoroutine(NoticeRoutine(3));
         }
 
@@ -699,7 +699,7 @@ public class NetworkManager : MonoBehaviour
         response.responseCode == (uint)ErrorCodes.ErrorCode.MISMATCH_PASSWORD)
         {
             GameManager.instance.loginUI.transform.GetChild(3).GetComponent<Button>().interactable = true;
-            AudioManager.instance.PlaySfx(AudioManager.Sfx.LevelUp);
+            AudioManager.instance.PlaySfx(AudioManager.SFX.LevelUp);
             StartCoroutine(NoticeRoutine(4));
         }
 

@@ -7,9 +7,9 @@ public class AudioManager : MonoBehaviour
     public static AudioManager instance;
 
     [Header("#BGM")]
-    public AudioClip bgmClip;
+    public AudioClip[] bgmClip;
     public float bgmVolume;
-    AudioSource bgmPlayer;
+    AudioSource[] bgmPlayer;
     AudioHighPassFilter bgmEffect;
 
     [Header("#SFX")]
@@ -19,7 +19,16 @@ public class AudioManager : MonoBehaviour
     AudioSource[] sfxPlayers;
     int channelIndex;
 
-    public enum Sfx { Dead, Hit, LevelUp = 3, Lose, Melee, Range = 7, Select, Win }
+    [Header("#LoopedSFX")]
+    public AudioClip[] LoopedSfxClips;
+    public float LoopedSfxVolume;
+    public int LoopedChannels;
+    AudioSource[] LoopedSfxPlayers;
+    int LoopedChannelIndex;
+
+    public enum BGM : int
+    { Lobby = 0, Game }
+    public enum SFX { Dead, Hit, LevelUp = 3, Lose, Melee, Range = 7, Select, Win }
 
 
     void Awake()
@@ -33,11 +42,15 @@ public class AudioManager : MonoBehaviour
         // 배경음 플레이어 초기화
         GameObject bgmObject = new GameObject("BgmPlayer");
         bgmObject.transform.parent = transform;
-        bgmPlayer = bgmObject.AddComponent<AudioSource>();
-        bgmPlayer.playOnAwake = false;
-        bgmPlayer.loop = true;
-        bgmPlayer.volume = bgmVolume;
-        bgmPlayer.clip = bgmClip;
+
+        for (int i = 0; i < sfxPlayers.Length; i++)
+        {
+            bgmPlayer[i] = bgmObject.AddComponent<AudioSource>();
+            bgmPlayer[i].playOnAwake = false;
+            bgmPlayer[i].loop = true;
+            bgmPlayer[i].volume = bgmVolume;
+            bgmPlayer[i].clip = bgmClip[i];
+        }
         bgmEffect = Camera.main.GetComponent<AudioHighPassFilter>();
 
         // 효과음 플레이어 초기화
@@ -52,19 +65,39 @@ public class AudioManager : MonoBehaviour
             sfxPlayers[i].bypassListenerEffects = true;
             sfxPlayers[i].volume = sfxVolume;
         }
+
+        // 반복 효과음 플레이어 초기화
+        GameObject loopedSfxObject = new GameObject("LoopedSfxPlayer");
+        loopedSfxObject.transform.parent = transform;
+        LoopedSfxPlayers = new AudioSource[channels];
+
+        for (int i = 0; i < LoopedSfxPlayers.Length; i++)
+        {
+            LoopedSfxPlayers[i] = sfxObject.AddComponent<AudioSource>();
+            LoopedSfxPlayers[i].playOnAwake = false;
+            LoopedSfxPlayers[i].loop = true;
+            LoopedSfxPlayers[i].bypassListenerEffects = true;
+            LoopedSfxPlayers[i].volume = sfxVolume;
+        }
     }
 
     public void PlayBgm(bool isPlay)
     {
         if (isPlay)
         {
+            if(NetworkManager.instance.isLobby == true)
+                bgmPlayer[(int)BGM.Lobby].Play();
+            else if (NetworkManager.instance.isLobby == false)
+                bgmPlayer[(int)BGM.Game].Play();
             //bgmPlayer.Play();
             //테스트할때 잠시 브금 꺼둠! 이부분 꼭 머지하기전에 고치기
-            bgmPlayer.Stop();
         }
         else
         {
-            bgmPlayer.Stop();
+            if (NetworkManager.instance.isLobby == true)
+                bgmPlayer[(int)BGM.Lobby].Stop();
+            else if (NetworkManager.instance.isLobby == false)
+                bgmPlayer[(int)BGM.Game].Stop();
         }
     }
 
@@ -73,7 +106,7 @@ public class AudioManager : MonoBehaviour
         bgmEffect.enabled = isPlay;
     }
 
-    public void PlaySfx(Sfx sfx)
+    public void PlaySfx(SFX sfx)
     {
 
         for (int i = 0; i < sfxPlayers.Length; i++)
@@ -86,7 +119,7 @@ public class AudioManager : MonoBehaviour
             }
 
             int ranIndex = 0;
-            if (sfx == Sfx.Hit || sfx == Sfx.Melee)
+            if (sfx == SFX.Hit || sfx == SFX.Melee)
             {
                 ranIndex = Random.Range(0, 2);
             }
