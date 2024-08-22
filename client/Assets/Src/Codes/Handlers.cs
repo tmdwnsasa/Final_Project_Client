@@ -364,6 +364,7 @@ public class Handlers : MonoBehaviour
         NetworkManager.instance.isLobby = true;
 
         GameManager.instance.matchStartUI.SetActive(true);
+        GameManager.instance.inventoryButton.SetActive(true);
         GameManager.instance.exitBtn.SetActive(true);
         GameManager.instance.mapBtn.SetActive(true);
         GameManager.instance.player.hpSlider.gameObject.SetActive(false);
