@@ -9,26 +9,19 @@ public class AudioManager : MonoBehaviour
     [Header("#BGM")]
     public AudioClip[] bgmClip;
     public float bgmVolume;
+    public int bgmChannels;
     AudioSource[] bgmPlayer;
     AudioHighPassFilter bgmEffect;
 
     [Header("#SFX")]
     public AudioClip[] sfxClips;
     public float sfxVolume;
-    public int channels;
+    public int sfxChannels;
     AudioSource[] sfxPlayers;
     int channelIndex;
 
-    [Header("#LoopedSFX")]
-    public AudioClip[] LoopedSfxClips;
-    public float LoopedSfxVolume;
-    public int LoopedChannels;
-    AudioSource[] LoopedSfxPlayers;
-    int LoopedChannelIndex;
-
-    public enum BGM : int
-    { Lobby = 0, Game }
-    public enum SFX { Dead, Hit, LevelUp = 3, Lose, Melee, Range = 7, Select, Win }
+    public enum Bgm { Lobby, Game }
+    public enum Sfx { Dead, Shot, Swing, LevelUp, Hurt, Heal, Walk, Select, Win, Lose, Stun, Berserk, Berserk2, Fire }
 
 
     void Awake()
@@ -42,12 +35,14 @@ public class AudioManager : MonoBehaviour
         // 배경음 플레이어 초기화
         GameObject bgmObject = new GameObject("BgmPlayer");
         bgmObject.transform.parent = transform;
+        bgmPlayer = new AudioSource[bgmChannels];
 
-        for (int i = 0; i < sfxPlayers.Length; i++)
+        for (int i = 0; i < bgmPlayer.Length; i++)
         {
             bgmPlayer[i] = bgmObject.AddComponent<AudioSource>();
             bgmPlayer[i].playOnAwake = false;
             bgmPlayer[i].loop = true;
+            //작은 소리 ||로 추가
             bgmPlayer[i].volume = bgmVolume;
             bgmPlayer[i].clip = bgmClip[i];
         }
@@ -56,28 +51,15 @@ public class AudioManager : MonoBehaviour
         // 효과음 플레이어 초기화
         GameObject sfxObject = new GameObject("SfxPlayer");
         sfxObject.transform.parent = transform;
-        sfxPlayers = new AudioSource[channels];
+        sfxPlayers = new AudioSource[sfxChannels];
 
         for (int i = 0; i < sfxPlayers.Length; i++)
         {
             sfxPlayers[i] = sfxObject.AddComponent<AudioSource>();
             sfxPlayers[i].playOnAwake = false;
+            //루프 해야하는 소리 ||로 추가
             sfxPlayers[i].bypassListenerEffects = true;
             sfxPlayers[i].volume = sfxVolume;
-        }
-
-        // 반복 효과음 플레이어 초기화
-        GameObject loopedSfxObject = new GameObject("LoopedSfxPlayer");
-        loopedSfxObject.transform.parent = transform;
-        LoopedSfxPlayers = new AudioSource[channels];
-
-        for (int i = 0; i < LoopedSfxPlayers.Length; i++)
-        {
-            LoopedSfxPlayers[i] = sfxObject.AddComponent<AudioSource>();
-            LoopedSfxPlayers[i].playOnAwake = false;
-            LoopedSfxPlayers[i].loop = true;
-            LoopedSfxPlayers[i].bypassListenerEffects = true;
-            LoopedSfxPlayers[i].volume = sfxVolume;
         }
     }
 
@@ -85,19 +67,27 @@ public class AudioManager : MonoBehaviour
     {
         if (isPlay)
         {
-            if(NetworkManager.instance.isLobby == true)
-                bgmPlayer[(int)BGM.Lobby].Play();
-            else if (NetworkManager.instance.isLobby == false)
-                bgmPlayer[(int)BGM.Game].Play();
             //bgmPlayer.Play();
             //테스트할때 잠시 브금 꺼둠! 이부분 꼭 머지하기전에 고치기
+            if(NetworkManager.instance.isLobby == true)
+            {
+                bgmPlayer[(int)Bgm.Lobby].Play();
+            }
+            else if(NetworkManager.instance.isLobby == false)
+            {
+                bgmPlayer[(int)Bgm.Game].Play();
+            }
         }
         else
         {
-            if (NetworkManager.instance.isLobby == true)
-                bgmPlayer[(int)BGM.Lobby].Stop();
-            else if (NetworkManager.instance.isLobby == false)
-                bgmPlayer[(int)BGM.Game].Stop();
+            if(NetworkManager.instance.isLobby == true)
+            {
+                bgmPlayer[(int)Bgm.Lobby].Stop();
+            }
+            else if(NetworkManager.instance.isLobby == false)
+            {
+                bgmPlayer[(int)Bgm.Game].Stop();
+            }
         }
     }
 
@@ -106,9 +96,8 @@ public class AudioManager : MonoBehaviour
         bgmEffect.enabled = isPlay;
     }
 
-    public void PlaySfx(SFX sfx)
+    public void PlaySfx(Sfx sfx)
     {
-
         for (int i = 0; i < sfxPlayers.Length; i++)
         {
             int loopIndex = (i + channelIndex) % sfxPlayers.Length;
@@ -119,9 +108,15 @@ public class AudioManager : MonoBehaviour
             }
 
             int ranIndex = 0;
-            if (sfx == SFX.Hit || sfx == SFX.Melee)
+            if(sfx == Sfx.Walk)
             {
-                ranIndex = Random.Range(0, 2);
+                sfxPlayers[(int)Sfx.Walk].loop = true;
+            }
+
+            //랜덤으로 소리 나야할 때
+            if (sfx == Sfx.Berserk)
+            {
+                ranIndex = Random.Range(0, 1);
             }
 
             channelIndex = loopIndex;

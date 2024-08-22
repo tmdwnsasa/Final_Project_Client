@@ -29609,21 +29609,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73691c2d8013f423ca8c44f2018c39f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bgmClip: {fileID: 8300000, guid: 4559935c00ef8e94b846e2e03e39f0d0, type: 3}
-  bgmVolume: 0.05
+  bgmClip:
+  - {fileID: 8300000, guid: fb51dda1354e8e342bdfc96702ba1461, type: 3}
+  - {fileID: 8300000, guid: c75819a9c75280e40ba3c70df13cbff7, type: 3}
+  bgmVolume: 0.1
+  bgmChannels: 2
   sfxClips:
-  - {fileID: 8300000, guid: 291608b8d286e2a4580ff36324455ce2, type: 3}
-  - {fileID: 8300000, guid: 0bddcb411d826e14bb26d40ae45d8e22, type: 3}
-  - {fileID: 8300000, guid: 6b7eaf4532a2f614595ad58d2b86efc4, type: 3}
+  - {fileID: 8300000, guid: 037a13fbd3b1a334bba3843808048a36, type: 3}
+  - {fileID: 8300000, guid: 0a1a9bf7e2bc3594ab731a1f99d8ada4, type: 3}
+  - {fileID: 8300000, guid: e8dfdc49ccf759d4bb8d6f67609c0f15, type: 3}
   - {fileID: 8300000, guid: 64795b87003c2324fa0814fbc336066c, type: 3}
-  - {fileID: 8300000, guid: c8a3fe17a6641ec48b38fb455a40a223, type: 3}
-  - {fileID: 8300000, guid: 14f24de2a9a70154e96297de25e2184c, type: 3}
-  - {fileID: 8300000, guid: d1bef3102d08ba944ac7bcac65733a26, type: 3}
-  - {fileID: 8300000, guid: 6f0c572d865b4664db7a460972bc4768, type: 3}
+  - {fileID: 8300000, guid: 97a15856e539bc5428d0804061c9f860, type: 3}
+  - {fileID: 8300000, guid: c318097692628f34ab9b8648c6df01bb, type: 3}
+  - {fileID: 8300000, guid: 6703a159f9b557d4380aa186ea246848, type: 3}
   - {fileID: 8300000, guid: 4b294d59d2399014daa718b35c9de73b, type: 3}
-  - {fileID: 8300000, guid: 2c4bc183a5df5aa4baf7c4fcf236a2de, type: 3}
-  sfxVolume: 0.1
-  channels: 16
+  - {fileID: 8300000, guid: 2b6f048e377dd5a409b795642fefc8af, type: 3}
+  - {fileID: 8300000, guid: d69e5d74797c8d940b10f3017bf1abe4, type: 3}
+  - {fileID: 8300000, guid: 6cad396c2e20fe446853e73677ecee42, type: 3}
+  - {fileID: 8300000, guid: 7cf1d6495fb4dfb4bb7fd6d40165df4b, type: 3}
+  - {fileID: 8300000, guid: eb97012dafa05044e8313cae53242798, type: 3}
+  - {fileID: 8300000, guid: 3f356c19ab9d8d144a418c24966b158c, type: 3}
+  sfxVolume: 0.2
+  sfxChannels: 14
 --- !u!4 &749104444
 Transform:
   m_ObjectHideFlags: 0

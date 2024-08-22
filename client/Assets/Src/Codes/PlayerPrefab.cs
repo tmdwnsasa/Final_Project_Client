@@ -176,6 +176,10 @@ public class PlayerPrefab : MonoBehaviour
                     }
                     StartCoroutine(AttackRangeCheck(shovelRange));
                 }
+                if (skill_type == 1)
+                    AudioManager.instance.PlaySfx(AudioManager.Sfx.Swing);
+                if (skill_type == 7)
+                    AudioManager.instance.PlaySfx(AudioManager.Sfx.Stun);
                 break;
             case 2:
                 GameObject projectile = Instantiate(projectilePrefab, transform.position + new Vector3(x, y), Quaternion.identity);
@@ -209,12 +213,14 @@ public class PlayerPrefab : MonoBehaviour
                     StartCoroutine(SetActiveGunSprite());
                     projScript.direction = Vector2.left;
                 }
+                AudioManager.instance.PlaySfx(AudioManager.Sfx.Shot);
                 break;
             case 4:
                 if (characterId == 0)
                 {
                     StartCoroutine(ChangeColorByBuff("green", duration));
                 }
+                AudioManager.instance.PlaySfx(AudioManager.Sfx.Berserk);
                 break;
             case 5:
                 if(guild == 1) {
@@ -238,6 +244,7 @@ public class PlayerPrefab : MonoBehaviour
                     AoePrefab fireAoeScript = fireAoe.GetComponent<AoePrefab>();
                     fireAoeScript.duration = duration;
                 }
+                AudioManager.instance.PlaySfx(AudioManager.Sfx.Fire);
                 break;
             default:
                 break;
@@ -272,8 +279,10 @@ public class PlayerPrefab : MonoBehaviour
     {
         if(isHeal) {
             StartCoroutine(AttackedCharacter(Color.green));
+            AudioManager.instance.PlaySfx(AudioManager.Sfx.Heal);
         } else {
             StartCoroutine(AttackedCharacter(Color.red));
+            AudioManager.instance.PlaySfx(AudioManager.Sfx.Hurt);
         }
 
         nowHp = hp;
@@ -291,6 +300,7 @@ public class PlayerPrefab : MonoBehaviour
             hpSlider.gameObject.SetActive(false);
             anim.SetBool("Dead", true);
             gameObject.GetComponent<CapsuleCollider2D>().enabled = false;
+            AudioManager.instance.PlaySfx(AudioManager.Sfx.Dead);
         }
     }
 

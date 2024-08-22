@@ -330,6 +330,10 @@ public class Player : MonoBehaviour
                     }
                     StartCoroutine(AttackRangeCheck(shovelRange));
                 }
+                if(skillType == 1)
+                    AudioManager.instance.PlaySfx(AudioManager.Sfx.Swing);
+                if (skillType == 7)
+                    AudioManager.instance.PlaySfx(AudioManager.Sfx.Stun);
                 break;
             case 2:
                 GameObject projectile = Instantiate(projectilePrefab, transform.position + new Vector3(x, y), Quaternion.identity, prefabManager.transform);
@@ -363,12 +367,14 @@ public class Player : MonoBehaviour
                     StartCoroutine(SetActiveGunSprite());
                     projScript.direction = Vector2.left;
                 }
+                AudioManager.instance.PlaySfx(AudioManager.Sfx.Shot);
                 break;
             case 4:
                 if (GameManager.instance.characterId == 0)
                 {
                     StartCoroutine(ChangeColorByBuff("green", duration));
                 }
+                AudioManager.instance.PlaySfx(AudioManager.Sfx.Berserk);
                 break;
             case 5:
                 if(guild == 1) {
@@ -380,7 +386,7 @@ public class Player : MonoBehaviour
                     GameObject greenHeal = Instantiate(greenHealPrefab, transform.position + new Vector3(x, y), Quaternion.identity, prefabManager.transform);
                     HealPrefab greenHealScript = greenHeal.GetComponent<HealPrefab>();
                     greenHealScript.duration = duration;
-                }                
+                }
                 break;
             case 8:
                 if(GameManager.instance.characterId == 1)
@@ -390,6 +396,7 @@ public class Player : MonoBehaviour
                     AoePrefab fireAoeScript = fireAoe.GetComponent<AoePrefab>();
                     fireAoeScript.duration = duration;
                 }
+                AudioManager.instance.PlaySfx(AudioManager.Sfx.Fire);
                 break;
             default:
                 break;
@@ -430,10 +437,14 @@ public class Player : MonoBehaviour
 
     public void SetHp(float hp, bool isHeal)
     {
-        if(isHeal) {
+        if(isHeal)
+        {
             StartCoroutine(AttackedCharacter(Color.green));
-        } else {
+            AudioManager.instance.PlaySfx(AudioManager.Sfx.Heal);
+        } else
+        {
             StartCoroutine(AttackedCharacter(Color.red));
+            AudioManager.instance.PlaySfx(AudioManager.Sfx.Hurt);
         }
 
         nowHp = hp;
@@ -452,6 +463,7 @@ public class Player : MonoBehaviour
             anim.SetBool("Dead", true);
             GameManager.instance.isLive = false;
             gameObject.GetComponent<CapsuleCollider2D>().enabled = false;
+            AudioManager.instance.PlaySfx(AudioManager.Sfx.Dead);
         }
     }
 
