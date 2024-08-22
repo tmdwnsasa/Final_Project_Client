@@ -115,12 +115,13 @@ public class ButtonController : MonoBehaviour
 
     public void OnInventoryItemSlotButtonClicked()
     {
+        Debug.Log(EventSystem.current.currentSelectedGameObject);
         if (EventSystem.current.currentSelectedGameObject.transform.GetComponent<InventorySlot>().item.itemName == null)
+  
         {
-            Debug.Log($"Empty Inventory Slot");
-            return;
+           Debug.Log($"Empty Inventory Slot");
+           return;
         }
-
         string itemId = EventSystem.current.currentSelectedGameObject.transform.GetComponent<InventorySlot>().item.itemId.ToString();
         NetworkManager.instance.SendEquipItemPacket(itemId);
 
