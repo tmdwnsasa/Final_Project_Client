@@ -497,13 +497,6 @@ public class NetworkManager : MonoBehaviour
         var response = Packets.Deserialize<Response>(packetData);
         Debug.Log($"HandlerId: {response.handlerId}, responseCode: {response.responseCode}, timestamp: {response.timestamp}");
 
-        if (response.responseCode == (uint)ErrorCodes.ErrorCode.SERVER_REBOOT)
-        {
-            AudioManager.instance.PlaySfx(AudioManager.Sfx.LevelUp);
-            StartCoroutine(NoticeRoutine(5));
-            return;
-        }
-
         HandleErrorResponsePacket(response);
 
         if (response.responseCode != 0 && !uiNotice.activeSelf)

@@ -507,10 +507,3 @@ public class MapPayload
         public string ownedBy { get; set; }
     }
 }
-
-[ProtoContract]
-public class ServerPacket
-{
-    [ProtoMember(1)]
-    public uint responseCode { get; set; }
-}
