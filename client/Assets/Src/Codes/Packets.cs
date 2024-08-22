@@ -424,6 +424,31 @@ public class BattleStart
 }
 
 [ProtoContract]
+public class InventoryPayload
+{
+    [ProtoMember(1, IsRequired = true)]
+    public string sessionId { get; set; }
+
+}
+
+
+[ProtoContract]
+public class EquipItemPayload
+{
+    [ProtoMember(1, IsRequired = true)]
+    public string itemId { get; set; }
+
+}
+
+[ProtoContract]
+public class UnequipItemPayload
+{
+    [ProtoMember(1, IsRequired = true)]
+    public string itemId { get; set; }
+
+}
+
+[ProtoContract]
 public class StoreOpenRequestPayload
 {
     [ProtoMember(1, IsRequired = true)]

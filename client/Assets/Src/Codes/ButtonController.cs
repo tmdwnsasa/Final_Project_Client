@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class ButtonController : MonoBehaviour
 {
@@ -28,7 +29,8 @@ public class ButtonController : MonoBehaviour
         string name = GameManager.instance.registerUI.transform.GetChild(2).GetChild(2).GetComponent<InputField>().text;
         int guild = GameManager.instance.guild;
 
-        if (id != "" && password != "" && name != "") {
+        if (id != "" && password != "" && name != "")
+        {
             NetworkManager.instance.SendRegisterPacket(id, password, name, guild);
             GameManager.instance.registerUI.transform.GetChild(3).GetComponent<Button>().interactable = false;
         }
@@ -93,12 +95,114 @@ public class ButtonController : MonoBehaviour
         AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
     }
 
+    //인벤토리 버튼
+    public void OnInventoryButtonClicked()
+    {
+        string sessionId = GameManager.instance.sessionId;
+
+        //GameManager.instance.inventoryButton.transform.GetChild(0).GetComponent<Button>().interactable = false;
+        GameManager.instance.inventoryUI.SetActive(!GameManager.instance.inventoryUI.activeSelf);
+        InventoryManager.instance.ShowInventoryItems();
+        InventoryManager.instance.ShowEquippedItems();
+
+        GameManager.instance.storeBtn.SetActive(false);
+        GameManager.instance.mapBtn.SetActive(false);
+        GameManager.instance.matchStartUI.SetActive(false);
+        GameManager.instance.exitBtn.SetActive(false);
+        GameManager.instance.inventoryButton.SetActive(false);
+    }
+
+    public void OnInventoryItemSlotButtonClicked()
+    {
+        if (EventSystem.current.currentSelectedGameObject.transform.GetComponent<InventorySlot>().item.itemName == null)
+        {
+            Debug.Log($"Empty Inventory Slot");
+            return;
+        }
+
+        string itemId = EventSystem.current.currentSelectedGameObject.transform.GetComponent<InventorySlot>().item.itemId.ToString();
+        NetworkManager.instance.SendEquipItemPacket(itemId);
+
+        for (int i = 0; i < 3; i++)
+        {
+            //Debug.Log(GameManager.instance.inventoryUI.transform.GetChild(5).GetChild(i).GetComponent<InventorySlot>().item.itemEquipSlot);
+            if (GameManager.instance.inventoryUI.transform.GetChild(5).GetChild(i).GetComponent<InventorySlot>().item.itemEquipSlot ==
+                EventSystem.current.currentSelectedGameObject.transform.GetComponent<InventorySlot>().item.itemEquipSlot)
+            {
+                Debug.Log($"Equip Error");
+                return;
+            }
+        }
+
+        for (int i = 0; i < 3; i++)
+        {
+            if (GameManager.instance.inventoryUI.transform.GetChild(5).GetChild(i).GetComponent<InventorySlot>().item.itemName == null)
+            {
+                Handlers.PlayerItem item = InventoryManager.instance.inventory.Find(item => item.itemId == EventSystem.current.currentSelectedGameObject.transform.GetComponent<InventorySlot>().item.itemId);
+                int num = InventoryManager.instance.inventory.RemoveAll(item => item.itemId == EventSystem.current.currentSelectedGameObject.transform.GetComponent<InventorySlot>().item.itemId);
+
+                GameManager.instance.inventoryUI.transform.GetChild(5).GetChild(i).GetComponent<InventorySlot>().item = EventSystem.current.currentSelectedGameObject.transform.GetComponent<InventorySlot>().item;
+                EventSystem.current.currentSelectedGameObject.transform.GetComponent<InventorySlot>().item = new Handlers.ItemStats();
+
+                InventoryManager.instance.ShowEquippedItems();
+                InventoryManager.instance.ShowInventoryItems();
+
+                break;
+            }
+        }
+    }
+
+
+    public void OnEquipmentItemSlotButtonClicked()
+    {
+        if (EventSystem.current.currentSelectedGameObject.transform.GetComponent<InventorySlot>().item.itemName == null)
+        {
+            Debug.Log($"Empty Equipment Slot");
+            return;
+        }
+
+        for (int i = 0; i < 10; i++)
+        {
+            if (GameManager.instance.inventoryUI.transform.GetChild(1).GetChild(0).GetChild(0).GetChild(i).GetComponent<InventorySlot>().item.itemName == null)
+            {
+
+                Handlers.PlayerItem item = InventoryManager.instance.equipment.Find(item => item.itemId == EventSystem.current.currentSelectedGameObject.transform.GetComponent<InventorySlot>().item.itemId);
+                int unequip = InventoryManager.instance.equipment.RemoveAll(item => item.itemId == EventSystem.current.currentSelectedGameObject.transform.GetComponent<InventorySlot>().item.itemId);
+
+                string itemId = EventSystem.current.currentSelectedGameObject.transform.GetComponent<InventorySlot>().item.itemId.ToString();
+                NetworkManager.instance.SendUnequipItemPacket(itemId);
+
+                GameManager.instance.inventoryUI.transform.GetChild(1).GetChild(0).GetChild(0).GetChild(i).GetComponent<InventorySlot>().item = EventSystem.current.currentSelectedGameObject.transform.GetComponent<InventorySlot>().item;
+                EventSystem.current.currentSelectedGameObject.transform.GetComponent<InventorySlot>().item = new Handlers.ItemStats();
+
+                InventoryManager.instance.ShowEquippedItems();
+                InventoryManager.instance.ShowInventoryItems();
+
+                break;
+            }
+        }
+
+    }
+
+
+    //인벤토리 닫기 버튼
+    public void OnInventoryCloseButtonClicked()
+    {
+        GameManager.instance.inventoryUI.SetActive(false);
+        GameManager.instance.storeBtn.SetActive(true);
+        GameManager.instance.mapBtn.SetActive(true);
+        GameManager.instance.matchStartUI.SetActive(true);
+        GameManager.instance.exitBtn.SetActive(true);
+        GameManager.instance.inventoryButton.SetActive(true);
+    }
+
     //상점 버튼
     public void OnStoreButtonClicked()
     {
         string sessionId = GameManager.instance.sessionId;
         NetworkManager.instance.SendStoreOpenPacket(sessionId);
         GameManager.instance.storeBtn.GetComponent<Button>().interactable = false;
+        GameManager.instance.inventoryButton.SetActive(false);
         // GameManager.instance.storeUI.transform.GetChild(2).GetComponent<Button>().interactable = false;
         AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
     }
@@ -152,8 +256,8 @@ public class ButtonController : MonoBehaviour
 
     //상점 장비 선택 버튼
     public void OnSelectEquipmentButtonClicked()
-    { 
-         uint equipmentIndex = 0;
+    {
+        uint equipmentIndex = 0;
         Transform group = GameManager.instance.storeUI.transform.GetChild(1).GetChild(0).GetChild(0).GetChild(0);
         int count = group.childCount;
 
@@ -221,6 +325,7 @@ public class ButtonController : MonoBehaviour
         GameManager.instance.storeBtn.SetActive(true);
         GameManager.instance.storeUI.SetActive(false);
         GameManager.instance.mapBtn.SetActive(true);
+        GameManager.instance.inventoryButton.SetActive(true);
         GameManager.instance.storeBtn.GetComponent<Button>().interactable = true;
         GameManager.instance.storeUI.transform.GetChild(0).gameObject.SetActive(true);
         GameManager.instance.storeUI.transform.GetChild(1).gameObject.SetActive(false);
@@ -254,6 +359,7 @@ public class ButtonController : MonoBehaviour
         GameManager.instance.storeBtn.SetActive(false);
         GameManager.instance.mapBtn.SetActive(false);
         GameManager.instance.mapUI.SetActive(true);
+        GameManager.instance.inventoryButton.SetActive(false);
         AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
     }
 
@@ -270,6 +376,8 @@ public class ButtonController : MonoBehaviour
         GameManager.instance.storeBtn.SetActive(true);
         GameManager.instance.mapBtn.SetActive(true);
         GameManager.instance.mapUI.SetActive(false);
+        GameManager.instance.inventoryButton.SetActive(true);
         AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
+
     }
 }

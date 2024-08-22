@@ -115,7 +115,7 @@ public class AudioManager : MonoBehaviour
 
             //랜덤으로 소리 나야할 때
             if (sfx == Sfx.Berserk)
-            {
+            {   
                 ranIndex = Random.Range(0, 1);
             }
 

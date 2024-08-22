@@ -323,7 +323,6 @@ public class NetworkManager : MonoBehaviour
         {
             sessionId = sessionId
         };
-        Debug.Log($"User's Session Id : {sessionId}");
         SendPacket(MatchingPayload, handlerId);
     }
 
@@ -345,6 +344,26 @@ public class NetworkManager : MonoBehaviour
         };
         SendPacket(exitPayload, (uint)Handlers.HandlerIds.EXIT);
 
+    }
+
+    public void SendEquipItemPacket(string itemId)
+    {
+        EquipItemPayload equipPayload = new EquipItemPayload
+        {
+            itemId = itemId,
+        };
+
+        SendPacket(equipPayload, (uint)Handlers.HandlerIds.EQUIP_ITEM);
+    }
+
+    public void SendUnequipItemPacket(string itemId)
+    {
+        UnequipItemPayload unequipPayload = new UnequipItemPayload
+        {
+            itemId = itemId,
+        };
+
+        SendPacket(unequipPayload, (uint)Handlers.HandlerIds.UNEQUIP_ITEM);
     }
 
     public void SendStoreOpenPacket(string sessionId)
@@ -532,6 +551,14 @@ public class NetworkManager : MonoBehaviour
                     Handlers.instance.ReturnLobbySetting(response.data);
                     break;
                 case (uint)Handlers.HandlerIds.SKILL:
+                    break;
+                case (uint)Handlers.HandlerIds.INVENTORY:
+                    break;
+                case (uint)Handlers.HandlerIds.EQUIP_ITEM:
+                    Handlers.instance.UpdateInventoryAndStats(response.data);
+                    break;
+                case (uint)Handlers.HandlerIds.UNEQUIP_ITEM:
+                    Handlers.instance.UpdateInventoryAndStats(response.data);
                     break;
                 case (uint)Handlers.HandlerIds.EXIT:
                     Application.Quit();
