@@ -68,6 +68,8 @@ public class Player : MonoBehaviour
     public GameObject blueHealPrefab;
     public GameObject greenHealPrefab;
 
+    public TextMeshPro buffText;
+
     public float x = 1, y = 1;
     public Vector2 BoxArea = new Vector2(0.5f, 0);
     void Awake()
@@ -372,7 +374,7 @@ public class Player : MonoBehaviour
             case 4:
                 if (GameManager.instance.characterId == 0)
                 {
-                    StartCoroutine(ChangeColorByBuff("green", duration));
+                    StartCoroutine(StartBuff("나 화났어!", duration));
                 }
                 AudioManager.instance.PlaySfx(AudioManager.Sfx.Berserk);
                 break;
@@ -475,14 +477,12 @@ public class Player : MonoBehaviour
         sprite.color = Color.white;
     }
 
-    IEnumerator ChangeColorByBuff(string color, float duration)
+    IEnumerator StartBuff(string text, float duration)
     {
-        SpriteRenderer sprite = GetComponent<SpriteRenderer>();
-        Color newColor;
-        ColorUtility.TryParseHtmlString(color, out newColor);
-        sprite.color = newColor;
+        buffText.gameObject.SetActive(true);
+        buffText.text = text;
         yield return new WaitForSeconds(duration);
-        sprite.color = Color.white;
+        buffText.gameObject.SetActive(false);
     }
 
     public void SetSkill(string isSkill)
