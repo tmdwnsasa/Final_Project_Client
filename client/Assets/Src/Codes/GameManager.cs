@@ -56,7 +56,6 @@ public class GameManager : MonoBehaviour
     public GameObject exitBtn;
     public GameObject inventoryButton;
     public GameObject inventoryUI;
-    public GameObject equipUnequipItemMessageUI;
     public GameObject storeBtn;
     public GameObject storeUI;
     public GameObject characterPurchaseCheckUI;
@@ -92,7 +91,6 @@ public class GameManager : MonoBehaviour
         exitBtn.SetActive(true);
         inventoryButton.SetActive(true);
         inventoryUI.SetActive(false);
-        equipUnequipItemMessageUI.SetActive(false);
         storeBtn.SetActive(true);
         storeUI.SetActive(false);
         characterPurchaseCheckUI.SetActive(false);
