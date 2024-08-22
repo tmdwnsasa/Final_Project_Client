@@ -4,7 +4,6 @@ using System.Collections;
 using static Handlers;
 using UnityEngine.UI;
 using System;
-using Unity.VisualScripting;
 
 public class InventoryManager : MonoBehaviour
 {

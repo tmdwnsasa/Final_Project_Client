@@ -37,6 +37,8 @@ public class PlayerPrefab : MonoBehaviour
     //불장판 관련 텍스트
     public GameObject AoePrefab;
 
+    public TextMeshPro buffText;
+
     void Awake()
     {
         anim = GetComponent<Animator>();
@@ -218,7 +220,7 @@ public class PlayerPrefab : MonoBehaviour
             case 4:
                 if (characterId == 0)
                 {
-                    StartCoroutine(ChangeColorByBuff("green", duration));
+                    StartCoroutine(StartBuff("나 화났어!", duration));
                 }
                 AudioManager.instance.PlaySfx(AudioManager.Sfx.Berserk);
                 break;
@@ -312,14 +314,12 @@ public class PlayerPrefab : MonoBehaviour
         sprite.color = Color.white;
     }
 
-    IEnumerator ChangeColorByBuff(string color, float duration)
+    IEnumerator StartBuff(string text, float duration)
     {
-        SpriteRenderer sprite = GetComponent<SpriteRenderer>();
-        Color newColor;
-        ColorUtility.TryParseHtmlString(color, out newColor);
-        sprite.color = newColor;
+        buffText.gameObject.SetActive(true);
+        buffText.text = text;
         yield return new WaitForSeconds(duration);
-        sprite.color = Color.white;
+        buffText.gameObject.SetActive(false);
     }
 
     public void startSetHp(float hp)

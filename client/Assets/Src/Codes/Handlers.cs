@@ -2,11 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
-using static Handlers;
-using static UnityEngine.UIElements.UxmlAttributeDescription;
 using UnityEngine.UI;
-using static UnityEditor.Progress;
-using Unity.VisualScripting;
 
 public class Handlers : MonoBehaviour
 {

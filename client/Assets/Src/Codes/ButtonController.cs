@@ -110,6 +110,7 @@ public class ButtonController : MonoBehaviour
         GameManager.instance.matchStartUI.SetActive(false);
         GameManager.instance.exitBtn.SetActive(false);
         GameManager.instance.inventoryButton.SetActive(false);
+        GameManager.instance.chattingUI.SetActive(false);
     }
 
     public void OnInventoryItemSlotButtonClicked()
@@ -194,6 +195,7 @@ public class ButtonController : MonoBehaviour
         GameManager.instance.matchStartUI.SetActive(true);
         GameManager.instance.exitBtn.SetActive(true);
         GameManager.instance.inventoryButton.SetActive(true);
+        GameManager.instance.chattingUI.SetActive(true);
     }
 
     //상점 버튼
@@ -204,6 +206,52 @@ public class ButtonController : MonoBehaviour
         GameManager.instance.storeBtn.GetComponent<Button>().interactable = false;
         GameManager.instance.inventoryButton.SetActive(false);
         // GameManager.instance.storeUI.transform.GetChild(2).GetComponent<Button>().interactable = false;
+
+        // 캐릭터 버튼 세팅
+        uint characterId = 0;
+        Transform characterGroup = GameManager.instance.storeUI.transform.GetChild(0);
+        int characterCount = characterGroup.childCount;
+
+        for (int i = 0; i < characterCount; i++)
+        {
+            Transform btn = characterGroup.GetChild(i);
+            uint index = (uint)i; // 로컬 변수로 캡처
+
+            Button buttonComponent = btn.GetComponent<Button>();
+
+            buttonComponent.onClick.RemoveAllListeners();
+
+            buttonComponent.onClick.AddListener(() =>
+            {
+                characterId = index;
+                GameManager.instance.storeUI.SetActive(false);
+                GameManager.instance.characterPurchaseCheckUI.SetActive(true);
+                GameManager.instance.PurchaseCharacter(characterId);
+            });
+        }
+
+        // 장비 버튼 세팅
+        uint equipmentIndex = 0;
+        Transform equipmentGroup = GameManager.instance.storeUI.transform.GetChild(1).GetChild(0).GetChild(0).GetChild(0);
+        int equipmentCount = equipmentGroup.childCount;
+
+        for (int i = 0; i < equipmentCount; i++)
+        {
+            Transform btn = equipmentGroup.GetChild(i);
+            uint index = (uint)i; // 로컬 변수로 캡처
+
+            Button buttonComponent = btn.GetComponent<Button>();
+
+            buttonComponent.onClick.RemoveAllListeners();
+
+            buttonComponent.onClick.AddListener(() =>
+            {
+                equipmentIndex = index;
+                GameManager.instance.storeUI.SetActive(false);
+                GameManager.instance.equipmentPurchaseCheckUI.SetActive(true);
+                GameManager.instance.PurchaseEquipment(equipmentIndex);
+            });
+        }
         AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
     }
 
@@ -224,60 +272,6 @@ public class ButtonController : MonoBehaviour
         GameManager.instance.storeUI.transform.GetChild(1).gameObject.SetActive(true);
         GameManager.instance.storeUI.transform.GetChild(2).GetComponent<Button>().interactable = true;
         GameManager.instance.storeUI.transform.GetChild(3).GetComponent<Button>().interactable = false;
-        AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
-    }
-
-    //상점 캐릭터 선택 버튼
-    public void OnSelectCharacterButtonClicked()
-    {
-        uint characterId = 0;
-        Transform group = GameManager.instance.storeUI.transform.GetChild(0);
-        int count = group.childCount;
-
-        for (int i = 0; i < count; i++)
-        {
-            Transform btn = group.GetChild(i);
-            uint index = (uint)i; // 로컬 변수로 캡처
-
-            Button buttonComponent = btn.GetComponent<Button>();
-
-            buttonComponent.onClick.RemoveAllListeners();
-
-            buttonComponent.onClick.AddListener(() =>
-            {
-                characterId = index;
-                GameManager.instance.storeUI.SetActive(false);
-                GameManager.instance.characterPurchaseCheckUI.SetActive(true);
-                GameManager.instance.PurchaseCharacter(characterId);
-            });
-        }
-        AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
-    }
-
-    //상점 장비 선택 버튼
-    public void OnSelectEquipmentButtonClicked()
-    {
-        uint equipmentIndex = 0;
-        Transform group = GameManager.instance.storeUI.transform.GetChild(1).GetChild(0).GetChild(0).GetChild(0);
-        int count = group.childCount;
-
-        for (int i = 0; i < count; i++)
-        {
-            Transform btn = group.GetChild(i);
-            uint index = (uint)i; // 로컬 변수로 캡처
-
-            Button buttonComponent = btn.GetComponent<Button>();
-
-            buttonComponent.onClick.RemoveAllListeners();
-
-            buttonComponent.onClick.AddListener(() =>
-            {
-                equipmentIndex = index;
-                GameManager.instance.storeUI.SetActive(false);
-                GameManager.instance.equipmentPurchaseCheckUI.SetActive(true);
-                GameManager.instance.PurchaseEquipment(equipmentIndex);
-            });
-        }
         AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
     }
 

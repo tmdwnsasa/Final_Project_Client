@@ -8,9 +8,6 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
-using static Packets;
-using static Handlers;
-using static UnityEngine.UIElements.UxmlAttributeDescription;
 using UnityEngine.TextCore.Text;
 
 public class NetworkManager : MonoBehaviour
