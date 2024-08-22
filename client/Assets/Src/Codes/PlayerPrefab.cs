@@ -242,7 +242,7 @@ public class PlayerPrefab : MonoBehaviour
                 if(characterId == 1)
                 {
                     GameObject fireAoe = Instantiate(AoePrefab, transform.position, Quaternion.identity);
-                    fireAoe.transform.localScale = new Vector3(rangeX, rangeY, 1);
+                    fireAoe.transform.localScale = new Vector3(rangeX + 5, rangeY + 5, 1);
                     AoePrefab fireAoeScript = fireAoe.GetComponent<AoePrefab>();
                     fireAoeScript.duration = duration;
                 }
