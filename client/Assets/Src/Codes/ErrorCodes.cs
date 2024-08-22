@@ -20,6 +20,7 @@ public class ErrorCodes : MonoBehaviour
         LOBBY_NOT_FOUND = 10011,
         PLAYERID_NOT_FOUND = 10012,
         CHARACTERID_NOT_FOUND = 10013,
+        INVENTORY_NOT_FOUND = 10014,
 
         // 추가적인 에러 코드들
         VALIDATE_ERROR = 10020,
@@ -32,5 +33,7 @@ public class ErrorCodes : MonoBehaviour
         BULLQUEUE_ERROR = 10050,
 
         API_ERROR = 10060,
+
+        SERVER_REBOOT = 99999,
     }
 }

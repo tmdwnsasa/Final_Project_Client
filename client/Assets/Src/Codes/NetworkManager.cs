@@ -15,8 +15,8 @@ public class NetworkManager : MonoBehaviour
     public static NetworkManager instance;
 
     private string port = "5000";
-    private string ip = "127.0.0.1";
-    // private string ip = "34.64.199.202";
+    // private string ip = "127.0.0.1";
+    private string ip = "34.64.199.202";
     public GameObject uiNotice;
     private TcpClient tcpClient;
     private NetworkStream stream;
@@ -496,6 +496,13 @@ public class NetworkManager : MonoBehaviour
         // 패킷 데이터 처리
         var response = Packets.Deserialize<Response>(packetData);
         Debug.Log($"HandlerId: {response.handlerId}, responseCode: {response.responseCode}, timestamp: {response.timestamp}");
+
+        if (response.responseCode == (uint)ErrorCodes.ErrorCode.SERVER_REBOOT)
+        {
+            AudioManager.instance.PlaySfx(AudioManager.Sfx.LevelUp);
+            StartCoroutine(NoticeRoutine(5));
+            return;
+        }
 
         HandleErrorResponsePacket(response);
 
