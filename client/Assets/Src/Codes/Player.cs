@@ -427,14 +427,12 @@ public class Player : MonoBehaviour
         {
             yield return new WaitForSeconds(zSkill_CoolTime);
             isZSkill = true;
-            Debug.Log("isZSkill : " + isZSkill);
         }
 
         else
         {
             yield return new WaitForSeconds(xSkill_CoolTime);
             isXSkill = true;
-            Debug.Log("isXSkill : " + isXSkill);
         }
     }
 
