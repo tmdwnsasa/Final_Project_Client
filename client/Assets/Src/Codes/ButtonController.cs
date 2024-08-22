@@ -17,6 +17,7 @@ public class ButtonController : MonoBehaviour
             NetworkManager.instance.SendLoginPacket(id, password);
             GameManager.instance.loginUI.transform.GetChild(3).GetComponent<Button>().interactable = false;
         }
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
 
     }
 
@@ -33,6 +34,7 @@ public class ButtonController : MonoBehaviour
             NetworkManager.instance.SendRegisterPacket(id, password, name, guild);
             GameManager.instance.registerUI.transform.GetChild(3).GetComponent<Button>().interactable = false;
         }
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
     }
 
     // 케릭터 선택 버튼
@@ -43,6 +45,7 @@ public class ButtonController : MonoBehaviour
         NetworkManager.instance.SendCharacterEarnPacket(characterId);
         NetworkManager.instance.SendJoinLobbyPacket(characterId);
         GameManager.instance.characterChoiceUI.transform.GetChild(1).GetComponent<Button>().interactable = false;
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
     }
 
     // 케릭터 고르기 버튼
@@ -52,6 +55,7 @@ public class ButtonController : MonoBehaviour
 
         NetworkManager.instance.SendJoinLobbyPacket(characterId);
         GameManager.instance.characterSelectUI.transform.GetChild(1).GetComponent<Button>().interactable = false;
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
     }
 
     // 매칭/대결 버튼
@@ -61,6 +65,7 @@ public class ButtonController : MonoBehaviour
 
         NetworkManager.instance.SendMatchPacket(sessionId, (uint)Handlers.HandlerIds.MATCHMAKING);
         GameManager.instance.matchStartUI.transform.GetChild(0).GetComponent<Button>().interactable = false;
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
     }
 
     // 매칭/대결 취소 버튼
@@ -70,6 +75,7 @@ public class ButtonController : MonoBehaviour
 
         NetworkManager.instance.SendMatchPacket(sessionId, (uint)Handlers.HandlerIds.MATCHINGCANCEL);
         GameManager.instance.matchCancelUI.transform.GetChild(0).GetComponent<Button>().interactable = false;
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
     }
 
     // 로비 복귀 버튼
@@ -78,6 +84,7 @@ public class ButtonController : MonoBehaviour
         NetworkManager.instance.SendReturnLobbyPacket();
         GameManager.instance.ReturnLobby();
         GameManager.instance.gameEndUI.transform.GetChild(3).GetComponent<Button>().interactable = false;
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
     }
 
     //게임 종료 버튼
@@ -85,6 +92,7 @@ public class ButtonController : MonoBehaviour
     {
         NetworkManager.instance.SendExitPacket();
         GameManager.instance.exitBtn.transform.GetChild(0).GetComponent<Button>().interactable = false;
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
     }
 
     //인벤토리 버튼
@@ -244,6 +252,7 @@ public class ButtonController : MonoBehaviour
                 GameManager.instance.PurchaseEquipment(equipmentIndex);
             });
         }
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
     }
 
     //상점 캐릭터 목록 버튼
@@ -253,6 +262,7 @@ public class ButtonController : MonoBehaviour
         GameManager.instance.storeUI.transform.GetChild(1).gameObject.SetActive(false);
         GameManager.instance.storeUI.transform.GetChild(2).GetComponent<Button>().interactable = false;
         GameManager.instance.storeUI.transform.GetChild(3).GetComponent<Button>().interactable = true;
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
     }
 
     //상점 장비 목록 버튼
@@ -262,16 +272,7 @@ public class ButtonController : MonoBehaviour
         GameManager.instance.storeUI.transform.GetChild(1).gameObject.SetActive(true);
         GameManager.instance.storeUI.transform.GetChild(2).GetComponent<Button>().interactable = true;
         GameManager.instance.storeUI.transform.GetChild(3).GetComponent<Button>().interactable = false;
-    }
-
-    //상점 캐릭터 선택 버튼
-    public void OnSelectCharacterButtonClicked()
-    {
-    }
-
-    //상점 장비 선택 버튼
-    public void OnSelectEquipmentButtonClicked()
-    {
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
     }
 
     //상점 캐릭터 구입 버튼
@@ -282,6 +283,7 @@ public class ButtonController : MonoBehaviour
         Text price = GameManager.instance.characterPurchaseCheckUI.transform.GetChild(4).GetComponent<Text>();
         NetworkManager.instance.SendPurchaseCharacterPacket(name.text, price.text, sessionId);
         GameManager.instance.characterPurchaseCheckUI.transform.GetChild(0).GetComponent<Button>().interactable = false;
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
     }
 
     //상점 장비 구입 버튼
@@ -292,6 +294,7 @@ public class ButtonController : MonoBehaviour
         Text price = GameManager.instance.equipmentPurchaseCheckUI.transform.GetChild(4).GetComponent<Text>();
         NetworkManager.instance.SendPurchaseEquipmentPacket(name.text, price.text, sessionId);
         GameManager.instance.equipmentPurchaseCheckUI.transform.GetChild(0).GetComponent<Button>().interactable = false;
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
     }
 
     //상점 구매 취소 버튼
@@ -300,6 +303,7 @@ public class ButtonController : MonoBehaviour
         GameManager.instance.characterPurchaseCheckUI.SetActive(false);
         GameManager.instance.equipmentPurchaseCheckUI.SetActive(false);
         GameManager.instance.storeUI.SetActive(true);
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
     }
 
     //상점 나가기 버튼
@@ -321,17 +325,20 @@ public class ButtonController : MonoBehaviour
         GameManager.instance.storeUI.transform.GetChild(1).gameObject.SetActive(false);
         GameManager.instance.storeUI.transform.GetChild(2).GetComponent<Button>().interactable = true;
         GameManager.instance.storeUI.transform.GetChild(3).GetComponent<Button>().interactable = true;
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
     }
 
     public void OnPoliceButtonClicked()
     {
         GameManager.instance.guild = 1;
         AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
     }
 
     public void OnFarmerButtonClicked()
     {
         GameManager.instance.guild = 2;
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
         AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
     }
 
@@ -347,6 +354,7 @@ public class ButtonController : MonoBehaviour
         GameManager.instance.mapBtn.SetActive(false);
         GameManager.instance.mapUI.SetActive(true);
         GameManager.instance.inventoryButton.SetActive(false);
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
     }
 
     // 맵 나가기 버튼
@@ -363,6 +371,7 @@ public class ButtonController : MonoBehaviour
         GameManager.instance.mapBtn.SetActive(true);
         GameManager.instance.mapUI.SetActive(false);
         GameManager.instance.inventoryButton.SetActive(true);
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
 
     }
 }

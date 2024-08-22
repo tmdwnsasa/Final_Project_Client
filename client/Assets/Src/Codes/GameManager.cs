@@ -104,7 +104,6 @@ public class GameManager : MonoBehaviour
         isMatchging = false;
 
         AudioManager.instance.PlayBgm(true);
-        AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
     }
 
 
@@ -139,16 +138,12 @@ public class GameManager : MonoBehaviour
     {
         loginUI.SetActive(false);
         registerUI.SetActive(true);
-
-        AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
     }
 
     public void GoLogin()
     {
         registerUI.SetActive(false);
         loginUI.SetActive(true);
-
-        AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
     }
 
     public void GoCharacterChoice()
@@ -156,8 +151,6 @@ public class GameManager : MonoBehaviour
         loginUI.SetActive(false);
         registerUI.SetActive(false);
         characterChoiceUI.SetActive(true);
-
-        AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
     }
 
     public void GoCharacterSelect()
@@ -171,7 +164,6 @@ public class GameManager : MonoBehaviour
         }
 
         CharacterChange(possession[0]);
-        AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
     }
 
     public void CharacterChange(uint index)
@@ -274,11 +266,13 @@ public class GameManager : MonoBehaviour
         {
             victory.gameObject.SetActive(true);
             defeat.gameObject.SetActive(false);
+            AudioManager.instance.PlaySfx(AudioManager.Sfx.Win);
         }
         else if (result == "Lose")
         {
             victory.gameObject.SetActive(false);
             defeat.gameObject.SetActive(true);
+            AudioManager.instance.PlaySfx(AudioManager.Sfx.Lose);
         }
     }
 
