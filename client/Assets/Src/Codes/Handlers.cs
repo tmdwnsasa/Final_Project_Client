@@ -74,7 +74,7 @@ public class Handlers : MonoBehaviour
         public int inventoryId;
         public string playerId;
         public int itemId;
-        public string itemSpriteName;
+        // public string itemSpriteName;
         public int equippedItems;
         public string equipSlot;
 
