@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using static Handlers;
 
 public class EquipmentStoreSlot : MonoBehaviour
 {
