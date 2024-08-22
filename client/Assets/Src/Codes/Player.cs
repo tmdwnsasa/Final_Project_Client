@@ -57,8 +57,8 @@ public class Player : MonoBehaviour
 
     public bool directionX;
 
-    private bool isZSkill;
-    private bool isXSkill;
+    public bool isZSkill;
+    public bool isXSkill;
 
     public GameObject sickleRange;
     public GameObject shovelRange;

@@ -369,6 +369,9 @@ public class Handlers : MonoBehaviour
         GameManager.instance.mapBtn.SetActive(true);
         GameManager.instance.player.hpSlider.gameObject.SetActive(false);
         GameManager.instance.gameEndUI.transform.GetChild(3).GetComponent<Button>().interactable = true;
+
+        GameManager.instance.player.isZSkill = true;
+        GameManager.instance.player.isXSkill = true;
     }
 
  
