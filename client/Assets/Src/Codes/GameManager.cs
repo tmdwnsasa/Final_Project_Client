@@ -6,10 +6,15 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.SocialPlatforms;
 using UnityEngine.UI;
+using static Handlers;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
+    public Sprite[] itemSprites; 
+    public Dictionary<int, Sprite> itemSpriteMapping; 
+    public List<ItemStats> equipmentStore;
+
 
     [Header("# Images")]
     public List<Sprite> farmers;
@@ -32,6 +37,9 @@ public class GameManager : MonoBehaviour
     public string name;
     public List<uint> possession;
 
+    [Header("# Item")]
+    public List<ItemStats> items;
+   
     [Header("# Game Object")]
     public PoolManager pool;
     public Player player;
@@ -46,6 +54,8 @@ public class GameManager : MonoBehaviour
     public GameObject matchStartUI;
     public GameObject matchCancelUI;
     public GameObject exitBtn;
+    public GameObject inventoryButton;
+    public GameObject inventoryUI;
     public GameObject storeBtn;
     public GameObject storeUI;
     public GameObject characterPurchaseCheckUI;
@@ -61,6 +71,7 @@ public class GameManager : MonoBehaviour
         instance = this;
         Application.targetFrameRate = targetFrameRate;
         SetBtn();
+        GetItemSpriteMapping();
     }
 
     public void GameStart()
@@ -78,6 +89,8 @@ public class GameManager : MonoBehaviour
         matchStartUI.SetActive(true);
         matchCancelUI.SetActive(false);
         exitBtn.SetActive(true);
+        inventoryButton.SetActive(true);
+        inventoryUI.SetActive(false);
         storeBtn.SetActive(true);
         storeUI.SetActive(false);
         characterPurchaseCheckUI.SetActive(false);
@@ -93,6 +106,34 @@ public class GameManager : MonoBehaviour
         AudioManager.instance.PlayBgm(true);
         AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
     }
+
+
+    public void InitializeItemSpriteMapping()
+    {
+        if (itemSpriteMapping == null)
+        {
+            itemSpriteMapping = new Dictionary<int, Sprite>();
+
+            // Map item IDs to their corresponding sprites
+            for (int i = 0; i < itemSprites.Length; i++)
+            {
+                itemSpriteMapping.Add(i + 1, itemSprites[i]);
+            }
+
+            Debug.Log($"itemSpriteMapping initialized with {itemSpriteMapping.Count} entries.");
+        }
+    }
+
+
+    public Dictionary<int, Sprite> GetItemSpriteMapping()
+    {
+        if (itemSpriteMapping == null)
+        {
+            InitializeItemSpriteMapping();
+        }
+        return itemSpriteMapping;
+    }
+
 
     public void GoRegister()
     {
@@ -261,4 +302,6 @@ public class GameManager : MonoBehaviour
         Text purchaseName = equipmentPurchaseCheckUI.transform.GetChild(3).GetComponent<Text>();
         purchaseName.text = equipmentName.text;
     }
+
 }
+

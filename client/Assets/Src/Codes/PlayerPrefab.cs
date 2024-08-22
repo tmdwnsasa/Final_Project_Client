@@ -7,15 +7,15 @@ using UnityEngine.UI;
 public class PlayerPrefab : MonoBehaviour
 {
     public RuntimeAnimatorController[] animCon;
-    private Animator anim;
+    private Animator anim;//inventory inven
     private SpriteRenderer spriter;
     public Vector2 newPosition;
     public uint guild;
 
     private Vector3 lastPosition;
     private Vector3 currentPosition;
-    private uint characterId;
-    TextMeshPro myText;
+    private uint characterId;//
+    TextMeshPro myText;//
 
     public float nowHp;
     public float hp;
