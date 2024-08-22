@@ -231,7 +231,7 @@ public class PlayerPrefab : MonoBehaviour
                 }                
                 break;
             case 8:
-                if(GameManager.instance.characterId == 1)
+                if(characterId == 1)
                 {
                     GameObject fireAoe = Instantiate(AoePrefab, transform.position, Quaternion.identity);
                     fireAoe.transform.localScale = new Vector3(rangeX, rangeY, 1);
