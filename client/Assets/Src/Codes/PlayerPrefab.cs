@@ -297,6 +297,15 @@ public class PlayerPrefab : MonoBehaviour
             if(gunSprite.gameObject.activeSelf) {
                 gunSprite.gameObject.SetActive(false);
             }
+            if(sickleRange.gameObject.activeSelf) {
+                sickleRange.gameObject.SetActive(false);
+            } 
+            if(shovelRange.gameObject.activeSelf) {
+                shovelRange.gameObject.SetActive(false);
+            } 
+            if(buffText.gameObject.activeSelf) {
+                buffText.gameObject.SetActive(false);
+            } 
             GetComponent<SpriteRenderer>().color = Color.white;
 
             hpSlider.gameObject.SetActive(false);
