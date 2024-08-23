@@ -188,7 +188,7 @@ public class ButtonController : MonoBehaviour
         GameManager.instance.inventoryUI.SetActive(false);
         GameManager.instance.storeBtn.SetActive(true);
         GameManager.instance.mapBtn.SetActive(true);
-        if(GameManager.instance.isMatchging) {
+        if(GameManager.instance.isMatching) {
             GameManager.instance.matchCancelUI.SetActive(true);
         } else {
             GameManager.instance.matchStartUI.SetActive(true);
