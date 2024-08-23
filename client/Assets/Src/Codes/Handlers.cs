@@ -317,9 +317,9 @@ public class Handlers : MonoBehaviour
         if (purchaseStateMessage.remainMoney == 0)
             return;
 
-        InventoryManager.instance.inventory = purchaseStateMessage.allInventoryItems;
-        InventoryManager.instance.equipment = purchaseStateMessage.allEquippedItems;
-        InventoryManager.instance.money = purchaseStateMessage.remainMoney;
+        // InventoryManager.instance.inventory = purchaseStateMessage.allInventoryItems;
+        // InventoryManager.instance.equipment = purchaseStateMessage.allEquippedItems;
+        // InventoryManager.instance.money = purchaseStateMessage.remainMoney;
 
         InventoryManager.instance.ShowEquippedItems();
         InventoryManager.instance.ShowInventoryItems();
@@ -373,6 +373,8 @@ public class Handlers : MonoBehaviour
 
         GameManager.instance.player.isZSkill = true;
         GameManager.instance.player.isXSkill = true;
+
+        GameManager.instance.isMatching = false;
     }
 
  
@@ -391,12 +393,17 @@ public class Handlers : MonoBehaviour
 
         // Update the inventory data with the new items and stats
         GameManager.instance.player.GetComponent<Player>().SetStats(updatedInventoryData.updatedStats);
-        InventoryManager.instance.UpdateInventoryCombinedStats();
 
         InventoryManager.instance.inventory = updatedInventoryData.allInventoryItems;
         InventoryManager.instance.equipment = updatedInventoryData.allEquippedItems;
 
-        InventoryManager.instance.ShowEquippedItems();
+        if(updatedInventoryData.money != 0)
+        {
+            InventoryManager.instance.money = updatedInventoryData.money;
+        }
+
+        InventoryManager.instance.UpdateInventoryCombinedStats();
         InventoryManager.instance.ShowInventoryItems();
+        InventoryManager.instance.ShowEquippedItems();
     }
 }
