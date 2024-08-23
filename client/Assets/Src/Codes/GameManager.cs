@@ -103,7 +103,7 @@ public class GameManager : MonoBehaviour
         isLive = true;
         isMatchging = false;
 
-        AudioManager.instance.PlayBgm(true);
+        AudioManager.instance.PlayBgm(AudioManager.Bgm.Lobby);
     }
 
 
@@ -218,7 +218,7 @@ public class GameManager : MonoBehaviour
         isLive = false;
         yield return new WaitForSeconds(0.5f);
 
-        AudioManager.instance.PlayBgm(true);
+        AudioManager.instance.PlayBgm(AudioManager.Bgm.Lobby);
         AudioManager.instance.PlaySfx(AudioManager.Sfx.Lose);
     }
 
@@ -281,6 +281,8 @@ public class GameManager : MonoBehaviour
         gameEndUI.SetActive(false);
         storeBtn.SetActive(true);
         storeBtn.GetComponent<Button>().interactable = true;
+        AudioManager.instance.StopBgm(AudioManager.Bgm.Game);
+        AudioManager.instance.PlayBgm(AudioManager.Bgm.Lobby);
     }
 
     public void PurchaseCharacter(uint characterId){
