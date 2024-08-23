@@ -427,7 +427,7 @@ public class BattleStart
 public class InventoryPayload
 {
     [ProtoMember(1, IsRequired = true)]
-    public string sessionId { get; set; }
+    public string message { get; set; }
 
 }
 

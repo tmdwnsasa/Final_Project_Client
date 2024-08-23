@@ -174,6 +174,7 @@ public class Handlers : MonoBehaviour
         public CombinedStats updatedStats;
         public List<PlayerItem> allInventoryItems;
         public List<PlayerItem> allEquippedItems;
+        public int money;
         public string message;
     }
     
