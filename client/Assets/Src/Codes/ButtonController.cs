@@ -98,12 +98,14 @@ public class ButtonController : MonoBehaviour
     //인벤토리 버튼
     public void OnInventoryButtonClicked()
     {
-        string sessionId = GameManager.instance.sessionId;
+        NetworkManager.instance.SendInventoryPacket();
 
         //GameManager.instance.inventoryButton.transform.GetChild(0).GetComponent<Button>().interactable = false;
         GameManager.instance.inventoryUI.SetActive(!GameManager.instance.inventoryUI.activeSelf);
+        
         InventoryManager.instance.ShowInventoryItems();
         InventoryManager.instance.ShowEquippedItems();
+        InventoryManager.instance.UpdateInventoryCombinedStats();
 
         GameManager.instance.storeBtn.SetActive(false);
         GameManager.instance.mapBtn.SetActive(false);

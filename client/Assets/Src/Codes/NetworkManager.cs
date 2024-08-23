@@ -15,8 +15,8 @@ public class NetworkManager : MonoBehaviour
     public static NetworkManager instance;
 
     private string port = "5000";
-    // private string ip = "127.0.0.1";
-    private string ip = "35.216.9.69";
+    private string ip = "127.0.0.1";
+    // private string ip = "35.216.9.69";
     public GameObject uiNotice;
     private TcpClient tcpClient;
     private NetworkStream stream;
@@ -343,6 +343,17 @@ public class NetworkManager : MonoBehaviour
 
     }
 
+     public void SendInventoryPacket()
+    {
+        InventoryPayload inventoryPayload = new InventoryPayload
+        {
+            message = "open inventory"
+        };
+
+        SendPacket(inventoryPayload, (uint)Handlers.HandlerIds.INVENTORY);
+    }
+
+
     public void SendEquipItemPacket(string itemId)
     {
         EquipItemPayload equipPayload = new EquipItemPayload
@@ -550,6 +561,7 @@ public class NetworkManager : MonoBehaviour
                 case (uint)Handlers.HandlerIds.SKILL:
                     break;
                 case (uint)Handlers.HandlerIds.INVENTORY:
+                    Handlers.instance.UpdateInventoryAndStats(response.data);
                     break;
                 case (uint)Handlers.HandlerIds.EQUIP_ITEM:
                     Handlers.instance.UpdateInventoryAndStats(response.data);

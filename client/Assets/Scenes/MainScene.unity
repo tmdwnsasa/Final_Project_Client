@@ -23701,7 +23701,7 @@ Camera:
   far clip plane: 1000
   field of view: 34
   orthographic: 1
-  orthographic size: 19.500643
+  orthographic size: 7.7777777
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -59696,6 +59696,8 @@ MonoBehaviour:
   xSkill_CoolTime: 0
   xSkill_id: 0
   directionX: 0
+  isZSkill: 0
+  isXSkill: 0
   sickleRange: {fileID: 2033580065}
   shovelRange: {fileID: 1496125699}
   gunSprite: {fileID: 1313418836}
@@ -62037,7 +62039,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: "\uCCB4\uC11C  +10\n\uACF5\uACA9\uB825 +2"
+  m_Text: "\uCCB4\uB825  +10\n\uACF5\uACA9\uB825 +2"
 --- !u!222 &1838520650
 CanvasRenderer:
   m_ObjectHideFlags: 0
