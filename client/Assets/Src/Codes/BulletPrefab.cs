@@ -28,9 +28,9 @@ public class BulletPrefab : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag != gameObject.tag && collision.gameObject.tag != "area" && collision.gameObject.tag != "ground")
+        if (collision.gameObject.tag != gameObject.tag && collision.gameObject.tag != "area" && collision.gameObject.tag != "ground" && collision.gameObject.tag != "item")
         {
-            if (collision.gameObject.tag != "green" && collision.gameObject.tag != "blue")
+            if ((collision.gameObject.tag != "green" && collision.gameObject.tag != "blue") || collision.gameObject.layer == 8)
             {
                 NetworkManager.instance.SendRemoveSkillPacket(bulletNum, skillType);
             }

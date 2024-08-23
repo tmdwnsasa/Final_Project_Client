@@ -93,7 +93,7 @@ public class Player : MonoBehaviour
         BoxArea.y = 0f;
         hpSlider.value = 1;
 
-        if(guild == 1)
+        if (guild == 1)
         {
             myText.color = Color.blue;
         }
@@ -286,7 +286,8 @@ public class Player : MonoBehaviour
         {
             case 7:
             case 1:
-                if(GameManager.instance.characterId == 0) {
+                if (GameManager.instance.characterId == 0)
+                {
                     sickleRange.SetActive(true);
                     sickleRange.transform.localPosition = new Vector2(x, y);
                     SpriteRenderer nearSkillRender = sickleRange.GetComponent<SpriteRenderer>();
@@ -309,7 +310,8 @@ public class Player : MonoBehaviour
                     }
                     StartCoroutine(AttackRangeCheck(sickleRange));
                 }
-                else if(GameManager.instance.characterId == 2) {
+                else if (GameManager.instance.characterId == 2)
+                {
                     shovelRange.SetActive(true);
                     shovelRange.transform.localPosition = new Vector2(x, y);
                     SpriteRenderer nearSkillRender = shovelRange.GetComponent<SpriteRenderer>();
@@ -332,16 +334,19 @@ public class Player : MonoBehaviour
                     }
                     StartCoroutine(AttackRangeCheck(shovelRange));
                 }
-                if(skillType == 1)
+                if (skillType == 1)
                     AudioManager.instance.PlaySfx(AudioManager.Sfx.Swing);
                 if (skillType == 7)
                     AudioManager.instance.PlaySfx(AudioManager.Sfx.Stun);
                 break;
             case 2:
                 GameObject projectile = Instantiate(projectilePrefab, transform.position + new Vector3(x, y), Quaternion.identity, prefabManager.transform);
-                if(GameManager.instance.characterId == 1) {
+                if (GameManager.instance.characterId == 1)
+                {
                     projectile.GetComponent<SpriteRenderer>().color = Color.white;
-                } else if (GameManager.instance.characterId == 3) {
+                }
+                else if (GameManager.instance.characterId == 3)
+                {
                     projectile.GetComponent<SpriteRenderer>().color = Color.green;
                 }
                 BulletPrefab projScript = projectile.GetComponent<BulletPrefab>();
@@ -379,19 +384,21 @@ public class Player : MonoBehaviour
                 AudioManager.instance.PlaySfx(AudioManager.Sfx.Berserk);
                 break;
             case 5:
-                if(guild == 1) {
+                if (guild == 1)
+                {
                     GameObject blueHeal = Instantiate(blueHealPrefab, transform.position + new Vector3(x, y), Quaternion.identity, prefabManager.transform);
                     HealPrefab blueHealScript = blueHeal.GetComponent<HealPrefab>();
                     blueHealScript.duration = duration;
                 }
-                else if(guild == 2) {
+                else if (guild == 2)
+                {
                     GameObject greenHeal = Instantiate(greenHealPrefab, transform.position + new Vector3(x, y), Quaternion.identity, prefabManager.transform);
                     HealPrefab greenHealScript = greenHeal.GetComponent<HealPrefab>();
                     greenHealScript.duration = duration;
                 }
                 break;
             case 8:
-                if(GameManager.instance.characterId == 1)
+                if (GameManager.instance.characterId == 1)
                 {
                     GameObject fireAoe = Instantiate(AoePrefab, transform.position, Quaternion.identity, prefabManager.transform);
                     fireAoe.transform.localScale = new Vector3(rangeX + 5, rangeY + 5, 1);
@@ -439,11 +446,12 @@ public class Player : MonoBehaviour
 
     public void SetHp(float hp, bool isHeal)
     {
-        if(isHeal)
+        if (isHeal)
         {
             StartCoroutine(AttackedCharacter(Color.green));
             AudioManager.instance.PlaySfx(AudioManager.Sfx.Heal);
-        } else
+        }
+        else
         {
             StartCoroutine(AttackedCharacter(Color.red));
             AudioManager.instance.PlaySfx(AudioManager.Sfx.Hurt);
@@ -456,18 +464,22 @@ public class Player : MonoBehaviour
         {
             StopAllCoroutines();
 
-            if(gunSprite.gameObject.activeSelf) {
+            if (gunSprite.gameObject.activeSelf)
+            {
                 gunSprite.gameObject.SetActive(false);
-            } 
-            if(sickleRange.gameObject.activeSelf) {
+            }
+            if (sickleRange.gameObject.activeSelf)
+            {
                 sickleRange.gameObject.SetActive(false);
-            } 
-            if(shovelRange.gameObject.activeSelf) {
+            }
+            if (shovelRange.gameObject.activeSelf)
+            {
                 shovelRange.gameObject.SetActive(false);
-            } 
-            if(buffText.gameObject.activeSelf) {
+            }
+            if (buffText.gameObject.activeSelf)
+            {
                 buffText.gameObject.SetActive(false);
-            } 
+            }
             GetComponent<SpriteRenderer>().color = Color.white;
 
             hpSlider.gameObject.SetActive(false);
