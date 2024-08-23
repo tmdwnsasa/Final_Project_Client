@@ -30,7 +30,7 @@ public class BulletPrefab : MonoBehaviour
     {
         if (collision.gameObject.tag != gameObject.tag && collision.gameObject.tag != "area" && collision.gameObject.tag != "ground")
         {
-            if (collision.gameObject.tag != "green" && collision.gameObject.tag != "blue")
+            if (collision.gameObject.tag != "green" && collision.gameObject.tag != "blue" && collision.gameObject.tag != "item")
             {
                 NetworkManager.instance.SendRemoveSkillPacket(bulletNum, skillType);
             }
