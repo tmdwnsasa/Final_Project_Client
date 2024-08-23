@@ -707,7 +707,8 @@ public class NetworkManager : MonoBehaviour
             GameManager.instance.inventoryUI.SetActive(false);
         }
 
-        AudioManager.instance.PlayBgm(false);
+        AudioManager.instance.StopBgm(AudioManager.Bgm.Lobby);
+        AudioManager.instance.PlayBgm(AudioManager.Bgm.Game);
         isLobby = false;
         GameManager.instance.matchStartUI.SetActive(false);
         GameManager.instance.matchCancelUI.SetActive(false);

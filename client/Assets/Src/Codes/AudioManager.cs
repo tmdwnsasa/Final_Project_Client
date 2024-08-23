@@ -63,32 +63,14 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    public void PlayBgm(bool isPlay)
+    public void PlayBgm(Bgm bgm)
     {
-        if (isPlay)
-        {
-            //bgmPlayer.Play();
-            //테스트할때 잠시 브금 꺼둠! 이부분 꼭 머지하기전에 고치기
-            if(NetworkManager.instance.isLobby == true)
-            {
-                bgmPlayer[(int)Bgm.Lobby].Play();
-            }
-            else if(NetworkManager.instance.isLobby == false)
-            {
-                bgmPlayer[(int)Bgm.Game].Play();
-            }
-        }
-        else
-        {
-            if(NetworkManager.instance.isLobby == true)
-            {
-                bgmPlayer[(int)Bgm.Lobby].Stop();
-            }
-            else if(NetworkManager.instance.isLobby == false)
-            {
-                bgmPlayer[(int)Bgm.Game].Stop();
-            }
-        }
+        bgmPlayer[(int)bgm].Play();
+    }
+
+    public void StopBgm(Bgm bgm)
+    {
+        bgmPlayer[(int)bgm].Stop();
     }
 
     public void EffectBgm(bool isPlay)
