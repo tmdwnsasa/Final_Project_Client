@@ -15,8 +15,8 @@ public class NetworkManager : MonoBehaviour
     public static NetworkManager instance;
 
     private string port = "5000";
-    // private string ip = "127.0.0.1";
-    private string ip = "35.216.9.69";
+    private string ip = "127.0.0.1";
+    // private string ip = "35.216.9.69";
     public GameObject uiNotice;
     private TcpClient tcpClient;
     private NetworkStream stream;
@@ -547,13 +547,13 @@ public class NetworkManager : MonoBehaviour
                     GameManager.instance.matchStartUI.transform.GetChild(0).GetComponent<Button>().interactable = true;
                     GameManager.instance.matchStartUI.SetActive(false);
                     GameManager.instance.matchCancelUI.SetActive(true);
-                    GameManager.instance.isMatchging = true;
+                    GameManager.instance.isMatching = true;
                     break;
                 case (uint)Handlers.HandlerIds.MATCHINGCANCEL:
                     GameManager.instance.matchCancelUI.transform.GetChild(0).GetComponent<Button>().interactable = true;
                     GameManager.instance.matchStartUI.SetActive(true);
                     GameManager.instance.matchCancelUI.SetActive(false);
-                    GameManager.instance.isMatchging = false;
+                    GameManager.instance.isMatching = false;
                     break;
                 case (uint)Handlers.HandlerIds.RETURN_LOBBY:
                     Handlers.instance.ReturnLobbySetting(response.data);
@@ -717,6 +717,7 @@ public class NetworkManager : MonoBehaviour
         GameManager.instance.mapBtn.SetActive(false);
         GameManager.instance.inventoryButton.SetActive(false);
         GameManager.instance.AnnouncementMap.SetActive(true);
+        GameManager.instance.chattingUI.SetActive(true);
         CharacterManager.instance.SetCharacterHp(response);
         CharacterManager.instance.SetCharacterTag(response);
     }

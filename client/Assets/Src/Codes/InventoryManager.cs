@@ -68,13 +68,12 @@ public class InventoryManager : MonoBehaviour
 
     public void UpdateInventoryCombinedStats()
     {
-
         Transform inventoryMoneyTransform = GameManager.instance.inventoryUI.transform.GetChild(2);
         Transform inventoryStatTransform = GameManager.instance.inventoryUI.transform.GetChild(3);
 
         Text userMoney = inventoryMoneyTransform.GetChild(1).GetComponent<Text>();
         userMoney.text = money.ToString();
-
+        
         Text userHp = inventoryStatTransform.GetChild(1).GetComponent<Text>();
         userHp.text = GameManager.instance.player.hp.ToString();
 

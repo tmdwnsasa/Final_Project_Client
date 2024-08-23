@@ -102,11 +102,7 @@ public class ButtonController : MonoBehaviour
 
         //GameManager.instance.inventoryButton.transform.GetChild(0).GetComponent<Button>().interactable = false;
         GameManager.instance.inventoryUI.SetActive(!GameManager.instance.inventoryUI.activeSelf);
-        
-        InventoryManager.instance.ShowInventoryItems();
-        InventoryManager.instance.ShowEquippedItems();
-        InventoryManager.instance.UpdateInventoryCombinedStats();
-
+    
         GameManager.instance.storeBtn.SetActive(false);
         GameManager.instance.mapBtn.SetActive(false);
         GameManager.instance.matchStartUI.SetActive(false);
@@ -120,7 +116,6 @@ public class ButtonController : MonoBehaviour
     {
         Debug.Log(EventSystem.current.currentSelectedGameObject);
         if (EventSystem.current.currentSelectedGameObject.transform.GetComponent<InventorySlot>().item.itemName == null)
-  
         {
            Debug.Log($"Empty Inventory Slot");
            return;
@@ -316,7 +311,7 @@ public class ButtonController : MonoBehaviour
     {
         GameManager.instance.chattingUI.SetActive(true);
         GameManager.instance.exitBtn.SetActive(true);
-        if(GameManager.instance.isMatchging) {
+        if(GameManager.instance.isMatching) {
             GameManager.instance.matchCancelUI.SetActive(true);
         } else {
             GameManager.instance.matchStartUI.SetActive(true);
@@ -367,7 +362,7 @@ public class ButtonController : MonoBehaviour
     {
         GameManager.instance.chattingUI.SetActive(true);
         GameManager.instance.exitBtn.SetActive(true);
-        if(GameManager.instance.isMatchging) {
+        if(GameManager.instance.isMatching) {
             GameManager.instance.matchCancelUI.SetActive(true);
         } else {
             GameManager.instance.matchStartUI.SetActive(true);
