@@ -16,7 +16,7 @@ public class NetworkManager : MonoBehaviour
 
     private string port = "5000";
     // private string ip = "127.0.0.1";
-    private string ip = "34.64.199.202";
+    private string ip = "35.216.9.69";
     public GameObject uiNotice;
     private TcpClient tcpClient;
     private NetworkStream stream;
