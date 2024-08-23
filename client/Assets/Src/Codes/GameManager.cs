@@ -23,7 +23,7 @@ public class GameManager : MonoBehaviour
     public bool isLive;
     public float gameTime;
     public int targetFrameRate;
-    public string version = "1.0.0";
+    public string version = "1.0.1";
     public bool isMatching;
 
     [Header("# Register")]
