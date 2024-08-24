@@ -110,6 +110,7 @@ public class ButtonController : MonoBehaviour
         GameManager.instance.exitBtn.SetActive(false);
         GameManager.instance.inventoryButton.SetActive(false);
         GameManager.instance.chattingUI.SetActive(false);
+        GameManager.instance.reselectCharacterBtn.SetActive(false);
     }
 
     public void OnInventoryItemSlotButtonClicked()
@@ -196,6 +197,7 @@ public class ButtonController : MonoBehaviour
         GameManager.instance.exitBtn.SetActive(true);
         GameManager.instance.inventoryButton.SetActive(true);
         GameManager.instance.chattingUI.SetActive(true);
+        GameManager.instance.reselectCharacterBtn.SetActive(true);
     }
 
     //상점 버튼
@@ -319,6 +321,7 @@ public class ButtonController : MonoBehaviour
         GameManager.instance.storeBtn.SetActive(true);
         GameManager.instance.storeUI.SetActive(false);
         GameManager.instance.mapBtn.SetActive(true);
+        GameManager.instance.reselectCharacterBtn.SetActive(true);
         GameManager.instance.inventoryButton.SetActive(true);
         GameManager.instance.storeBtn.GetComponent<Button>().interactable = true;
         GameManager.instance.storeUI.transform.GetChild(0).gameObject.SetActive(true);
@@ -354,6 +357,7 @@ public class ButtonController : MonoBehaviour
         GameManager.instance.mapBtn.SetActive(false);
         GameManager.instance.mapUI.SetActive(true);
         GameManager.instance.inventoryButton.SetActive(false);
+        GameManager.instance.reselectCharacterBtn.SetActive(false);
         AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
     }
 
@@ -371,7 +375,26 @@ public class ButtonController : MonoBehaviour
         GameManager.instance.mapBtn.SetActive(true);
         GameManager.instance.mapUI.SetActive(false);
         GameManager.instance.inventoryButton.SetActive(true);
+        GameManager.instance.reselectCharacterBtn.SetActive(true);
+        AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
+    }
+
+    // 캐릭터 선택 버튼
+    public void OnReselectCharacterClicked()
+    {
+        GameManager.instance.reselectCharacterBtn.transform.GetComponent<Button>().interactable = false;
+        GameManager.instance.reselectCharacterBtn.SetActive(false);
+        GameManager.instance.chattingUI.SetActive(false);
+        GameManager.instance.exitBtn.SetActive(false);
+        GameManager.instance.matchStartUI.SetActive(false);
+        GameManager.instance.matchCancelUI.SetActive(false);
+        GameManager.instance.storeBtn.SetActive(false);
+        GameManager.instance.mapBtn.SetActive(false);
+        GameManager.instance.inventoryButton.SetActive(false);
         AudioManager.instance.PlaySfx(AudioManager.Sfx.Select);
 
+        GameManager.instance.player.gameObject.SetActive(false);
+
+        NetworkManager.instance.SendReselectCharacterPacket();
     }
 }
