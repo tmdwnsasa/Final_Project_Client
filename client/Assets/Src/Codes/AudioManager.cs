@@ -21,7 +21,7 @@ public class AudioManager : MonoBehaviour
     int channelIndex;
 
     public enum Bgm { Lobby, Game }
-    public enum Sfx { Dead, Shot, Swing, LevelUp, Hurt, Heal, Walk, Select, Win, Lose, Stun, Berserk, Berserk2, Fire }
+    public enum Sfx { Dead, Shot, Swing, LevelUp, Hurt, Heal, Walk, Select, Win, Lose, Stun, Berserk, Berserk2, Fire, Shattered }
 
 
     void Awake()
