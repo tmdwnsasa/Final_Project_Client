@@ -25,6 +25,7 @@ public class Handlers : MonoBehaviour
         CHATTING = 10,
         MATCHMAKING = 11,
         MATCHINGCANCEL = 12,
+        RESELECTCHARACTER = 13,
         GAME_END = 15,
         RETURN_LOBBY = 16,
         INVENTORY = 17,
@@ -299,6 +300,7 @@ public class Handlers : MonoBehaviour
         GameManager.instance.storeBtn.SetActive(false);
         GameManager.instance.storeUI.SetActive(true);
         GameManager.instance.purchaseMessageUI.SetActive(false);
+        GameManager.instance.reselectCharacterBtn.SetActive(false);
         GameManager.instance.characterPurchaseCheckUI.transform.GetChild(0).GetComponent<Button>().interactable = true;
         GameManager.instance.equipmentPurchaseCheckUI.transform.GetChild(0).GetComponent<Button>().interactable = true;
         GameManager.instance.mapBtn.SetActive(false);
@@ -368,6 +370,7 @@ public class Handlers : MonoBehaviour
         GameManager.instance.inventoryButton.SetActive(true);
         GameManager.instance.exitBtn.SetActive(true);
         GameManager.instance.mapBtn.SetActive(true);
+        GameManager.instance.reselectCharacterBtn.SetActive(true);
         GameManager.instance.player.hpSlider.gameObject.SetActive(false);
         GameManager.instance.gameEndUI.transform.GetChild(3).GetComponent<Button>().interactable = true;
 

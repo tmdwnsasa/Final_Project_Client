@@ -64,7 +64,7 @@ public class GameManager : MonoBehaviour
     public GameObject mapBtn;
     public GameObject mapUI;
     public GameObject AnnouncementMap;
-
+    public GameObject reselectCharacterBtn;
 
     void Awake()
     {
@@ -101,6 +101,8 @@ public class GameManager : MonoBehaviour
         mapBtn.SetActive(true);
         mapUI.SetActive(false);
         AnnouncementMap.SetActive(false);
+        reselectCharacterBtn.SetActive(true);
+        GameManager.instance.reselectCharacterBtn.transform.GetComponent<Button>().interactable = true;
 
         isLive = true;
         isMatching = false;

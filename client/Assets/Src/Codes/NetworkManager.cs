@@ -15,8 +15,8 @@ public class NetworkManager : MonoBehaviour
     public static NetworkManager instance;
 
     private string port = "5000";
-    // private string ip = "127.0.0.1";
-    private string ip = "35.216.9.69";
+    private string ip = "127.0.0.1";
+    // private string ip = "35.216.9.69";
     public GameObject uiNotice;
     private TcpClient tcpClient;
     private NetworkStream stream;
@@ -414,6 +414,15 @@ public class NetworkManager : MonoBehaviour
         SendPacket(openMapPayload, (uint)Handlers.HandlerIds.OPEN_MAP);
     }
 
+    public void SendReselectCharacterPacket()
+    {
+        ReselectCharacterPayload reselectCharacterPayload = new ReselectCharacterPayload
+        {
+            message = "reselect"
+        };
+        SendPacket(reselectCharacterPayload, (uint)Handlers.HandlerIds.RESELECTCHARACTER);
+    }
+
     void StartReceiving()
     {
         _ = ReceivePacketsAsync();
@@ -554,6 +563,10 @@ public class NetworkManager : MonoBehaviour
                     GameManager.instance.matchStartUI.SetActive(true);
                     GameManager.instance.matchCancelUI.SetActive(false);
                     GameManager.instance.isMatching = false;
+                    break;
+                case (uint)Handlers.HandlerIds.RESELECTCHARACTER:
+                    GameManager.instance.GoCharacterSelect();
+                    GameManager.instance.characterSelectUI.transform.GetChild(1).GetComponent<Button>().interactable = true;
                     break;
                 case (uint)Handlers.HandlerIds.RETURN_LOBBY:
                     Handlers.instance.ReturnLobbySetting(response.data);
@@ -716,6 +729,7 @@ public class NetworkManager : MonoBehaviour
         GameManager.instance.storeBtn.SetActive(false);
         GameManager.instance.mapBtn.SetActive(false);
         GameManager.instance.inventoryButton.SetActive(false);
+        GameManager.instance.reselectCharacterBtn.SetActive(false);
         GameManager.instance.AnnouncementMap.SetActive(true);
         GameManager.instance.chattingUI.SetActive(true);
         CharacterManager.instance.SetCharacterHp(response);

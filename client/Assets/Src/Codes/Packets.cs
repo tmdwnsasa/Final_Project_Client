@@ -507,3 +507,10 @@ public class MapPayload
         public string ownedBy { get; set; }
     }
 }
+
+[ProtoContract]
+public class ReselectCharacterPayload
+{
+    [ProtoMember(1)]
+    public string message { get; set; }
+}
