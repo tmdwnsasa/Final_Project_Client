@@ -557,12 +557,14 @@ public class NetworkManager : MonoBehaviour
                     GameManager.instance.matchStartUI.SetActive(false);
                     GameManager.instance.matchCancelUI.SetActive(true);
                     GameManager.instance.isMatching = true;
+                    GameManager.instance.reselectCharacterBtn.transform.GetComponent<Button>().interactable = false;
                     break;
                 case (uint)Handlers.HandlerIds.MATCHINGCANCEL:
                     GameManager.instance.matchCancelUI.transform.GetChild(0).GetComponent<Button>().interactable = true;
                     GameManager.instance.matchStartUI.SetActive(true);
                     GameManager.instance.matchCancelUI.SetActive(false);
                     GameManager.instance.isMatching = false;
+                    GameManager.instance.reselectCharacterBtn.transform.GetComponent<Button>().interactable = true;
                     break;
                 case (uint)Handlers.HandlerIds.RESELECTCHARACTER:
                     GameManager.instance.GoCharacterSelect();
