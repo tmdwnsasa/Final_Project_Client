@@ -19,7 +19,7 @@ public class HealPrefab : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag != "area" && collision.gameObject.tag != "ground")
+        if (collision.gameObject.tag != "area" && collision.gameObject.tag != "ground" && collision.gameObject.layer != 8)
         {
             // 충돌 처리
             Destroy(gameObject);
