@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
+using static Handlers;
 
 public class Handlers : MonoBehaviour
 {
@@ -193,6 +194,12 @@ public class Handlers : MonoBehaviour
         public MapData[] mapData;
     }
 
+    [Serializable]
+    public struct ReselectCharacterData
+    {
+        public string message;
+        public List<uint> possession;
+    }
     public void GetCharacterChoice(byte[] data)
     {
         string jsonString = Encoding.UTF8.GetString(data);
@@ -409,5 +416,15 @@ public class Handlers : MonoBehaviour
         InventoryManager.instance.UpdateInventoryCombinedStats();
         InventoryManager.instance.ShowInventoryItems();
         InventoryManager.instance.ShowEquippedItems();
+    }
+    
+    public void ReselectCharacter(byte[] data)
+    {
+        string jsonString = Encoding.UTF8.GetString(data);
+        ReselectCharacterData reselectCharacter = JsonUtility.FromJson<ReselectCharacterData>(jsonString);
+
+
+        GameManager.instance.possession = reselectCharacter.possession;
+        GameManager.instance.GoCharacterSelect();
     }
 }

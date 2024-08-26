@@ -567,7 +567,7 @@ public class NetworkManager : MonoBehaviour
                     GameManager.instance.reselectCharacterBtn.transform.GetComponent<Button>().interactable = true;
                     break;
                 case (uint)Handlers.HandlerIds.RESELECTCHARACTER:
-                    GameManager.instance.GoCharacterSelect();
+                    Handlers.instance.ReselectCharacter(response.data);
                     GameManager.instance.characterSelectUI.transform.GetChild(1).GetComponent<Button>().interactable = true;
                     break;
                 case (uint)Handlers.HandlerIds.RETURN_LOBBY:
