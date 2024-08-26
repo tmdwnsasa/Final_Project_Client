@@ -37,9 +37,5 @@ public class BulletPrefab : MonoBehaviour
             // 충돌 처리
             Destroy(gameObject);
         }
-        if(collision.gameObject.tag == "item")
-        {
-            AudioManager.instance.PlaySfx(AudioManager.Sfx.Shattered);
-        }
     }
 }
