@@ -388,12 +388,14 @@ public class Player : MonoBehaviour
                 {
                     GameObject blueHeal = Instantiate(blueHealPrefab, transform.position + new Vector3(x, y), Quaternion.identity, prefabManager.transform);
                     HealPrefab blueHealScript = blueHeal.GetComponent<HealPrefab>();
+                    blueHealScript.team = "blue";
                     blueHealScript.duration = duration;
                 }
                 else if (guild == 2)
                 {
                     GameObject greenHeal = Instantiate(greenHealPrefab, transform.position + new Vector3(x, y), Quaternion.identity, prefabManager.transform);
                     HealPrefab greenHealScript = greenHeal.GetComponent<HealPrefab>();
+                    greenHealScript.team = "green";
                     greenHealScript.duration = duration;
                 }
                 break;
